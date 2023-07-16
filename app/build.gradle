@@ -32,7 +32,7 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
-    buildFeatures{
+    buildFeatures {
         viewBinding true
     }
 }
@@ -100,4 +100,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
     androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
+
+    //Image Slider
+    implementation 'com.github.denzcoskun:ImageSlideshow:0.1.2'
 }
