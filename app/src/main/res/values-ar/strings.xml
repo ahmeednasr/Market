@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Market</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">اهلا بكم</string>
+    <string name="your_cart_is_empty">حقيبه التسوق فارغه!</string>
+    <string name="remove">remove</string>
+    <string name="egp">EGP</string>
+    <string name="decrement">decrement</string>
+    <string name="increment">increment</string>
+</resources>
