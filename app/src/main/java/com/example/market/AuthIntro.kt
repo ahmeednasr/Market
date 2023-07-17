@@ -1,5 +1,6 @@
 package com.example.market
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -21,6 +22,17 @@ class AuthIntro : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.loginButton.setOnClickListener {
+            startActivity(Intent(requireContext(),AuthSignIn::class.java))
+            requireActivity().supportFragmentManager.popBackStack()
+        }
+        binding.signupButton.setOnClickListener {
+            startActivity(Intent(requireContext(),AuthSignup::class.java))
+            requireActivity().supportFragmentManager.popBackStack()
+        }
+    }
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
