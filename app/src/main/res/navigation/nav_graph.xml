@@ -21,6 +21,46 @@
         android:id="@+id/accountFragment"
         android:name="com.example.market.ui.AccountFragment"
         android:label="fragment_account"
-        tools:layout="@layout/fragment_account" />
+        tools:layout="@layout/fragment_account" >
+        <action
+            android:id="@+id/action_accountFragment_to_authIntro"
+            app:destination="@id/authIntro" />
+    </fragment>
+    <fragment
+        android:id="@+id/authIntro"
+        android:name="com.example.market.AuthIntro"
+        android:label="fragment_auth_intro"
+        tools:layout="@layout/fragment_auth_intro" >
+        <action
+            android:id="@+id/action_authIntro_to_authSignIn"
+            app:destination="@id/authSignIn" />
+        <action
+            android:id="@+id/action_authIntro_to_authSignup"
+            app:destination="@id/authSignup" />
+    </fragment>
+    <fragment
+        android:id="@+id/authSignIn"
+        android:name="com.example.market.AuthSignIn"
+        android:label="fragment_auth_sign_in"
+        tools:layout="@layout/fragment_auth_sign_in" >
+        <action
+            android:id="@+id/action_authSignIn_to_accountFragment"
+            app:destination="@id/accountFragment" />
+        <action
+            android:id="@+id/action_authSignIn_to_authIntro"
+            app:destination="@id/authIntro" />
+    </fragment>
+    <fragment
+        android:id="@+id/authSignup"
+        android:name="com.example.market.AuthSignup"
+        android:label="fragment_auth_singup"
+        tools:layout="@layout/fragment_auth_singup" >
+        <action
+            android:id="@+id/action_authSignup_to_accountFragment"
+            app:destination="@id/accountFragment" />
+        <action
+            android:id="@+id/action_authSignup_to_authIntro"
+            app:destination="@id/authIntro" />
+    </fragment>
 
 </navigation>

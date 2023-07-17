@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import com.example.market.databinding.FragmentAuthIntroBinding
 import com.example.market.databinding.FragmentAuthSingupBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -55,11 +56,21 @@ class AuthSignup : Fragment() {
         if(validateInfo(name,email,password,rePassword)){
             auth.createUserWithEmailAndPassword(email,password).addOnCompleteListener { task ->
                 if(task.isSuccessful){
-                    binding.progressBar.visibility = View.GONE
-                    Toast.makeText(requireContext(),"Signed Up Successfully",Toast.LENGTH_LONG)
+                    auth.currentUser!!.sendEmailVerification().addOnCompleteListener {task ->
+                        if(task.isSuccessful){
+                            binding.progressBar.visibility = View.GONE
+                            Toast.makeText(requireContext(),"Signed Up Successfully",Toast.LENGTH_LONG)
+                            findNavController().navigate(R.id.action_authSignIn_to_accountFragment)
+                        }else{
+                            binding.progressBar.visibility = View.GONE
+                            Toast.makeText(requireContext(),"Please Verify Your Email",Toast.LENGTH_LONG)
+                            findNavController().navigate(R.id.action_authSignIn_to_authIntro)
+                        }
+                    }
                 }else{
-                    binding.progressBar.visibility = View.GONE
-                    Toast.makeText(requireContext(),"Something Went Wrong,Please Try Again Later",Toast.LENGTH_LONG)
+                binding.progressBar.visibility = View.GONE
+                Toast.makeText(requireContext(),"Something Went Wrong, Please Try Again Later",Toast.LENGTH_LONG)
+                findNavController().navigate(R.id.action_authSignIn_to_authIntro)
                 }
             }
         }

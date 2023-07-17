@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.NavigationUI
 import com.example.market.databinding.FragmentAuthSignInBinding
 import com.example.market.databinding.FragmentAuthSingupBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -34,6 +36,7 @@ class AuthSignIn : Fragment() {
 
         binding.signInButton.setOnClickListener {
             signInUser()
+
         }
 
     }
@@ -50,11 +53,18 @@ class AuthSignIn : Fragment() {
         if(validateInfo(email,password)){
             auth.signInWithEmailAndPassword(email,password).addOnCompleteListener { task ->
                 if(task.isSuccessful){
-                    binding.progressBar2.visibility = View.GONE
-                    Toast.makeText(requireContext(),"Login Successfully", Toast.LENGTH_LONG)
+                    if(auth.currentUser!!.isEmailVerified){
+                        binding.progressBar2.visibility = View.GONE
+                        Toast.makeText(requireContext(),"Login Successfully", Toast.LENGTH_LONG)
+                        findNavController().navigate(R.id.action_authSignIn_to_accountFragment)
+                    }else{
+                        binding.progressBar2.visibility = View.GONE
+                        Toast.makeText(requireContext(),"Please Verify Your Email",Toast.LENGTH_LONG)
+                    }
                 }else{
                     binding.progressBar2.visibility = View.GONE
                     Toast.makeText(requireContext(),"Something Went Wrong,Please Try Again Later",Toast.LENGTH_LONG)
+                    findNavController().navigate(R.id.action_authSignIn_to_authIntro)
                 }
             }
         }

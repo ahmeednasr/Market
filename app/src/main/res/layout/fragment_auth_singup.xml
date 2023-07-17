@@ -101,7 +101,7 @@
                     android:background="@drawable/gery_background"
                     android:ems="10"
                     android:hint="Email"
-                    android:inputType="textPersonName"
+                    android:inputType="textEmailAddress"
                     android:textAlignment="center"
                     android:textSize="16sp"
                     android:textStyle="bold" />
