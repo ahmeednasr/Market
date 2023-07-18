@@ -74,17 +74,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="@string/egp"
+            android:text="@string/currancy"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/product_name"
             app:layout_constraintTop_toBottomOf="@+id/product_name" />
 
         <TextView
-            android:id="@+id/currency2"
+            android:id="@+id/currency_real"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="@string/egp"
+            android:text="@string/currancy"
             android:textSize="12sp"
             app:layout_constraintStart_toStartOf="@+id/currency"
             app:layout_constraintTop_toBottomOf="@+id/currency" />
@@ -95,9 +95,9 @@
             android:layout_height="wrap_content"
             android:text="1000"
             android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="@+id/currency2"
+            app:layout_constraintBottom_toBottomOf="@+id/currency_real"
             app:layout_constraintStart_toStartOf="@+id/discounted_price"
-            app:layout_constraintTop_toTopOf="@+id/currency2" />
+            app:layout_constraintTop_toTopOf="@+id/currency_real" />
 
         <TextView
             android:id="@+id/discount_percentage"
