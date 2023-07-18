@@ -1,4 +1,4 @@
-package com.example.market
+package com.example.market.auth
 
 import android.os.Bundle
 import android.text.TextUtils
@@ -9,13 +9,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
-import com.example.market.databinding.FragmentAuthIntroBinding
+import com.example.market.R
 import com.example.market.databinding.FragmentAuthSingupBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class AuthSignup : Fragment() {
 
     private var _binding : FragmentAuthSingupBinding? = null
@@ -48,29 +49,27 @@ class AuthSignup : Fragment() {
     }
 
     private fun registerUser(){
-        val name = binding.nameText.toString()
-        val email = binding.emailText.toString()
-        val password = binding.passwordText.toString()
-        val rePassword = binding.rePasswordText.toString()
+        val name = binding.nameText.text.toString()
+        val email = binding.emailText.text.toString()
+        val password = binding.passwordText.text.toString()
+        val rePassword = binding.rePasswordText.text.toString()
         binding.progressBar.visibility = View.VISIBLE
         if(validateInfo(name,email,password,rePassword)){
             auth.createUserWithEmailAndPassword(email,password).addOnCompleteListener { task ->
                 if(task.isSuccessful){
-                    auth.currentUser!!.sendEmailVerification().addOnCompleteListener {task ->
-                        if(task.isSuccessful){
+                    auth.currentUser?.sendEmailVerification()?.addOnSuccessListener {
                             binding.progressBar.visibility = View.GONE
-                            Toast.makeText(requireContext(),"Signed Up Successfully",Toast.LENGTH_LONG)
-                            findNavController().navigate(R.id.action_authSignIn_to_accountFragment)
-                        }else{
-                            binding.progressBar.visibility = View.GONE
-                            Toast.makeText(requireContext(),"Please Verify Your Email",Toast.LENGTH_LONG)
-                            findNavController().navigate(R.id.action_authSignIn_to_authIntro)
-                        }
+                            Toast.makeText(requireContext(),"Signed Up Successfully, Please Verify Your Email",Toast.LENGTH_LONG)
+                            findNavController().navigate(R.id.action_authSignup_to_authIntro)
+                        }?.addOnFailureListener {
+                        binding.progressBar.visibility = View.GONE
+                        Toast.makeText(requireContext(),"Something Went Wrong, Please Try Again Later",Toast.LENGTH_LONG)
+                        findNavController().navigate(R.id.action_authSignup_to_authIntro)
                     }
                 }else{
-                binding.progressBar.visibility = View.GONE
-                Toast.makeText(requireContext(),"Something Went Wrong, Please Try Again Later",Toast.LENGTH_LONG)
-                findNavController().navigate(R.id.action_authSignIn_to_authIntro)
+                    binding.progressBar.visibility = View.GONE
+                    Toast.makeText(requireContext(),"Something Went Wrong, Please Try Again Later",Toast.LENGTH_LONG)
+                    findNavController().navigate(R.id.action_authSignup_to_authIntro)
                 }
             }
         }

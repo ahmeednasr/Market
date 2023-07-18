@@ -1,19 +1,25 @@
 package com.example.market.ui
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import com.example.market.AuthActivity
 import com.example.market.R
 import com.example.market.databinding.FragmentAccountBinding
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class AccountFragment : Fragment() {
     private var _binding: FragmentAccountBinding? = null
     private val binding get() = _binding!!
+    private lateinit var auth : FirebaseAuth
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,9 +33,20 @@ class AccountFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        auth = Firebase.auth
         binding.tvLogin.setOnClickListener {
-            findNavController().navigate(R.id.action_accountFragment_to_authIntro)
+           startActivity(Intent(requireActivity(),AuthActivity::class.java))
+        }
+
+        if(auth.currentUser != null){
+            binding.tvLogin.text = "Logout"
+            binding.tvUsername.visibility = View.VISIBLE
+            binding.tvUsername.text = auth.currentUser!!.email
+            binding.tvLogin.setOnClickListener {
+                Firebase.auth.signOut()
+                view.invalidate()
+                view.requestLayout()
+            }
         }
     }
     override fun onDestroyView() {
