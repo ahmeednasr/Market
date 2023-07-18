@@ -1,56 +1,57 @@
-package com.example.market.ui.home
+package com.example.market.ui.brand
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.market.databinding.FragmentHomeBinding
+import com.example.market.databinding.FragmentBrandBinding
 import com.example.market.utils.NetworkResult
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
-class HomeFragment : Fragment() {
+class BrandFragment : Fragment() {
 
-    private var _binding: FragmentHomeBinding? = null
+    private var _binding: FragmentBrandBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: HomeViewModel by viewModels()
-    private val brandsAdapter by lazy { BrandsAdapter(object: BrandsAdapter.BrandClickListener {
-        override fun onItemClicked(vendor: String) {
-            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToBrandFragment(vendor))
-        }
-    }) }
+    private val viewModel: BrandViewModel by viewModels()
+    private val brandProductsAdapter by lazy { BrandProductsAdapter() }
+
+    private val args: BrandFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        _binding = FragmentBrandBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupBrandsRecyclerView()
-        observeBrandsResponse()
+        setTitle()
+        setupProductsRecyclerView()
+        observeProductsResponse()
 
-        viewModel.getBrands()
+        viewModel.getProducts(args.vendor)
     }
 
-    private fun observeBrandsResponse() {
-        viewModel.brands.observe(viewLifecycleOwner) { response ->
+    private fun setTitle() {
+        binding.tvTitle.text = args.vendor
+    }
+
+    private fun observeProductsResponse() {
+        viewModel.products.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is NetworkResult.Success -> {
                     response.data?.let {
-                        brandsAdapter.submitList(it.smart_collections)
+                        brandProductsAdapter.submitList(it.products)
                     }
                 }
                 is NetworkResult.Error -> {
@@ -63,9 +64,9 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun setupBrandsRecyclerView() {
-        binding.rvBrands.apply {
-            adapter = brandsAdapter
+    private fun setupProductsRecyclerView() {
+        binding.rvProducts.apply {
+            adapter = brandProductsAdapter
             layoutManager = GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
         }
     }
@@ -74,4 +75,5 @@ class HomeFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
 }
