@@ -68,6 +68,10 @@ dependencies {
     //GSON
     implementation 'com.google.code.gson:gson:2.10.1'
 
+    def okHttp_version = "4.10.0"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okHttp_version"
+    implementation "com.squareup.okhttp3:okhttp:$okHttp_version"
+
     //Room
     implementation 'androidx.room:room-ktx:2.5.1'
     implementation 'androidx.room:room-runtime:2.5.1'
@@ -128,4 +132,7 @@ dependencies {
     //dagger-hilt
     implementation("com.google.dagger:hilt-android:2.44")
     kapt("com.google.dagger:hilt-android-compiler:2.44")
+
+    //floating action button
+    implementation 'com.nambimobile.widgets:expandable-fab:1.2.1'
 }
