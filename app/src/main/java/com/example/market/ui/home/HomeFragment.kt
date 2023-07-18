@@ -45,7 +45,6 @@ class HomeFragment : Fragment() {
             when (response) {
                 is NetworkResult.Success -> {
                     response.data?.let {
-                        Log.d("observeBrandsResponse", it.smart_collections.toString())
                         brandsAdapter.submitList(it.smart_collections)
                     }
                 }

@@ -18,7 +18,7 @@
         app:justifyContent="center">
 
         <nl.bryanderidder.themedtogglebuttongroup.ThemedButton
-            android:id="@+id/btn1"
+            android:id="@+id/btn_women"
             android:layout_width="wrap_content"
             android:layout_height="38dp"
             android:paddingHorizontal="8dp"
@@ -28,7 +28,7 @@
             app:toggle_text="WOMEN" />
 
         <nl.bryanderidder.themedtogglebuttongroup.ThemedButton
-            android:id="@+id/btn2"
+            android:id="@+id/btn_kid"
             android:layout_width="wrap_content"
             android:layout_height="38dp"
             android:paddingHorizontal="8dp"
@@ -38,7 +38,7 @@
             app:toggle_text="KID" />
 
         <nl.bryanderidder.themedtogglebuttongroup.ThemedButton
-            android:id="@+id/btn3"
+            android:id="@+id/btn_men"
             android:layout_width="wrap_content"
             android:layout_height="38dp"
             android:paddingHorizontal="8dp"
@@ -48,7 +48,7 @@
             app:toggle_text="MEN" />
 
         <nl.bryanderidder.themedtogglebuttongroup.ThemedButton
-            android:id="@+id/btn4"
+            android:id="@+id/btn_sale"
             android:layout_width="wrap_content"
             android:layout_height="38dp"
             android:paddingHorizontal="8dp"
@@ -92,6 +92,7 @@
             app:efab_orientation="portrait"/>
 
         <com.nambimobile.widgets.efab.FabOption
+            android:id="@+id/fab_shoes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:fab_orientation="portrait"
@@ -99,6 +100,7 @@
             app:label_text="SHOES" />
 
         <com.nambimobile.widgets.efab.FabOption
+            android:id="@+id/fab_shirt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:fab_orientation="portrait"
@@ -106,6 +108,7 @@
             app:label_text="T-SHIRTS" />
 
         <com.nambimobile.widgets.efab.FabOption
+            android:id="@+id/fab_accessories"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:fab_orientation="portrait"
