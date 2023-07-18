@@ -6,4 +6,8 @@
     <string name="egp">EGP</string>
     <string name="decrement">decrement</string>
     <string name="increment">increment</string>
+    <string name="home">Home</string>
+    <string name="categories">Categories</string>
+    <string name="account">Account</string>
+
 </resources>

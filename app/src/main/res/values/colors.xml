@@ -12,4 +12,8 @@
     <color name="light_orange">#fbe6bf</color>
     <color name="ash_gray">#B2BEB5</color>
 
+
+    <color name="orange_200">#ffc77d</color>
+    <color name="orange_500">#ff8d00</color>
+    <color name="orange_700">#f47100</color>
 </resources>
