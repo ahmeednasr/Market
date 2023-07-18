@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.example.market.R
 import com.example.market.databinding.FragmentAccountBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class AccountFragment : Fragment() {
     private var _binding: FragmentAccountBinding? = null
     private val binding get() = _binding!!
