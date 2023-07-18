@@ -40,7 +40,7 @@ class CategoriesViewModel @Inject constructor(
     fun filterProducts(mainCategory: String, subCategory: String) {
         _products.value = NetworkResult.Loading()
         viewModelScope.launch {
-            var filter = _allProducts.filter { it.tags.contains(mainCategory, true) }
+            var filter = _allProducts.filter { it.tags?.contains(mainCategory, true) ?: false }
             if (subCategory.isNotBlank()) {
                 filter = filter.filter { it.product_type.equals(subCategory, true) }
             }

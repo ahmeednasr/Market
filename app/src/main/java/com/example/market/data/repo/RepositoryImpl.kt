@@ -13,4 +13,8 @@ class RepositoryImpl(private val apiService: ApiService) : Repository {
     override suspend fun getProducts(): Response<ProductResponse> {
         return apiService.getProducts()
     }
+
+    override suspend fun getBrandProducts(vendor: String): Response<ProductResponse> {
+        return apiService.getBrandProducts(vendor)
+    }
 }
