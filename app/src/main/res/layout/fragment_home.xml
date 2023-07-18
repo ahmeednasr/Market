@@ -9,8 +9,64 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingVertical="10dp">
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_home_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/black"
+            android:elevation="4dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+           <androidx.constraintlayout.widget.ConstraintLayout
+               android:layout_width="match_parent"
+               android:layout_height="match_parent">
+
+               <TextView
+                   android:id="@+id/tv_title"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text="Home"
+                   android:textColor="@color/white"
+                   android:layout_marginStart="16dp"
+                   app:layout_constraintStart_toStartOf="parent"
+                   app:layout_constraintTop_toTopOf="parent"
+                   app:layout_constraintBottom_toBottomOf="parent"
+                   android:textSize="24sp" />
+
+               <ImageView
+                   android:id="@+id/iv_favourite"
+                   android:layout_width="30dp"
+                   android:layout_height="30dp"
+                   android:layout_marginEnd="8dp"
+                   app:layout_constraintEnd_toStartOf="@+id/iv_search"
+                   app:layout_constraintTop_toTopOf="parent"
+                   app:layout_constraintBottom_toBottomOf="parent"
+                   android:src="@drawable/ic_white_heart" />
+
+               <ImageView
+                   android:id="@+id/iv_search"
+                   android:layout_width="30dp"
+                   android:layout_height="30dp"
+                   android:layout_marginEnd="8dp"
+                   app:layout_constraintEnd_toStartOf="@+id/iv_cart"
+                   app:layout_constraintTop_toTopOf="parent"
+                   app:layout_constraintBottom_toBottomOf="parent"
+                   android:src="@drawable/ic_search" />
+
+               <ImageView
+                   android:id="@+id/iv_cart"
+                   android:layout_width="30dp"
+                   android:layout_height="30dp"
+                   android:layout_marginEnd="16dp"
+                   app:layout_constraintEnd_toEndOf="parent"
+                   app:layout_constraintTop_toTopOf="parent"
+                   app:layout_constraintBottom_toBottomOf="parent"
+                   android:src="@drawable/ic_cart" />
+           </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.appcompat.widget.Toolbar>
 
         <com.denzcoskun.imageslider.ImageSlider
             android:id="@+id/iv_image_slider"
@@ -20,7 +76,7 @@
             app:iss_text_align="CENTER"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/toolbar_home_fragment" />
 
         <TextView
             android:id="@+id/tv_brand"
@@ -33,7 +89,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_image_slider" />
-
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"

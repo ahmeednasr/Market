@@ -9,9 +9,9 @@ import com.bumptech.glide.Glide
 import com.example.market.data.pojo.SmartCollection
 import com.example.market.databinding.ItemBrandBinding
 
-class BrandsAdapter (
+class BrandsAdapter(
     private val clickListener: BrandClickListener
-        ):
+) :
     ListAdapter<SmartCollection, BrandsAdapter.MyViewHolder>(
         DailyDiffCallback()
     ) {
@@ -40,7 +40,7 @@ class BrandsAdapter (
                     .into(ivBrand)
 
                 cvLayout.setOnClickListener {
-                    clickListener.onItemClicked(brand.title?:"")
+                    clickListener.onItemClicked(brand.title ?: "")
                 }
             }
         }
