@@ -1,4 +1,4 @@
-package com.example.market.ui.categories
+package com.example.market.ui.brand
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,11 +8,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.market.data.pojo.Product
 import com.example.market.databinding.ItemCategoryProductBinding
+import com.example.market.ui.categories.ProductsAdapter
 
-class ProductsAdapter(
+class BrandProductsAdapter(
     private val clickListener: ProductClickListener
 ) :
-    ListAdapter<Product, ProductsAdapter.MyViewHolder>(
+    ListAdapter<Product, BrandProductsAdapter.MyViewHolder>(
         DailyDiffCallback()
     ) {
 
