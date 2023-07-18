@@ -8,8 +8,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.market.data.pojo.Product
 import com.example.market.databinding.ItemCategoryProductBinding
+import com.example.market.ui.categories.ProductsAdapter
 
-class BrandProductsAdapter :
+class BrandProductsAdapter(
+    private val clickListener: ProductClickListener
+) :
     ListAdapter<Product, BrandProductsAdapter.MyViewHolder>(
         DailyDiffCallback()
     ) {
@@ -19,19 +22,27 @@ class BrandProductsAdapter :
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), clickListener)
+    }
+
+    interface ProductClickListener {
+        fun onItemClicked(product: Product)
     }
 
     class MyViewHolder(private val binding: ItemCategoryProductBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(product: Product) {
+        fun bind(product: Product, clickListener: ProductClickListener) {
             binding.apply {
                 tvProductName.text = product.title
                 Glide
                     .with(binding.root)
                     .load(product.image?.src)
                     .into(ivProduct)
+
+                cvLayout.setOnClickListener {
+                    clickListener.onItemClicked(product)
+                }
             }
         }
 
@@ -42,7 +53,6 @@ class BrandProductsAdapter :
                 return MyViewHolder(binding)
             }
         }
-
     }
 
     class DailyDiffCallback : DiffUtil.ItemCallback<Product>() {

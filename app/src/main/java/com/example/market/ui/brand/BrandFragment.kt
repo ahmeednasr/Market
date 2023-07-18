@@ -6,9 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.market.data.pojo.Product
 import com.example.market.databinding.FragmentBrandBinding
+import com.example.market.ui.categories.ProductsAdapter
 import com.example.market.utils.NetworkResult
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -19,7 +22,13 @@ class BrandFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: BrandViewModel by viewModels()
-    private val brandProductsAdapter by lazy { BrandProductsAdapter() }
+    private val brandProductsAdapter by lazy {
+        BrandProductsAdapter(object : BrandProductsAdapter.ProductClickListener {
+            override fun onItemClicked(product: Product) {
+                //navigate to product info
+            }
+        })
+    }
 
     private val args: BrandFragmentArgs by navArgs()
 
@@ -36,6 +45,7 @@ class BrandFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setTitle()
+        observeBackButton()
         setupProductsRecyclerView()
         observeProductsResponse()
 
@@ -44,6 +54,12 @@ class BrandFragment : Fragment() {
 
     private fun setTitle() {
         binding.tvTitle.text = args.vendor
+    }
+
+    private fun observeBackButton() {
+        binding.ivBackArrow.setOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 
     private fun observeProductsResponse() {
@@ -67,7 +83,8 @@ class BrandFragment : Fragment() {
     private fun setupProductsRecyclerView() {
         binding.rvProducts.apply {
             adapter = brandProductsAdapter
-            layoutManager = GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
+            layoutManager =
+                GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
         }
     }
 

@@ -7,8 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.market.R
+import com.example.market.data.pojo.Product
 import com.example.market.databinding.FragmentCategoriesBinding
 import com.example.market.utils.NetworkResult
 import dagger.hilt.android.AndroidEntryPoint
@@ -21,7 +23,13 @@ class CategoriesFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: CategoriesViewModel by viewModels()
-    private val productsAdapter by lazy { ProductsAdapter() }
+    private val productsAdapter by lazy {
+        ProductsAdapter(object : ProductsAdapter.ProductClickListener {
+            override fun onItemClicked(product: Product) {
+                //navigate to product info
+            }
+        })
+    }
 
     private var mainCategory = ""
     private var subCategory = ""
@@ -38,12 +46,19 @@ class CategoriesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        observeSearchButton()
         setupProductsRecyclerView()
         observeProductsResponse()
         observeButtonsGroup()
         observeFloatingActionButton()
 
         viewModel.getProducts()
+    }
+
+    private fun observeSearchButton() {
+        binding.ivSearch.setOnClickListener {
+            findNavController().navigate(CategoriesFragmentDirections.actionCategoriesFragmentToSearchFragment())
+        }
     }
 
     private fun observeProductsResponse() {
@@ -67,29 +82,30 @@ class CategoriesFragment : Fragment() {
     private fun setupProductsRecyclerView() {
         binding.rvProducts.apply {
             adapter = productsAdapter
-            layoutManager = GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
+            layoutManager =
+                GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
         }
     }
 
     private fun observeButtonsGroup() {
         binding.category.setOnSelectListener { button: ThemedButton ->
-            when(button.id){
-                R.id.btn_women-> {
+            when (button.id) {
+                R.id.btn_women -> {
                     Log.d("setOnSelectListener", "btn_women")
                     mainCategory = WOMEN
                     viewModel.filterProducts(mainCategory, subCategory)
                 }
-                R.id.btn_kid-> {
+                R.id.btn_kid -> {
                     Log.d("setOnSelectListener", "btn_kid")
                     mainCategory = KID
                     viewModel.filterProducts(mainCategory, subCategory)
                 }
-                R.id.btn_men-> {
+                R.id.btn_men -> {
                     Log.d("setOnSelectListener", "btn_men")
                     mainCategory = MEN
                     viewModel.filterProducts(mainCategory, subCategory)
                 }
-                R.id.btn_sale-> {
+                R.id.btn_sale -> {
                     Log.d("setOnSelectListener", "btn_sale")
                     mainCategory = SALE
                     viewModel.filterProducts(mainCategory, subCategory)

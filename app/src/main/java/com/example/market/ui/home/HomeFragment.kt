@@ -21,11 +21,17 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: HomeViewModel by viewModels()
-    private val brandsAdapter by lazy { BrandsAdapter(object: BrandsAdapter.BrandClickListener {
-        override fun onItemClicked(vendor: String) {
-            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToBrandFragment(vendor))
-        }
-    }) }
+    private val brandsAdapter by lazy {
+        BrandsAdapter(object : BrandsAdapter.BrandClickListener {
+            override fun onItemClicked(vendor: String) {
+                findNavController().navigate(
+                    HomeFragmentDirections.actionHomeFragmentToBrandFragment(
+                        vendor
+                    )
+                )
+            }
+        })
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,10 +45,17 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        observeSearchButton()
         setupBrandsRecyclerView()
         observeBrandsResponse()
 
         viewModel.getBrands()
+    }
+
+    private fun observeSearchButton() {
+        binding.ivSearch.setOnClickListener {
+            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToSearchFragment())
+        }
     }
 
     private fun observeBrandsResponse() {
@@ -66,7 +79,8 @@ class HomeFragment : Fragment() {
     private fun setupBrandsRecyclerView() {
         binding.rvBrands.apply {
             adapter = brandsAdapter
-            layoutManager = GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
+            layoutManager =
+                GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
         }
     }
 
