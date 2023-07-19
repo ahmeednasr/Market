@@ -1,59 +1,48 @@
-package com.example.market.ui.brand
+package com.example.market.ui.favourites
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.market.data.pojo.Product
-import com.example.market.databinding.FragmentBrandBinding
-import com.example.market.ui.categories.ProductsAdapter
-import com.example.market.utils.NetworkResult
-import dagger.hilt.android.AndroidEntryPoint
+import com.example.market.databinding.FragmentFavouritesBinding
 
-@AndroidEntryPoint
-class BrandFragment : Fragment() {
+class FavouritesFragment : Fragment() {
 
-    private var _binding: FragmentBrandBinding? = null
+    private var _binding: FragmentFavouritesBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: BrandViewModel by viewModels()
-    private val brandProductsAdapter by lazy {
-        BrandProductsAdapter(object : BrandProductsAdapter.ProductClickListener {
+    private val favouritesAdapter by lazy {
+        FavouritesAdapter(object : FavouritesAdapter.ProductClickListener {
             override fun onItemClicked(product: Product) {
                 //navigate to product details
             }
+
+            override fun onDislikeClicked(product: Product) {
+                //remove item from favourites
+            }
         })
     }
-
-    private val args: BrandFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        _binding = FragmentBrandBinding.inflate(inflater, container, false)
+        _binding = FragmentFavouritesBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setTitle()
         observeBackButton()
         setupProductsRecyclerView()
         observeProductsResponse()
 
-        viewModel.getProducts(args.vendor)
-    }
-
-    private fun setTitle() {
-        binding.tvTitle.text = args.vendor
     }
 
     private fun observeBackButton() {
@@ -63,26 +52,26 @@ class BrandFragment : Fragment() {
     }
 
     private fun observeProductsResponse() {
-        viewModel.products.observe(viewLifecycleOwner) { response ->
-            when (response) {
-                is NetworkResult.Success -> {
-                    response.data?.let {
-                        brandProductsAdapter.submitList(it.products)
-                    }
-                }
-                is NetworkResult.Error -> {
-
-                }
-                is NetworkResult.Loading -> {
-
-                }
-            }
-        }
+//        viewModel.products.observe(viewLifecycleOwner) { response ->
+//            when (response) {
+//                is NetworkResult.Success -> {
+//                    response.data?.let {
+//                        brandProductsAdapter.submitList(it.products)
+//                    }
+//                }
+//                is NetworkResult.Error -> {
+//
+//                }
+//                is NetworkResult.Loading -> {
+//
+//                }
+//            }
+//        }
     }
 
     private fun setupProductsRecyclerView() {
         binding.rvProducts.apply {
-            adapter = brandProductsAdapter
+            adapter = favouritesAdapter
             layoutManager =
                 GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
         }
@@ -92,5 +81,4 @@ class BrandFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
 }
