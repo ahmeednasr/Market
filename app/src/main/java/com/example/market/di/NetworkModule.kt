@@ -1,9 +1,12 @@
 package com.example.market.di
 
 import com.example.market.data.remote.ApiService
+import com.example.market.data.remote.CurrencyApi
 import com.example.market.utils.Constants.API_ACCESS_TOKEN
 import com.example.market.utils.Constants.API_KEY
 import com.example.market.utils.Constants.BASE_URL
+import com.example.market.utils.Constants.CURRENCY_API_KEY
+import com.example.market.utils.Constants.CURRENCY_URL
 import com.example.market.utils.Constants.NETWORK_TIMEOUT
 import dagger.Module
 import dagger.Provides
@@ -80,5 +83,46 @@ object NetworkModule {
     @Singleton
     fun provideAPIService(retrofit: Retrofit): ApiService {
         return retrofit.create(ApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun currencyAPiKey(chain: Interceptor.Chain): Response {
+        val credentials = CURRENCY_API_KEY
+        return chain.proceed(
+            chain.request().newBuilder().header("apikey", credentials)
+                .build()
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideCurrencyOkHttpClient(
+        headersInterceptor: Interceptor,
+        logging: HttpLoggingInterceptor,
+    ): OkHttpClient {
+        return OkHttpClient.Builder()
+            .readTimeout(NETWORK_TIMEOUT, TimeUnit.SECONDS)
+            .connectTimeout(NETWORK_TIMEOUT, TimeUnit.SECONDS)
+            .addInterceptor(headersInterceptor)
+            .addInterceptor(logging)
+            .addInterceptor(::currencyAPiKey)
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun currencyRetrofit(okHttpClient: OkHttpClient): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(CURRENCY_URL)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun currencyAPIService(retrofit: Retrofit): CurrencyApi {
+        return retrofit.create(CurrencyApi::class.java)
     }
 }
