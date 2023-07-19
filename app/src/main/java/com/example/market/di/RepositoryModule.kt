@@ -1,6 +1,7 @@
 package com.example.market.di
 
 import com.example.market.data.remote.ApiService
+import com.example.market.data.remote.CurrencyApi
 import com.example.market.data.repo.Repository
 import com.example.market.data.repo.RepositoryImpl
 import dagger.Module
@@ -17,7 +18,8 @@ object RepositoryModule {
     @Singleton
     fun provideMoviesRepository(
         apiService: ApiService,
+        currencyApi: CurrencyApi,
     ): Repository {
-        return RepositoryImpl(apiService)
+        return RepositoryImpl(apiService, currencyApi)
     }
 }

@@ -10,21 +10,20 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.market.R
 import com.example.market.data.pojo.Currency
+import com.example.market.data.pojo.OrderCurrency
 import com.example.market.databinding.FragmentAccountBinding
-import com.example.market.ui.brand.BrandViewModel
 import com.example.market.utils.Constants.CURRENCY_KEY
 import com.example.market.utils.NetworkResult
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class AccountFragment : Fragment() {
     private var _binding: FragmentAccountBinding? = null
     private val binding get() = _binding!!
+
     private val viewModel: AccountViewModel by viewModels()
 
     override fun onCreateView(

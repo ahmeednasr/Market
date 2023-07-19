@@ -16,7 +16,7 @@ data class Order (
     val confirmed: Boolean? = null,
     val contact_email: String? = null,
     val created_at: String? = null,
-    val currency: Currency? = null,
+    val currency: OrderCurrency? = null,
     val current_subtotal_price: String? = null,
     val current_total_discounts: String? = null,
     val current_total_price: String? = null,
@@ -32,7 +32,7 @@ data class Order (
     val payment_gateway_names: List<String>? = null,
     val phone: String? = null,
     val po_number: String? = null,
-    val presentment_currency: Currency? = null,
+    val presentment_currency: OrderCurrency? = null,
     val processed_at: String? = null,
     val reference: String? = null,
     val referring_site: String? = null,
@@ -77,7 +77,7 @@ data class Address (
     val line_items: List<LineItem>? = null
 )
 
-enum class Currency(val value: String) {
+enum class OrderCurrency(val value: String) {
     Usd("USD");
 }
 
