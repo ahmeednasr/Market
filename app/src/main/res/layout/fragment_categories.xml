@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -135,7 +134,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_products"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginVertical="8dp"
                 tools:listitem="@layout/item_category_product"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -146,54 +145,103 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
-    <com.nambimobile.widgets.efab.ExpandableFabLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
+        android:src="@drawable/ic_categories"
+        app:fabSize="normal"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:elevation="16dp"
+        android:focusable="true"
+        app:backgroundTint="#ffffff"
+        app:pressedTranslationZ="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent" />
 
-        <com.nambimobile.widgets.efab.Overlay
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:overlay_orientation="portrait"/>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_shoes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        app:fabSize="normal"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:elevation="16dp"
+        android:focusable="true"
+        app:backgroundTint="#ffffff"
+        app:pressedTranslationZ="12dp"
+        app:layout_constraintBottom_toTopOf="@+id/fab_category"
+        app:layout_constraintEnd_toEndOf="@+id/fab_category"
+        app:layout_constraintStart_toStartOf="@+id/fab_category"
+        app:srcCompat="@drawable/sneakers" />
 
-        <com.nambimobile.widgets.efab.ExpandableFab
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            android:contentDescription="@string/filter"
-            app:efab_color="@color/black"
-            app:efab_orientation="portrait" />
+    <TextView
+        android:id="@+id/tv_shoes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="SHOES"
+        app:layout_constraintBottom_toBottomOf="@+id/fab_shoes"
+        app:layout_constraintEnd_toStartOf="@+id/fab_shoes"
+        app:layout_constraintTop_toTopOf="@+id/fab_shoes" />
 
-        <com.nambimobile.widgets.efab.FabOption
-            android:id="@+id/fab_shoes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:fab_orientation="portrait"
-            app:fab_icon="@drawable/sneakers"
-            app:label_text="SHOES" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_accessories"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        app:fabSize="normal"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:elevation="16dp"
+        android:focusable="true"
+        app:backgroundTint="#ffffff"
+        app:pressedTranslationZ="12dp"
+        app:layout_constraintBottom_toTopOf="@+id/fab_shoes"
+        app:layout_constraintEnd_toEndOf="@+id/fab_shoes"
+        app:layout_constraintStart_toStartOf="@+id/fab_shoes"
+        app:srcCompat="@drawable/wedding_rings" />
 
-        <com.nambimobile.widgets.efab.FabOption
-            android:id="@+id/fab_shirt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:fab_orientation="portrait"
-            app:fab_icon="@drawable/shirt"
-            app:label_text="T-SHIRTS" />
+    <TextView
+        android:id="@+id/tv_accessories"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="ACCESSORIES"
+        app:layout_constraintBottom_toBottomOf="@+id/fab_accessories"
+        app:layout_constraintEnd_toStartOf="@+id/fab_accessories"
+        app:layout_constraintTop_toTopOf="@+id/fab_accessories" />
 
-        <com.nambimobile.widgets.efab.FabOption
-            android:id="@+id/fab_accessories"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:fab_orientation="portrait"
-            app:fab_icon="@drawable/wedding_rings"
-            app:label_text="ACCESSORIES" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_shirt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        app:fabSize="normal"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:elevation="16dp"
+        android:focusable="true"
+        app:backgroundTint="#ffffff"
+        app:pressedTranslationZ="12dp"
+        app:layout_constraintBottom_toTopOf="@+id/fab_accessories"
+        app:layout_constraintEnd_toEndOf="@+id/fab_accessories"
+        app:layout_constraintStart_toStartOf="@+id/fab_accessories"
+        app:srcCompat="@drawable/shirt" />
 
-    </com.nambimobile.widgets.efab.ExpandableFabLayout>
-
+    <TextView
+        android:id="@+id/tv_shirt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="T-SHIRTS"
+        app:layout_constraintBottom_toBottomOf="@+id/fab_shirt"
+        app:layout_constraintEnd_toStartOf="@+id/fab_shirt"
+        app:layout_constraintTop_toTopOf="@+id/fab_shirt" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

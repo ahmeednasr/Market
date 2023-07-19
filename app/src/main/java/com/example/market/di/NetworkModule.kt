@@ -20,6 +20,8 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
+import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module
@@ -54,6 +56,7 @@ object NetworkModule {
         )
     }
 
+    @CustomApiService
     @Provides
     @Singleton
     fun provideOkHttpClient(
@@ -69,9 +72,10 @@ object NetworkModule {
             .build()
     }
 
+    @CustomApiService
     @Provides
     @Singleton
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
+    fun provideRetrofit(@CustomApiService okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(okHttpClient)
@@ -81,20 +85,20 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideAPIService(retrofit: Retrofit): ApiService {
+    fun provideAPIService(@CustomApiService retrofit: Retrofit): ApiService {
         return retrofit.create(ApiService::class.java)
     }
 
     @Provides
     @Singleton
     fun currencyAPiKey(chain: Interceptor.Chain): Response {
-        val credentials = CURRENCY_API_KEY
         return chain.proceed(
-            chain.request().newBuilder().header("apikey", credentials)
+            chain.request().newBuilder().header("Authorization", CURRENCY_API_KEY)
                 .build()
         )
     }
 
+    @CustomCurrencyApi
     @Provides
     @Singleton
     fun provideCurrencyOkHttpClient(
@@ -110,9 +114,10 @@ object NetworkModule {
             .build()
     }
 
+    @CustomCurrencyApi
     @Provides
     @Singleton
-    fun currencyRetrofit(okHttpClient: OkHttpClient): Retrofit {
+    fun currencyRetrofit(@CustomCurrencyApi okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl(CURRENCY_URL)
             .client(okHttpClient)
@@ -122,7 +127,15 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun currencyAPIService(retrofit: Retrofit): CurrencyApi {
+    fun currencyAPIService(@CustomCurrencyApi retrofit: Retrofit): CurrencyApi {
         return retrofit.create(CurrencyApi::class.java)
     }
 }
+
+@Qualifier
+@Retention(AnnotationRetention.RUNTIME)
+annotation class CustomApiService
+
+@Qualifier
+@Retention(AnnotationRetention.RUNTIME)
+annotation class CustomCurrencyApi

@@ -2,10 +2,12 @@ package com.example.market.ui.categories
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -34,6 +36,12 @@ class CategoriesFragment : Fragment() {
     private var mainCategory = ""
     private var subCategory = ""
 
+    private var isAllFabsVisible: Boolean = false
+    private lateinit var fabOpen: Animation
+    private lateinit var fabClose:Animation
+    private lateinit var fabClock:Animation
+    private lateinit var fabAntiClock:Animation
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -46,6 +54,9 @@ class CategoriesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setAnimation()
+        hideAllFabs()
+        observeCategoryFab()
         observeSearchButton()
         setupProductsRecyclerView()
         observeProductsResponse()
@@ -61,11 +72,59 @@ class CategoriesFragment : Fragment() {
         }
     }
 
+    private fun setAnimation() {
+        fabClose = AnimationUtils.loadAnimation(requireContext(), R.anim.fab_close)
+        fabOpen = AnimationUtils.loadAnimation(requireContext(), R.anim.fab_open)
+        fabClock = AnimationUtils.loadAnimation(requireContext(), R.anim.fab_rotate_clock)
+        fabAntiClock = AnimationUtils.loadAnimation(requireContext(), R.anim.fab_rotate_anticlock)
+    }
+
+    private fun hideAllFabs() {
+        binding.apply {
+            fabAccessories.visibility = View.GONE
+            tvAccessories.visibility = View.GONE
+            fabAccessories.startAnimation(fabClose)
+            fabShirt.visibility = View.GONE
+            tvShirt.visibility = View.GONE
+            fabShirt.startAnimation(fabClose)
+            fabShoes.visibility = View.GONE
+            tvShoes.visibility = View.GONE
+            fabShoes.startAnimation(fabClose)
+            fabCategory.startAnimation(fabAntiClock)
+        }
+    }
+
+    private fun showAllFabs() {
+        binding.apply {
+            fabAccessories.visibility = View.VISIBLE
+            tvAccessories.visibility = View.VISIBLE
+            fabAccessories.startAnimation(fabOpen)
+            fabShirt.visibility = View.VISIBLE
+            tvShirt.visibility = View.VISIBLE
+            fabShirt.startAnimation(fabOpen)
+            fabShoes.visibility = View.VISIBLE
+            tvShoes.visibility = View.VISIBLE
+            fabShoes.startAnimation(fabOpen)
+            fabCategory.startAnimation(fabClock)
+        }
+    }
+
+    private fun observeCategoryFab() {
+        binding.fabCategory.setOnClickListener(View.OnClickListener {
+            (if (!isAllFabsVisible) {
+                showAllFabs()
+            } else {
+             hideAllFabs()
+            }).also { isAllFabsVisible = !isAllFabsVisible }
+        })
+    }
+
     private fun observeProductsResponse() {
         viewModel.products.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is NetworkResult.Success -> {
                     response.data?.let {
+                        Log.d("observeProductsResponse", "size: ${it.size}")
                         productsAdapter.submitList(it)
                     }
                 }
