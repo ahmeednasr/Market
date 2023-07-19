@@ -1,7 +1,7 @@
 package com.example.market.data.pojo
 
 data class Currencies(
-    val currencies: List<Currency>
+    val currencies: MutableList<Currency>
 )
 data class Currency(
     val currency: String,

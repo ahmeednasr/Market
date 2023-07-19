@@ -19,7 +19,9 @@ class AccountViewModel @Inject constructor(
     init {
         getCurrencies()
     }
-    private val _currencies:MutableLiveData<NetworkResult<Currencies>> = MutableLiveData(NetworkResult.Loading())
+
+    private val _currencies: MutableLiveData<NetworkResult<Currencies>> =
+        MutableLiveData(NetworkResult.Loading())
     val currencies: LiveData<NetworkResult<Currencies>> = _currencies
     private fun getCurrencies() {
 //        _currencies.value = NetworkResult.Loading()

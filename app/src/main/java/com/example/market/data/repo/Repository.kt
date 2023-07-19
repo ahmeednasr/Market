@@ -11,4 +11,5 @@ interface Repository {
     suspend fun getProducts(): Response<ProductResponse>
     suspend fun getBrandProducts(vendor: String): Response<ProductResponse>
     suspend fun getCurrencies(): Response<Currencies>
+
 }
