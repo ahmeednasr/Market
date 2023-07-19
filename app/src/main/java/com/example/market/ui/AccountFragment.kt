@@ -42,6 +42,7 @@ class AccountFragment : Fragment() {
             binding.tvLogin.text = "Logout"
             binding.tvUsername.visibility = View.VISIBLE
             binding.tvUsername.text = auth.currentUser!!.email
+
             binding.tvLogin.setOnClickListener {
                 Firebase.auth.signOut()
                 view.invalidate()

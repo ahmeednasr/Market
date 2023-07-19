@@ -136,7 +136,7 @@
                         android:src="@drawable/twitter" />
                 </LinearLayout>
 
-                <androidx.appcompat.widget.AppCompatButton
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/signInButton"
                     style="@android:style/Widget.Button"
                     android:layout_width="match_parent"
@@ -147,7 +147,7 @@
                     android:layout_marginBottom="24dp"
                     android:background="@drawable/orange_background_button"
                     android:text="Login"
-                    android:textColor="#4972f2"
+                    android:textColor="@color/white"
                     android:textSize="19sp"
                     android:textStyle="bold" />
 
