@@ -9,6 +9,10 @@
     <string name="decrement">decrement</string>
     <string name="increment">increment</string>
     <string name="no_connection">no connection</string>
+    <string name="home">Home</string>
+    <string name="categories">Categories</string>
+    <string name="account">Account</string>
     <string name="subtotal">Subtotal:</string>
     <string name="cart">Cart</string>
+    <string name="filter">filter</string>
 </resources>

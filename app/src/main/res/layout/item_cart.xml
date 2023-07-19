@@ -60,7 +60,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/discounted_price"
+            android:id="@+id/current_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
@@ -80,37 +80,17 @@
             app:layout_constraintTop_toBottomOf="@+id/product_name" />
 
         <TextView
-            android:id="@+id/currency_real"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="@string/currancy"
-            android:textSize="12sp"
-            app:layout_constraintStart_toStartOf="@+id/currency"
-            app:layout_constraintTop_toBottomOf="@+id/currency" />
-
-        <TextView
-            android:id="@+id/real_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="1000"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="@+id/currency_real"
-            app:layout_constraintStart_toStartOf="@+id/discounted_price"
-            app:layout_constraintTop_toTopOf="@+id/currency_real" />
-
-        <TextView
             android:id="@+id/discount_percentage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
+            android:layout_marginStart="8dp"
             android:background="@color/light_orange"
             android:text="-15%"
             android:textColor="@color/red_orange"
             android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="@+id/real_price"
-            app:layout_constraintStart_toEndOf="@+id/real_price"
-            app:layout_constraintTop_toTopOf="@+id/real_price"
+            app:layout_constraintBottom_toBottomOf="@+id/current_price"
+            app:layout_constraintStart_toEndOf="@+id/current_price"
+            app:layout_constraintTop_toTopOf="@+id/current_price"
             tools:ignore="TextContrastCheck" />
 
         <LinearLayout
@@ -119,8 +99,7 @@
             android:weightSum="3"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/product_name"
-            app:layout_constraintStart_toEndOf="@+id/discount_percentage"
-            app:layout_constraintTop_toBottomOf="@+id/real_price">
+            app:layout_constraintTop_toBottomOf="@+id/currency">
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/rm_item"
@@ -130,7 +109,7 @@
                 android:backgroundTint="#FFFCFC"
                 android:contentDescription="@string/decrement"
                 android:drawableStart="@drawable/ic_round_remove_circle_24"
-                app:srcCompat="@drawable/ic_round_remove_circle_24" />
+                tools:ignore="TouchTargetSizeCheck" />
 
             <TextView
                 android:id="@+id/item_count"
@@ -143,14 +122,15 @@
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
-            <ImageButton
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/add_item"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_weight="1"
                 android:backgroundTint="#FFFFFF"
                 android:contentDescription="@string/decrement"
-                app:srcCompat="@drawable/ic_round_add_circle_24" />
+                android:drawableStart="@drawable/ic_round_add_circle_24"
+                tools:ignore="TouchTargetSizeCheck" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

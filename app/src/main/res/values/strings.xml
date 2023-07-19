@@ -12,5 +12,6 @@
     <string name="no_connection">no connection</string>
     <string name="subtotal">Subtotal:</string>
     <string name="cart">Cart</string>
+    <string name="filter">filter</string>
 
 </resources>

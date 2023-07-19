@@ -163,10 +163,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
-            app:efab_color="@color/black"
-            android:layout_marginBottom="16dp"
             android:layout_marginEnd="16dp"
-            app:efab_orientation="portrait"/>
+            android:layout_marginBottom="16dp"
+            android:contentDescription="@string/filter"
+            app:efab_color="@color/black"
+            app:efab_orientation="portrait" />
 
         <com.nambimobile.widgets.efab.FabOption
             android:id="@+id/fab_shoes"
