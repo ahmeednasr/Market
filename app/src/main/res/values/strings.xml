@@ -13,5 +13,9 @@
     <string name="subtotal">Subtotal:</string>
     <string name="cart">Cart</string>
     <string name="filter">filter</string>
+    <string name="map">map</string>
+    <string name="OK">Ok</string>
+    <string name="GPS">GPS</string>
+    <string name="change">Change</string>
 
 </resources>
