@@ -1,5 +1,6 @@
 package com.example.market.ui.account
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -12,6 +13,7 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.market.R
+import com.example.market.auth.AuthActivity
 import com.example.market.data.pojo.Currency
 import com.example.market.data.pojo.OrderCurrency
 import com.example.market.databinding.FragmentAccountBinding
@@ -41,7 +43,7 @@ class AccountFragment : Fragment() {
         observeSearchButton()
 
         binding.tvLogin.setOnClickListener {
-            findNavController().navigate(R.id.action_accountFragment_to_authIntro)
+            startActivity(Intent(requireActivity(),AuthActivity::class.java))
         }
 
         binding.llCurrency.setOnClickListener {

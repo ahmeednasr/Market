@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_auth"
+    app:startDestination="@id/authIntro">
+
+    <fragment
+        android:id="@+id/authIntro"
+        android:name="com.example.market.auth.AuthIntro"
+        android:label="fragment_auth_intro"
+        tools:layout="@layout/fragment_auth_intro" >
+        <action
+            android:id="@+id/action_authIntro_to_authSignIn"
+            app:destination="@id/authSignIn" />
+        <action
+            android:id="@+id/action_authIntro_to_authSignup"
+            app:destination="@id/authSignup" />
+    </fragment>
+    <fragment
+        android:id="@+id/authSignIn"
+        android:name="com.example.market.auth.AuthSignIn"
+        android:label="fragment_auth_sign_in"
+        tools:layout="@layout/fragment_auth_sign_in" >
+        <action
+            android:id="@+id/action_authSignIn_to_authIntro"
+            app:destination="@id/authIntro" />
+    </fragment>
+    <fragment
+        android:id="@+id/authSignup"
+        android:name="com.example.market.auth.AuthSignup"
+        android:label="fragment_auth_singup"
+        tools:layout="@layout/fragment_auth_singup" >
+        <action
+            android:id="@+id/action_authSignup_to_authIntro"
+            app:destination="@id/authIntro" />
+    </fragment>
+</navigation>

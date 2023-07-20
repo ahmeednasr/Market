@@ -25,7 +25,8 @@ class BrandFragment : Fragment() {
     private val brandProductsAdapter by lazy {
         BrandProductsAdapter(object : BrandProductsAdapter.ProductClickListener {
             override fun onItemClicked(product: Product) {
-                //navigate to product details
+                //navigate to product info
+                findNavController().navigate(BrandFragmentDirections.actionBrandFragmentToProductDetails(product))
             }
         })
     }
