@@ -12,7 +12,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.navigation.fragment.findNavController
-import com.example.market.AuthActivity
 import com.example.market.MainActivity
 import com.example.market.R
 import com.example.market.databinding.FragmentAuthSignInBinding
@@ -75,17 +74,17 @@ class AuthSignIn : Fragment() {
                 if(task.isSuccessful){
                     if(auth.currentUser!!.isEmailVerified){
                         binding.progressBar2.visibility = View.GONE
-                        Toast.makeText(requireContext(),"Login Successfully", Toast.LENGTH_LONG)
+                        Toast.makeText(requireContext(),"Login Successfully", Toast.LENGTH_LONG).show()
                         val intent = Intent(requireActivity(),MainActivity::class.java)
                         startActivity(intent)
                         requireActivity().finish()
                     }else{
                         binding.progressBar2.visibility = View.GONE
-                        Toast.makeText(requireContext(),"Please Verify Your Email",Toast.LENGTH_LONG)
+                        Toast.makeText(requireContext(),"Please Verify Your Email",Toast.LENGTH_LONG).show()
                     }
                 }else{
                     binding.progressBar2.visibility = View.GONE
-                    Toast.makeText(requireActivity().baseContext,"Something Went Wrong,Please Try Again Later",Toast.LENGTH_LONG)
+                    Toast.makeText(requireContext(),"Something Went Wrong,Please Try Again Later",Toast.LENGTH_LONG).show()
                     findNavController().navigate(R.id.action_authSignIn_to_authIntro)
                 }
             }
@@ -95,11 +94,11 @@ class AuthSignIn : Fragment() {
     private fun validateInfo(email: String, password: String): Boolean {
         return when {
             TextUtils.isEmpty(email) && !Patterns.EMAIL_ADDRESS.matcher(email).matches() ->{
-                Toast.makeText(requireContext(),"Please Enter a Valid Email", Toast.LENGTH_LONG)
+                Toast.makeText(requireContext(),"Please Enter a Valid Email", Toast.LENGTH_LONG).show()
                 false
             }
             TextUtils.isEmpty(password) ->{
-                Toast.makeText(requireContext(),"Please Enter Your Password", Toast.LENGTH_LONG)
+                Toast.makeText(requireContext(),"Please Enter Your Password", Toast.LENGTH_LONG).show()
                 false
             }
             else -> { true }
@@ -126,7 +125,7 @@ class AuthSignIn : Fragment() {
                 updateUI(account)
             }
         }else{
-            Toast.makeText(requireContext(),"SignIn Failed, Try Again Later",Toast.LENGTH_LONG)
+            Toast.makeText(requireContext(),"SignIn Failed, Try Again Later",Toast.LENGTH_LONG).show()
         }
 
     }
@@ -136,13 +135,13 @@ class AuthSignIn : Fragment() {
         auth.signInWithCredential(credential).addOnCompleteListener {
             if (it.isSuccessful){
                 binding.progressBar2.visibility = View.GONE
-                Toast.makeText(requireContext(),"Login Successfully", Toast.LENGTH_LONG)
+                Toast.makeText(requireContext(),"Login Successfully", Toast.LENGTH_LONG).show()
                 val intent = Intent(requireActivity(),MainActivity::class.java)
                 startActivity(intent)
                 requireActivity().finish()
             }else{
                 binding.progressBar2.visibility = View.GONE
-                Toast.makeText(requireActivity().baseContext,"Something Went Wrong,Please Try Again Later",Toast.LENGTH_LONG)
+                Toast.makeText(requireContext(),"Something Went Wrong,Please Try Again Later",Toast.LENGTH_LONG).show()
                 findNavController().navigate(R.id.action_authSignIn_to_authIntro)
             }
         }

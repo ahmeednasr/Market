@@ -1,8 +1,9 @@
-package com.example.market
+package com.example.market.auth
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.Navigation
+import com.example.market.R
 import com.example.market.databinding.ActivityAuthBinding
 import dagger.hilt.android.AndroidEntryPoint
 

@@ -41,6 +41,9 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_categoriesFragment_to_productDetails"
+            app:destination="@id/productDetails" />
     </fragment>
 
     <fragment
@@ -65,11 +68,23 @@
         <argument
             android:name="vendor"
             app:argType="string" />
+        <action
+            android:id="@+id/action_brandFragment_to_productDetails"
+            app:destination="@id/productDetails" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.example.market.ui.search.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search" />
+    <fragment
+        android:id="@+id/productDetails"
+        android:name="com.example.market.product.ProductDetails"
+        android:label="fragment_product_details"
+        tools:layout="@layout/fragment_product_details" >
+        <argument
+            android:name="product"
+            app:argType="com.example.market.data.pojo.Product" />
+    </fragment>
 
 </navigation>

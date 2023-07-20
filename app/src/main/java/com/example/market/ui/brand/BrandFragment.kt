@@ -26,6 +26,7 @@ class BrandFragment : Fragment() {
         BrandProductsAdapter(object : BrandProductsAdapter.ProductClickListener {
             override fun onItemClicked(product: Product) {
                 //navigate to product info
+                findNavController().navigate(BrandFragmentDirections.actionBrandFragmentToProductDetails(product))
             }
         })
     }
