@@ -1,6 +1,7 @@
 package com.example.market.data.repo
 
 import com.example.market.data.pojo.BrandResponse
+import com.example.market.data.pojo.ConvertedCurrency
 import com.example.market.data.pojo.Currencies
 import com.example.market.data.pojo.ProductResponse
 import com.example.market.data.remote.ApiService
@@ -25,5 +26,9 @@ class RepositoryImpl(
 
     override suspend fun getCurrencies(): Response<Currencies> {
         return apiService.getCurrencies()
+    }
+
+    override suspend fun convertCurrency(from: String, to: String): Response<ConvertedCurrency> {
+        return currencyApi.convertCurrency(from, to)
     }
 }
