@@ -1,4 +1,4 @@
-package com.example.market.ui.search
+package com.example.market.ui.favourites
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,11 +8,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.market.data.pojo.Product
 import com.example.market.databinding.ItemFavouriteProductBinding
+import com.example.market.databinding.ItemUnfavouriteBinding
 
-class SearchAdapter(
+class FavouritesAdapter(
     private val clickListener: ProductClickListener
 ) :
-    ListAdapter<Product, SearchAdapter.MyViewHolder>(
+    ListAdapter<Product, FavouritesAdapter.MyViewHolder>(
         DailyDiffCallback()
     ) {
 
@@ -26,10 +27,10 @@ class SearchAdapter(
 
     interface ProductClickListener {
         fun onItemClicked(product: Product)
-        fun onFavouriteClicked(product: Product)
+        fun onDislikeClicked(product: Product)
     }
 
-    class MyViewHolder(private val binding: ItemFavouriteProductBinding) :
+    class MyViewHolder(private val binding: ItemUnfavouriteBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(product: Product, clickListener: ProductClickListener) {
@@ -40,8 +41,8 @@ class SearchAdapter(
                     .load(product.image?.src)
                     .into(ivProduct)
 
-                ivFavourite.setOnClickListener {
-                    clickListener.onFavouriteClicked(product)
+                ivUnfavourite.setOnClickListener {
+                    clickListener.onDislikeClicked(product)
                 }
 
                 cvLayout.setOnClickListener {
@@ -53,7 +54,7 @@ class SearchAdapter(
         companion object {
             fun from(parent: ViewGroup): MyViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = ItemFavouriteProductBinding.inflate(layoutInflater, parent, false)
+                val binding = ItemUnfavouriteBinding.inflate(layoutInflater, parent, false)
                 return MyViewHolder(binding)
             }
         }

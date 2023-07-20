@@ -20,6 +20,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(view)
 
         val navController = Navigation.findNavController(this, R.id.nav_host_fragment)
-        setupWithNavController(binding.navigationBar, navController)
+        setupWithNavController(binding.navigationBar, navController,false)
     }
 }

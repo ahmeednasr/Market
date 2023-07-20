@@ -17,7 +17,11 @@ class SearchFragment : Fragment() {
     private val searchAdapter by lazy {
         SearchAdapter(object : SearchAdapter.ProductClickListener {
             override fun onItemClicked(product: Product) {
-                //navigate to product info
+                //navigate to product details
+            }
+
+            override fun onFavouriteClicked(product: Product) {
+                //add product to favourites
             }
         })
     }
