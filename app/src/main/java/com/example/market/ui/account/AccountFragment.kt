@@ -1,5 +1,6 @@
 package com.example.market.ui.account
 
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
@@ -42,21 +43,20 @@ class AccountFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //viewModel.getCurrencies()
+        sharedPreferences = requireContext().getSharedPreferences("PREFS", 0)
+        editor = sharedPreferences.edit()
         observeSearchButton()
-
         binding.tvLogin.setOnClickListener {
-            findNavController().navigate(R.id.action_accountFragment_to_authIntro)
+            startActivity(Intent(requireActivity(),AuthActivity::class.java))
         }
 
         binding.llCurrency.setOnClickListener {
             observeCurrenciesResponse()
         }
-    }
-
-    private fun observeSearchButton() {
-        binding.ivSearch.setOnClickListener {
-            findNavController().navigate(AccountFragmentDirections.actionAccountFragmentToSearchFragment())
+        binding.llAddress.setOnClickListener {
+            findNavController().navigate(R.id.action_accountFragment_to_mapFragment)
         }
+        observeConvertCurrencyResponse()
     }
 
     private fun observeCurrenciesResponse() {
@@ -66,6 +66,36 @@ class AccountFragment : Fragment() {
                     response.data?.let {
                         Log.i("TAG", "${it.currencies}")
                         showCurrenciesMenu(binding.llCurrency, it.currencies)
+                    }
+                }
+                is NetworkResult.Error -> {
+                }
+                is NetworkResult.Loading -> {
+
+                }
+            }
+        }
+    }
+    private fun observeSearchButton() {
+        binding.ivSearch.setOnClickListener {
+            findNavController().navigate(AccountFragmentDirections.actionAccountFragmentToSearchFragment())
+        }
+    }
+
+    private fun observeConvertCurrencyResponse() {
+        viewModel.conversionResult.observe(viewLifecycleOwner) { response ->
+            when (response) {
+                is NetworkResult.Success -> {
+                    response.data?.let {
+                        Log.i("TAG", "$it")
+                        editor.putFloat(CURRENCY_VALUE, it.toFloat())
+                        editor.apply()
+                        val currencyValue = sharedPreferences.getFloat(CURRENCY_VALUE, 0.0F)
+                        Toast.makeText(
+                            requireContext(),
+                            currencyValue.toString(),
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
                 is NetworkResult.Error -> {

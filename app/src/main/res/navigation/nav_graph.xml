@@ -9,38 +9,38 @@
         android:id="@+id/homeFragment"
         android:name="com.example.market.ui.home.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_brandFragment"
             app:destination="@id/brandFragment"
-            app:popUpTo="@id/homeFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/homeFragment" />
         <action
             android:id="@+id/action_homeFragment_to_searchFragment"
             app:destination="@id/searchFragment"
-            app:popUpTo="@id/homeFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/homeFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/categoriesFragment"
         android:name="com.example.market.ui.categories.CategoriesFragment"
         android:label="fragment_categories"
-        tools:layout="@layout/fragment_categories" >
+        tools:layout="@layout/fragment_categories">
         <action
             android:id="@+id/action_categoriesFragment_to_searchFragment"
             app:destination="@id/searchFragment"
-            app:popUpTo="@id/categoriesFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/categoriesFragment" />
         <action
             android:id="@+id/action_categoriesFragment_to_productDetails"
             app:destination="@id/productDetails" />
@@ -50,24 +50,27 @@
         android:id="@+id/accountFragment"
         android:name="com.example.market.ui.account.AccountFragment"
         android:label="fragment_account"
-        tools:layout="@layout/fragment_account" >
+        tools:layout="@layout/fragment_account">
         <action
             android:id="@+id/action_accountFragment_to_authIntro"
             app:destination="@id/authIntro" />
         <action
             android:id="@+id/action_accountFragment_to_searchFragment"
             app:destination="@id/searchFragment"
-            app:popUpTo="@id/accountFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/accountFragment" />
+        <action
+            android:id="@+id/action_accountFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
     </fragment>
     <fragment
         android:id="@+id/authIntro"
-        android:name="com.example.market.AuthIntro"
+        android:name="com.example.market.auth.AuthIntro"
         android:label="fragment_auth_intro"
-        tools:layout="@layout/fragment_auth_intro" >
+        tools:layout="@layout/fragment_auth_intro">
         <action
             android:id="@+id/action_authIntro_to_authSignIn"
             app:destination="@id/authSignIn" />
@@ -77,9 +80,9 @@
     </fragment>
     <fragment
         android:id="@+id/authSignIn"
-        android:name="com.example.market.AuthSignIn"
+        android:name="com.example.market.auth.AuthSignIn"
         android:label="fragment_auth_sign_in"
-        tools:layout="@layout/fragment_auth_sign_in" >
+        tools:layout="@layout/fragment_auth_sign_in">
         <action
             android:id="@+id/action_authSignIn_to_accountFragment"
             app:destination="@id/accountFragment" />
@@ -89,9 +92,9 @@
     </fragment>
     <fragment
         android:id="@+id/authSignup"
-        android:name="com.example.market.AuthSignup"
+        android:name="com.example.market.auth.AuthSignup"
         android:label="fragment_auth_singup"
-        tools:layout="@layout/fragment_auth_singup" >
+        tools:layout="@layout/fragment_auth_singup">
         <action
             android:id="@+id/action_authSignup_to_accountFragment"
             app:destination="@id/accountFragment" />
@@ -103,10 +106,13 @@
         android:id="@+id/brandFragment"
         android:name="com.example.market.ui.brand.BrandFragment"
         android:label="fragment_brand"
-        tools:layout="@layout/fragment_brand" >
+        tools:layout="@layout/fragment_brand">
         <argument
             android:name="vendor"
             app:argType="string" />
+        <action
+            android:id="@+id/action_brandFragment_to_productDetails"
+            app:destination="@id/productDetails" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -122,7 +128,7 @@
         android:id="@+id/productDetails"
         android:name="com.example.market.product.ProductDetails"
         android:label="fragment_product_details"
-        tools:layout="@layout/fragment_product_details" >
+        tools:layout="@layout/fragment_product_details">
         <argument
             android:name="product"
             app:argType="com.example.market.data.pojo.Product" />
