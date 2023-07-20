@@ -10,5 +10,4 @@ object Constants {
     const val CURRENCY_VALUE = "CURRENCY_VALUE"
     const val CURRENCY_URL = "https://api.apilayer.com/currency_data/"
     const val CURRENCY_API_KEY = "DBBn4yFP2oT7w1XT2XP3gYVXT8yAWIPB"
-
 }

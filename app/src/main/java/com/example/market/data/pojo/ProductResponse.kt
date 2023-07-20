@@ -1,4 +1,5 @@
 package com.example.market.data.pojo
+import java.io.Serializable
 
 data class ProductResponse(
     val products: List<Product>?
@@ -23,7 +24,7 @@ data class Product(
     val updated_at: String?,
     val variants: List<Variant>?,
     val vendor: String?
-)
+) : Serializable
 
 data class Variant(
     val admin_graphql_api_id: String?,

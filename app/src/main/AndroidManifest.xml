@@ -24,6 +24,13 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAWElsI7ATMbgeKeX-qZOHD-U5uiSNmzU0" />
         <activity
+            android:name=".auth.AuthActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
