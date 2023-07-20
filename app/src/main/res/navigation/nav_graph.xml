@@ -13,34 +13,34 @@
         <action
             android:id="@+id/action_homeFragment_to_brandFragment"
             app:destination="@id/brandFragment"
+            app:popUpTo="@id/homeFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"
-            app:popUpTo="@id/homeFragment" />
+            app:popExitAnim="@anim/slide_out_right"/>
         <action
             android:id="@+id/action_homeFragment_to_searchFragment"
             app:destination="@id/searchFragment"
+            app:popUpTo="@id/homeFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"
-            app:popUpTo="@id/homeFragment" />
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
 
     <fragment
         android:id="@+id/categoriesFragment"
         android:name="com.example.market.ui.categories.CategoriesFragment"
         android:label="fragment_categories"
-        tools:layout="@layout/fragment_categories">
+        tools:layout="@layout/fragment_categories" >
         <action
             android:id="@+id/action_categoriesFragment_to_searchFragment"
             app:destination="@id/searchFragment"
+            app:popUpTo="@id/categoriesFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"
-            app:popUpTo="@id/categoriesFragment" />
+            app:popExitAnim="@anim/slide_out_right"/>
         <action
             android:id="@+id/action_categoriesFragment_to_productDetails"
             app:destination="@id/productDetails" />
@@ -57,11 +57,11 @@
         <action
             android:id="@+id/action_accountFragment_to_searchFragment"
             app:destination="@id/searchFragment"
+            app:popUpTo="@id/accountFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"
-            app:popUpTo="@id/accountFragment" />
+            app:popExitAnim="@anim/slide_out_right"/>
         <action
             android:id="@+id/action_accountFragment_to_mapFragment"
             app:destination="@id/mapFragment" />
