@@ -81,7 +81,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_products"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginVertical="8dp"
                 tools:listitem="@layout/item_favourite_product"
                 app:layout_constraintEnd_toEndOf="parent"

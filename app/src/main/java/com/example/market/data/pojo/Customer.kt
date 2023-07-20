@@ -44,17 +44,17 @@ data class Customer(
     val last_order_name: String?,
     val currency: String,
     val phone: String,
-    val addresses: List<Address>,
+    val addresses: List<CustomerAddress>,
     val accepts_marketing_updated_at: String,
     val marketing_opt_in_level: String?,
     val tax_exemptions: List<String>,
     val email_marketing_consent: EmailMarketingConsent?,
     val sms_marketing_consent: SmsMarketingConsent?,
     val admin_graphql_api_id: String,
-    val default_address: Address
+    val default_address: CustomerAddress
 )
 
-data class Address(
+data class CustomerAddress(
     val id: Long,
     val customer_id: Long,
     val first_name: String,

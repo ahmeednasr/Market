@@ -18,6 +18,7 @@ android {
         versionCode 1
         versionName "1.0"
 
+        manifestPlaceholders = [google_maps_api_key: "AIzaSyAWElsI7ATMbgeKeX-qZOHD-U5uiSNmzU0"]
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -43,7 +44,6 @@ android {
 }
 
 dependencies {
-
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
@@ -135,6 +135,12 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.44")
     kapt("com.google.dagger:hilt-android-compiler:2.44")
 
-    //floating action button
-    implementation 'com.nambimobile.widgets:expandable-fab:1.2.1'
+    //map
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
+    implementation 'com.google.android.libraries.places:places:3.1.0'
+    implementation 'com.google.android.gms:play-services-places:17.0.0'
+
+    //google services location
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
+
 }
