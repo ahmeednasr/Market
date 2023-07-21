@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.market.databinding.FragmentHomeBinding
 import com.example.market.utils.NetworkResult
 import dagger.hilt.android.AndroidEntryPoint
@@ -96,8 +97,10 @@ class HomeFragment : Fragment() {
     private fun setupBrandsRecyclerView() {
         binding.rvBrands.apply {
             adapter = brandsAdapter
-            layoutManager =
-                GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
+            set3DItem(true)
+            setAlpha(true)
+            setInfinite(true)
+            setOrientation(RecyclerView.HORIZONTAL)
         }
     }
 
