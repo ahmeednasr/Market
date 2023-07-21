@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.market.data.pojo.Product
 import com.example.market.databinding.FragmentSearchBinding
+import kotlin.math.roundToInt
 
 class SearchFragment : Fragment() {
 
@@ -39,6 +40,9 @@ class SearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupProductsRecyclerView()
+        setupSliderView()
+
+
     }
 
     private fun handleNoDataState() {
@@ -54,6 +58,13 @@ class SearchFragment : Fragment() {
             ivNoData.visibility = View.GONE
             tvNoData.visibility = View.GONE
             rvProducts.visibility = View.VISIBLE
+        }
+    }
+
+    private fun setupSliderView() {
+        binding.continuousSlider.setLabelFormatter { value: Float ->
+            //should change $ to current currency
+            return@setLabelFormatter "$${value.roundToInt()}"
         }
     }
 
