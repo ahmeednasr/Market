@@ -62,17 +62,34 @@ class HomeFragment : Fragment() {
         viewModel.brands.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is NetworkResult.Success -> {
+                    stopShimmer()
                     response.data?.let {
                         brandsAdapter.submitList(it.smart_collections)
                     }
                 }
                 is NetworkResult.Error -> {
-
+                    stopShimmer()
                 }
                 is NetworkResult.Loading -> {
-
+                    startShimmer()
                 }
             }
+        }
+    }
+
+    private fun startShimmer() {
+        binding.apply {
+            cvBrands.visibility = View.GONE
+            shimmerViewContainer.visibility = View.VISIBLE
+            shimmerViewContainer.startShimmerAnimation()
+        }
+    }
+
+    private fun stopShimmer() {
+        binding.apply {
+            cvBrands.visibility = View.VISIBLE
+            shimmerViewContainer.visibility = View.GONE
+            shimmerViewContainer.stopShimmerAnimation()
         }
     }
 
