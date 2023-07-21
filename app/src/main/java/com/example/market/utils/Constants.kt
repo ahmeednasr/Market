@@ -16,5 +16,6 @@ object Constants {
     const val LANGUAGE_KEY = "LANGUAGE_KEY"
     const val ENGLISH = "en"
     const val ARABIC = "ar"
-
+    const val SharedPreferences = "PREFS"
+    const val UserID = "User_ID"
 }

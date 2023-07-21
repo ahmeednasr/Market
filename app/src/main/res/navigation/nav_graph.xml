@@ -126,7 +126,7 @@
         tools:layout="@layout/fragment_map" />
     <fragment
         android:id="@+id/productDetails"
-        android:name="com.example.market.product.ProductDetails"
+        android:name="com.example.market.ui.product.ProductDetails"
         android:label="fragment_product_details"
         tools:layout="@layout/fragment_product_details">
         <argument

@@ -1,9 +1,6 @@
 package com.example.market.data.repo
 
-import com.example.market.data.pojo.BrandResponse
-import com.example.market.data.pojo.ConvertedCurrency
-import com.example.market.data.pojo.Currencies
-import com.example.market.data.pojo.ProductResponse
+import com.example.market.data.pojo.*
 import com.example.market.data.remote.ApiService
 import com.example.market.data.remote.CurrencyApi
 import retrofit2.Response
@@ -31,4 +28,14 @@ class RepositoryImpl(
     override suspend fun convertCurrency(from: String, to: String): Response<ConvertedCurrency> {
         return currencyApi.convertCurrency(from, to)
     }
+
+    override suspend fun createUser(user: NewUser): Response<CustomerResponse> {
+        return apiService.postCustomer(customer = user)
+    }
+
+    override suspend fun getAllCustomers(): Response<CustomersResponse> {
+        return apiService.getAllCustomers()
+    }
+
+
 }
