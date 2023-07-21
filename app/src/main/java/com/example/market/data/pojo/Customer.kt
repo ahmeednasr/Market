@@ -1,4 +1,5 @@
 package com.example.market.data.pojo
+
 data class CustomerResponse(
     val customer: Customer
 )
@@ -14,14 +15,14 @@ data class User(
 )
 
 data class UserAddress(
-    val address1: String,
-    val city: String,
-    val province: String,
-    val phone: String,
-    val zip: String,
-    val last_name: String,
-    val first_name: String,
-    val country: String
+    val address1: String?,
+    val city: String?,
+    val province: String?,
+    val phone: String?,
+    val zip: String?,
+    val last_name: String?,
+    val first_name: String?,
+    val country: String?
 )
 
 data class Customer(

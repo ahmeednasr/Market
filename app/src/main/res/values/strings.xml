@@ -13,5 +13,24 @@
     <string name="subtotal">Subtotal:</string>
     <string name="cart">Cart</string>
     <string name="filter">filter</string>
+    <string name="map">map</string>
+    <string name="OK">Ok</string>
+    <string name="GPS">GPS</string>
+    <string name="change">Change</string>
+    <string name="arabic">Arabic</string>
+    <string name="english">english</string>
+    <string name="address">Address</string>
+    <string name="currency">Currency</string>
+    <string name="language">Language</string>
+    <string name="login">login</string>
+    <string name="orders">Orders</string>
+    <string name="saved_items">Saved Items</string>
+    <string name="phone">Phone</string>
+    <string name="zipcode">ZipCod</string>
+    <string name="country">Country</string>
+    <string name="egypt">Egypt</string>
+    <string name="city">City</string>
+    <string name="govern">Govern</string>
+    <string name="save">Save</string>
 
 </resources>

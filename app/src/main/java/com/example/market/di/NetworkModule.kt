@@ -93,7 +93,7 @@ object NetworkModule {
     @Singleton
     fun currencyAPiKey(chain: Interceptor.Chain): Response {
         return chain.proceed(
-            chain.request().newBuilder().header("Authorization", CURRENCY_API_KEY)
+            chain.request().newBuilder().header("apikey", CURRENCY_API_KEY)
                 .build()
         )
     }

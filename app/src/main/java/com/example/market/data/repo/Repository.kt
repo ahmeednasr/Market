@@ -1,6 +1,7 @@
 package com.example.market.data.repo
 
 import com.example.market.data.pojo.BrandResponse
+import com.example.market.data.pojo.ConvertedCurrency
 import com.example.market.data.pojo.Currencies
 import com.example.market.data.pojo.ProductResponse
 import retrofit2.Response
@@ -11,5 +12,5 @@ interface Repository {
     suspend fun getProducts(): Response<ProductResponse>
     suspend fun getBrandProducts(vendor: String): Response<ProductResponse>
     suspend fun getCurrencies(): Response<Currencies>
-
+    suspend fun convertCurrency(from: String, to: String): Response<ConvertedCurrency>
 }
