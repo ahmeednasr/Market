@@ -1,4 +1,4 @@
-package com.example.market.product
+package com.example.market.ui.product
 
 import androidx.lifecycle.ViewModel
 import com.example.market.data.repo.Repository

@@ -1,4 +1,4 @@
-package com.example.market.product
+package com.example.market.ui.product
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -32,6 +32,7 @@ class ProductDetails : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setUI(args.product)
+
 
     }
 
