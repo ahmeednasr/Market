@@ -8,6 +8,7 @@ import com.example.market.data.pojo.*
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.Path
 import retrofit2.http.POST
 import retrofit2.http.Query
@@ -23,12 +24,16 @@ interface ApiService {
     suspend fun getBrandProducts(@Query("vendor") vendor: String): Response<ProductResponse>
 
     @POST("customers.json")
-    suspend fun postCustomer(@Body customer: User): CustomerResponse
+    suspend fun postCustomer(@Header("Content-Type") contentType: String = "application/json",
+                             @Header("Accept") accept: String = "application/json",@Body customer: NewUser): Response<CustomerResponse>
 
     @GET("customers/{id}/orders.json")
     suspend fun getCustomerOrders(@Path("id") userId: Long): Response<OrderResponse>
 
     @GET("currencies.json")
     suspend fun getCurrencies(): Response<Currencies>
+
+    @GET("customers.json")
+    suspend fun getAllCustomers():Response<CustomersResponse>
 
 }

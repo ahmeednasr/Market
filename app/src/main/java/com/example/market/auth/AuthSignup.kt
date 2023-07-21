@@ -8,8 +8,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.market.R
+import com.example.market.data.pojo.User
+import com.example.market.data.pojo.NewUser
 import com.example.market.databinding.FragmentAuthSingupBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -22,6 +25,8 @@ class AuthSignup : Fragment() {
     private var _binding : FragmentAuthSingupBinding? = null
     private val binding get() = _binding!!
     private lateinit var auth:FirebaseAuth
+    private lateinit var user: User
+    private val viewModel:AuthViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,19 +54,24 @@ class AuthSignup : Fragment() {
     }
 
     private fun registerUser(){
-        val name = binding.nameText.text.toString()
+        val firstName = binding.firstNameText.text.toString()
+        val lastName = binding.lastNameText.text.toString()
+        val phone = binding.phoneText.text.toString()
         val email = binding.emailText.text.toString()
         val password = binding.passwordText.text.toString()
         val rePassword = binding.rePasswordText.text.toString()
         binding.progressBar.visibility = View.VISIBLE
-        if(validateInfo(name,email,password,rePassword)){
+        if(validateInfo(firstName,lastName,phone,email,password,rePassword)){
             auth.createUserWithEmailAndPassword(email,password).addOnCompleteListener { task ->
                 if(task.isSuccessful){
                     auth.currentUser?.sendEmailVerification()?.addOnSuccessListener {
-                            binding.progressBar.visibility = View.GONE
-                            Toast.makeText(requireContext(),"Signed Up Successfully, Please Verify Your Email",Toast.LENGTH_LONG).show()
-                            findNavController().navigate(R.id.action_authSignup_to_authIntro)
-                        }?.addOnFailureListener {
+                        binding.progressBar.visibility = View.GONE
+                        Toast.makeText(requireContext(),"Signed Up Successfully, Please Verify Your Email",Toast.LENGTH_LONG).show()
+                        user = User(firstName,lastName,email,phone,true,null,null)
+                        val newUser = NewUser(user)
+                        viewModel.createUser(newUser)
+                        findNavController().navigate(R.id.action_authSignup_to_authIntro)
+                    }?.addOnFailureListener {
                         binding.progressBar.visibility = View.GONE
                         Toast.makeText(requireContext(),"Something Went Wrong, Please Try Again Later",Toast.LENGTH_LONG).show()
                         findNavController().navigate(R.id.action_authSignup_to_authIntro)
@@ -75,10 +85,18 @@ class AuthSignup : Fragment() {
         }
     }
 
-    private fun validateInfo(name: String, email: String, password: String, rePassword: String): Boolean {
+    private fun validateInfo(firstName: String,lastName:String,phone:String, email: String, password: String, rePassword: String): Boolean {
         return when {
-            TextUtils.isEmpty(name) ->{
-                Toast.makeText(requireContext(),"Please Enter Your Name",Toast.LENGTH_LONG).show()
+            TextUtils.isEmpty(firstName) ->{
+                Toast.makeText(requireContext(),"Please Enter Your First Name",Toast.LENGTH_LONG).show()
+                false
+            }
+            TextUtils.isEmpty(lastName) ->{
+                Toast.makeText(requireContext(),"Please Enter Your Last Name",Toast.LENGTH_LONG).show()
+                false
+            }
+            TextUtils.isEmpty(phone) ->{
+                Toast.makeText(requireContext(),"Please Enter Your Phone Number",Toast.LENGTH_LONG).show()
                 false
             }
             TextUtils.isEmpty(email) && !Patterns.EMAIL_ADDRESS.matcher(email).matches() ->{

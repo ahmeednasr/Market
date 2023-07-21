@@ -77,7 +77,7 @@
                 android:orientation="vertical">
 
                 <EditText
-                    android:id="@+id/nameText"
+                    android:id="@+id/firstNameText"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginStart="32dp"
@@ -85,8 +85,38 @@
                     android:layout_marginEnd="32dp"
                     android:background="@drawable/gery_background"
                     android:ems="10"
-                    android:hint="Name"
+                    android:hint="First Name"
                     android:inputType="textPersonName"
+                    android:textAlignment="center"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/lastNameText"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="32dp"
+                    android:background="@drawable/gery_background"
+                    android:ems="10"
+                    android:hint="Last Name"
+                    android:inputType="textPersonName"
+                    android:textAlignment="center"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/phoneText"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="32dp"
+                    android:background="@drawable/gery_background"
+                    android:ems="10"
+                    android:hint="Phone"
+                    android:inputType="number"
                     android:textAlignment="center"
                     android:textSize="16sp"
                     android:textStyle="bold" />
