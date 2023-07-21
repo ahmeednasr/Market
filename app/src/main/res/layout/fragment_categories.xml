@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.categories.CategoriesFragment">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_category_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/black"
+        android:elevation="4dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Category"
+                android:textColor="@color/white"
+                android:layout_marginStart="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:textSize="24sp" />
+
+            <ImageView
+                android:id="@+id/iv_favourite"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toStartOf="@+id/iv_search"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:src="@drawable/ic_white_heart" />
+
+            <ImageView
+                android:id="@+id/iv_search"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toStartOf="@+id/iv_cart"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:src="@drawable/ic_search" />
+
+            <ImageView
+                android:id="@+id/iv_cart"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:src="@drawable/ic_cart" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.appcompat.widget.Toolbar>
+
+    <nl.bryanderidder.themedtogglebuttongroup.ThemedToggleButtonGroup
+        android:id="@+id/category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:toggle_horizontalSpacing="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_category_fragment"
+        app:layout_constraintStart_toStartOf="parent"
+        app:justifyContent="center">
+
+        <nl.bryanderidder.themedtogglebuttongroup.ThemedButton
+            android:id="@+id/btn_women"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            app:toggle_selectAnimation="horizontal_slide"
+            app:toggle_selectedBackgroundColor="@color/orange_500"
+            app:toggle_selectedTextColor="@color/white"
+            app:toggle_text="WOMEN" />
+
+        <nl.bryanderidder.themedtogglebuttongroup.ThemedButton
+            android:id="@+id/btn_kid"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            app:toggle_selectAnimation="horizontal_slide"
+            app:toggle_selectedBackgroundColor="@color/orange_500"
+            app:toggle_selectedTextColor="@color/white"
+            app:toggle_text="KID" />
+
+        <nl.bryanderidder.themedtogglebuttongroup.ThemedButton
+            android:id="@+id/btn_men"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            app:toggle_selectAnimation="horizontal_slide"
+            app:toggle_selectedBackgroundColor="@color/orange_500"
+            app:toggle_selectedTextColor="@color/white"
+            app:toggle_text="MEN" />
+
+        <nl.bryanderidder.themedtogglebuttongroup.ThemedButton
+            android:id="@+id/btn_sale"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            app:toggle_selectAnimation="horizontal_slide"
+            app:toggle_selectedBackgroundColor="@color/orange_500"
+            app:toggle_selectedTextColor="@color/white"
+            app:toggle_text="SALE" />
+    </nl.bryanderidder.themedtogglebuttongroup.ThemedToggleButtonGroup>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="8dp"
+        android:elevation="8dp"
+        app:cardCornerRadius="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/category"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#EFEEED">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_products"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginVertical="8dp"
+                tools:listitem="@layout/item_category_product"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/ic_categories"
+        app:fabSize="normal"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:elevation="16dp"
+        android:focusable="true"
+        app:backgroundTint="#ffffff"
+        app:pressedTranslationZ="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_shoes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        app:fabSize="normal"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:elevation="16dp"
+        android:focusable="true"
+        app:backgroundTint="#ffffff"
+        app:pressedTranslationZ="12dp"
+        app:layout_constraintBottom_toTopOf="@+id/fab_category"
+        app:layout_constraintEnd_toEndOf="@+id/fab_category"
+        app:layout_constraintStart_toStartOf="@+id/fab_category"
+        app:srcCompat="@drawable/sneakers" />
+
+    <TextView
+        android:id="@+id/tv_shoes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="SHOES"
+        app:layout_constraintBottom_toBottomOf="@+id/fab_shoes"
+        app:layout_constraintEnd_toStartOf="@+id/fab_shoes"
+        app:layout_constraintTop_toTopOf="@+id/fab_shoes" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_accessories"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        app:fabSize="normal"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:elevation="16dp"
+        android:focusable="true"
+        app:backgroundTint="#ffffff"
+        app:pressedTranslationZ="12dp"
+        app:layout_constraintBottom_toTopOf="@+id/fab_shoes"
+        app:layout_constraintEnd_toEndOf="@+id/fab_shoes"
+        app:layout_constraintStart_toStartOf="@+id/fab_shoes"
+        app:srcCompat="@drawable/wedding_rings" />
+
+    <TextView
+        android:id="@+id/tv_accessories"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="ACCESSORIES"
+        app:layout_constraintBottom_toBottomOf="@+id/fab_accessories"
+        app:layout_constraintEnd_toStartOf="@+id/fab_accessories"
+        app:layout_constraintTop_toTopOf="@+id/fab_accessories" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_shirt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        app:fabSize="normal"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:elevation="16dp"
+        android:focusable="true"
+        app:backgroundTint="#ffffff"
+        app:pressedTranslationZ="12dp"
+        app:layout_constraintBottom_toTopOf="@+id/fab_accessories"
+        app:layout_constraintEnd_toEndOf="@+id/fab_accessories"
+        app:layout_constraintStart_toStartOf="@+id/fab_accessories"
+        app:srcCompat="@drawable/shirt" />
+
+    <TextView
+        android:id="@+id/tv_shirt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="T-SHIRTS"
+        app:layout_constraintBottom_toBottomOf="@+id/fab_shirt"
+        app:layout_constraintEnd_toStartOf="@+id/fab_shirt"
+        app:layout_constraintTop_toTopOf="@+id/fab_shirt" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
