@@ -18,4 +18,6 @@
     <color name="orange_700">#f47100</color>
     <color name="transparent">#00FFFFFF</color>
 
+    <color name="background">#dddddd</color>
+
 </resources>

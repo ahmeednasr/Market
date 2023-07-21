@@ -67,6 +67,22 @@ class OrdersFragment : Fragment() {
         }
     }
 
+    private fun handleNoDataState() {
+        binding.apply {
+            ivNoData.visibility = View.VISIBLE
+            tvNoData.visibility = View.VISIBLE
+            rvOrders.visibility = View.GONE
+        }
+    }
+
+    private fun handleDataState() {
+        binding.apply {
+            ivNoData.visibility = View.GONE
+            tvNoData.visibility = View.GONE
+            rvOrders.visibility = View.VISIBLE
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

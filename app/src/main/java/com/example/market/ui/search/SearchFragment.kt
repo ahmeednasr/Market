@@ -41,6 +41,22 @@ class SearchFragment : Fragment() {
         setupProductsRecyclerView()
     }
 
+    private fun handleNoDataState() {
+        binding.apply {
+            ivNoData.visibility = View.VISIBLE
+            tvNoData.visibility = View.VISIBLE
+            rvProducts.visibility = View.GONE
+        }
+    }
+
+    private fun handleDataState() {
+        binding.apply {
+            ivNoData.visibility = View.GONE
+            tvNoData.visibility = View.GONE
+            rvProducts.visibility = View.VISIBLE
+        }
+    }
+
     private fun setupProductsRecyclerView() {
         binding.rvProducts.apply {
             adapter = searchAdapter
