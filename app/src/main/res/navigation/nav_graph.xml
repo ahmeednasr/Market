@@ -63,8 +63,8 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
         <action
-            android:id="@+id/action_accountFragment_to_mapFragment"
-            app:destination="@id/mapFragment" />
+            android:id="@+id/action_accountFragment_to_addressFormFragment"
+            app:destination="@id/addressFormFragment" />
     </fragment>
     <fragment
         android:id="@+id/authIntro"
@@ -132,6 +132,15 @@
         <argument
             android:name="product"
             app:argType="com.example.market.data.pojo.Product" />
+    </fragment>
+    <fragment
+        android:id="@+id/addressFormFragment"
+        android:name="com.example.market.ui.address_form.AddressFormFragment"
+        android:label="fragment_address_form"
+        tools:layout="@layout/fragment_address_form" >
+        <action
+            android:id="@+id/action_addressFormFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
     </fragment>
 
 </navigation>
