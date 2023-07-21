@@ -1,5 +1,6 @@
 package com.example.market.utils
 
+
 object Constants {
     const val BASE_URL =
         "https://itp-sv-and4.myshopify.com/admin/api/2023-07/"
@@ -16,5 +17,9 @@ object Constants {
     const val LANGUAGE_KEY = "LANGUAGE_KEY"
     const val ENGLISH = "en"
     const val ARABIC = "ar"
-
+    const val GOVERNMENT_URL = "https://countriesnow.space/api/v0.1/"
+    const val ADDRESS_KEY = "ADDRESS_KEY"
+    const val POSTAL_KEY = "POSTAL_KEY"
+    const val GOVERN_KEY="GOVERN_KEY"
+    const val CITY_KEY="CITY_KEY"
 }

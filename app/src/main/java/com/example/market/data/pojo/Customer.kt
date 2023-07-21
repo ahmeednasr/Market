@@ -1,5 +1,7 @@
 package com.example.market.data.pojo
 
+import java.io.Serializable
+
 data class CustomerResponse(
     val customer: Customer
 )
@@ -23,7 +25,7 @@ data class UserAddress(
     val last_name: String?,
     val first_name: String?,
     val country: String?
-)
+) : Serializable
 
 data class Customer(
     val id: Long,
