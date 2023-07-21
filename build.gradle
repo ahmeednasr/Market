@@ -15,6 +15,12 @@ plugins {
     id("com.google.dagger.hilt.android") version "2.44" apply false
 }
 
+allprojects {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+}
+
 ext{
     // App dependencies
     androidXVersion = '1.0.0'

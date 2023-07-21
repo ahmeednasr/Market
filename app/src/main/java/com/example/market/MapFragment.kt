@@ -19,7 +19,9 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat.startActivity
+import androidx.navigation.fragment.findNavController
 import com.example.market.databinding.FragmentMapBinding
+import com.example.market.utils.Constants.MAP
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -56,7 +58,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickListener
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        geocoder = Geocoder(requireContext())
+        geocoder = Geocoder(requireContext(), Locale("ar"))
         binding.mapView.onCreate(savedInstanceState)
         binding.mapView.getMapAsync(this)
 
@@ -64,6 +66,12 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickListener
         binding.btnToggleLocationMethod.setOnClickListener {
             isLocationViaGPS = true
             getLastLocation()
+        }
+        binding.okBtn.setOnClickListener {
+            parentFragmentManager.setFragmentResult(MAP, Bundle().apply {
+                putDouble("latitude", latitude!!)
+                putDouble("longitude", longitude!!)
+            })
         }
 
     }
@@ -83,7 +91,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickListener
         longitude = 31.23
         val cairo = LatLng(latitude!!, longitude!!)
 //        val cairo = LatLng(location.latitude, location.longitude)
-        mMap.addMarker(MarkerOptions().position(cairo).title("cairo"))
+        // mMap.addMarker(MarkerOptions().position(cairo).title("cairo"))
         mMap.moveCamera(CameraUpdateFactory.newLatLng(cairo))
     }
 
@@ -95,9 +103,9 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickListener
         val addressList =
             geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
 
-        Log.i("err", "address name: $addressList")
         if (addressList != null && addressList.isNotEmpty()) {
-
+            Log.i("MAP", addressList[0].getAddressLine(0))
+            Log.i("MAP", "address name: $addressList")
             val newLocality = addressList[0].locality
             val subAdmin = addressList[0].subAdminArea
             val subLocality = addressList[0].subLocality
@@ -138,6 +146,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickListener
                                 1
                             )
                         if (addressList != null && addressList.isNotEmpty()) {
+                            Log.i("MAP", addressList[0].getAddressLine(0))
                             var newLocality = addressList[0].locality
                             location = mLastLocation
                             mMap.clear()

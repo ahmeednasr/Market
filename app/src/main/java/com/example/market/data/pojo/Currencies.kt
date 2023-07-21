@@ -5,7 +5,7 @@ data class Currencies(
 )
 
 data class Currency(
-    val currency: String,
-    val enabled: Boolean,
-    val rate_updated_at: String
+    val currency: String?,
+    val enabled: Boolean?,
+    val rate_updated_at: String?
 )
