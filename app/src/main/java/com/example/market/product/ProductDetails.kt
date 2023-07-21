@@ -30,9 +30,7 @@ class ProductDetails : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setUI(args.product)
-
     }
 
     override fun onDestroy() {

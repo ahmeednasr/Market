@@ -1,12 +1,12 @@
 package com.example.market.ui.account
 
-import android.util.Log
+
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.market.data.pojo.Currencies
-import com.example.market.data.pojo.ProductResponse
+
 import com.example.market.data.repo.Repository
 import com.example.market.utils.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,9 +25,9 @@ class AccountViewModel @Inject constructor(
     private val _currencies: MutableLiveData<NetworkResult<Currencies>> =
         MutableLiveData(NetworkResult.Loading())
     val currencies: LiveData<NetworkResult<Currencies>> = _currencies
-    private val _conversionResult: MutableLiveData<NetworkResult<Double>> =
+    private val _conversionResult: MutableLiveData<NetworkResult<Double?>> =
         MutableLiveData(NetworkResult.Loading())
-    val conversionResult: LiveData<NetworkResult<Double>> = _conversionResult
+    val conversionResult: LiveData<NetworkResult<Double?>> = _conversionResult
 
     private fun getCurrencies() {
         viewModelScope.launch {
@@ -54,4 +54,6 @@ class AccountViewModel @Inject constructor(
             }
         }
     }
+
+
 }
