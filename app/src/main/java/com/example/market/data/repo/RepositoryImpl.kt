@@ -52,6 +52,14 @@ class RepositoryImpl(
         return apiService.createCartDraftOrder(cartDraftOrder = cartDraftOrder)
     }
 
+    override suspend fun modifyFavourites(favouriteId: Long, modifiedList: DraftOrderResponse) {
+        apiService.modifyFavourites(favouriteId, modifiedList)
+    }
+
+    override suspend fun getFavourites(favouriteId: Long): Response<DraftOrderResponse> {
+        return apiService.getFavourites(favouriteId)
+    }
+
 
     override suspend fun getGovernment(country: String): Response<GovernmentPojo> {
         val countryObj = Country(country)
