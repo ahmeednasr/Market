@@ -12,10 +12,12 @@
         tools:layout="@layout/fragment_auth_intro" >
         <action
             android:id="@+id/action_authIntro_to_authSignIn"
-            app:destination="@id/authSignIn" />
+            app:destination="@id/authSignIn"
+            app:enterAnim="@anim/slide_in_right" />
         <action
             android:id="@+id/action_authIntro_to_authSignup"
-            app:destination="@id/authSignup" />
+            app:destination="@id/authSignup"
+            app:enterAnim="@anim/slide_in_right" />
     </fragment>
     <fragment
         android:id="@+id/authSignIn"
@@ -24,7 +26,8 @@
         tools:layout="@layout/fragment_auth_sign_in" >
         <action
             android:id="@+id/action_authSignIn_to_authIntro"
-            app:destination="@id/authIntro" />
+            app:destination="@id/authIntro"
+            app:enterAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/authSignup"
@@ -33,6 +36,7 @@
         tools:layout="@layout/fragment_auth_singup" >
         <action
             android:id="@+id/action_authSignup_to_authIntro"
-            app:destination="@id/authIntro" />
+            app:destination="@id/authIntro"
+            app:enterAnim="@anim/slide_out_right" />
     </fragment>
 </navigation>
