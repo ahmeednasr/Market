@@ -24,8 +24,10 @@ interface ApiService {
     suspend fun getBrandProducts(@Query("vendor") vendor: String): Response<ProductResponse>
 
     @POST("customers.json")
-    suspend fun postCustomer(@Header("Content-Type") contentType: String = "application/json",
-                             @Header("Accept") accept: String = "application/json",@Body customer: NewUser): Response<CustomerResponse>
+    suspend fun postCustomer(
+        @Header("Content-Type") contentType: String = "application/json",
+        @Header("Accept") accept: String = "application/json", @Body customer: NewUser
+    ): Response<CustomerResponse>
 
     @GET("customers/{id}/orders.json")
     suspend fun getCustomerOrders(@Path("id") userId: Long): Response<OrderResponse>
@@ -34,6 +36,20 @@ interface ApiService {
     suspend fun getCurrencies(): Response<Currencies>
 
     @GET("customers.json")
-    suspend fun getAllCustomers():Response<CustomersResponse>
+    suspend fun getAllCustomers(): Response<CustomersResponse>
+
+    @POST("draft_orders.json")
+    suspend fun createFavouriteDraftOrder(
+        @Header("Content-Type") contentType: String = "application/json",
+        @Header("Accept") accept: String = "application/json",
+        @Body favouriteDraftOrder: DraftOrderResponse
+    ): Response<DraftOrderResponse>
+
+    @POST("draft_orders.json")
+    suspend fun createCartDraftOrder(
+        @Header("Content-Type") contentType: String = "application/json",
+        @Header("Accept") accept: String = "application/json",
+        @Body cartDraftOrder: DraftOrderResponse
+    ): Response<DraftOrderResponse>
 
 }
