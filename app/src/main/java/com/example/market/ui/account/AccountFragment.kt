@@ -46,7 +46,7 @@ class AccountFragment : Fragment() {
     lateinit var currentLocale: Locale
     lateinit var currentLanguage: String
     private val viewModel: AccountViewModel by viewModels()
-    private lateinit var auth:FirebaseAuth
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -69,7 +69,7 @@ class AccountFragment : Fragment() {
         } else if (currentLanguage == "ar") {
             binding.languageValue.text = resources.getString(R.string.arabic)
         }
-        binding.currencyValue.text=sharedPreferences.getString(CURRENCY_KEY, "")?:"EGP"
+        binding.currencyValue.text = sharedPreferences.getString(CURRENCY_KEY, "") ?: "EGP"
         binding.llLanguage.setOnClickListener {
             showDialog()
         }
@@ -82,6 +82,9 @@ class AccountFragment : Fragment() {
         }
         binding.llAddress.setOnClickListener {
             findNavController().navigate(R.id.action_accountFragment_to_addressFormFragment)
+        }
+        binding.ivCart.setOnClickListener {
+
         }
         observeSearchButton()
         observeConvertCurrencyResponse()
@@ -163,8 +166,8 @@ class AccountFragment : Fragment() {
         // val oldCurrency = sharedPreferences.getString(CURRENCY_KEY, "")
         editor.putString(CURRENCY_KEY, selectedItem as String?)
         editor.apply()
-        binding.currencyValue.text=selectedItem
-        viewModel.convertCurrency("EGP", selectedItem!!)
+        binding.currencyValue.text = selectedItem
+        viewModel.convertCurrency("EGP", selectedItem!!,1.0)
         Toast.makeText(requireContext(), selectedItem, Toast.LENGTH_SHORT).show()
 
     }
@@ -201,8 +204,8 @@ class AccountFragment : Fragment() {
         dialog.show()
     }
 
-    private fun updateUserUI(){
-        if(auth.currentUser!=null){
+    private fun updateUserUI() {
+        if (auth.currentUser != null) {
 
         }
     }

@@ -1,5 +1,6 @@
 package com.example.market.data.repo
 
+import android.util.Log
 import com.example.market.data.pojo.*
 import com.example.market.data.remote.ApiService
 import com.example.market.data.remote.CurrencyApi
@@ -27,8 +28,12 @@ class RepositoryImpl(
         return apiService.getCurrencies()
     }
 
-    override suspend fun convertCurrency(from: String, to: String): Response<ConvertedCurrency> {
-        return currencyApi.convertCurrency(from, to)
+    override suspend fun convertCurrency(
+        from: String,
+        to: String,
+        amount: Double
+    ): Response<ConvertedCurrency> {
+        return currencyApi.convertCurrency(from, to, amount.toString())
     }
 
     override suspend fun createUser(user: NewUser): Response<CustomerResponse> {
@@ -48,7 +53,6 @@ class RepositoryImpl(
     }
 
 
-
     override suspend fun getGovernment(country: String): Response<GovernmentPojo> {
         val countryObj = Country(country)
         return governmentAPI.getGovernment(countryObj)
@@ -57,5 +61,11 @@ class RepositoryImpl(
     override suspend fun getCities(country: String, government: String): Response<CitiesPojo> {
         val citiesRequest = CitiesRequest(country, government)
         return governmentAPI.getCities(citiesRequest)
+    }
+
+    override suspend fun getDiscountCodes(): Response<DiscountResponse> {
+        val res = apiService.getDiscountCodes()
+        Log.i("MYTAG", "repo" + res.body().toString())
+        return res
     }
 }

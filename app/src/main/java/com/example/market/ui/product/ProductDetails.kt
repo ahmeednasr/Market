@@ -30,10 +30,7 @@ class ProductDetails : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setUI(args.product)
-
-
     }
 
     override fun onDestroy() {
@@ -95,6 +92,9 @@ class ProductDetails : Fragment() {
                 binding.priceText.text = product.variants[i].price
                 binding.availability.text = product.variants[i].inventory_quantity.toString()
             }
+        }
+        binding.addToChartButton.setOnClickListener {
+            view
         }
 
     }

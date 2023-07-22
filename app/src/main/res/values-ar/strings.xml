@@ -12,7 +12,7 @@
     <string name="home">الرئيسيه</string>
     <string name="categories">الفئات</string>
     <string name="account">الحساب</string>
-    <string name="subtotal">Subtotal:</string>
+    <string name="subtotal">المجموع:</string>
     <string name="cart">السله</string>
     <string name="filter">filter</string>
     <string name="map">خريطه</string>
@@ -34,4 +34,5 @@
     <string name="city">مدينه</string>
     <string name="govern">محافظه</string>
     <string name="save">حفظ</string>
+    <string name="cancel">إلغاء</string>
 </resources>
