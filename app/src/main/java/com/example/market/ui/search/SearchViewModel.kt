@@ -14,7 +14,6 @@ import com.example.market.data.repo.Repository
 import com.example.market.utils.Constants
 import com.example.market.utils.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import java.math.BigDecimal
@@ -27,7 +26,7 @@ class SearchViewModel @Inject constructor(
 ) : ViewModel() {
     var allProducts = ArrayList<Product>()
     private var _filterProducts = ArrayList<Product>()
-    private var favourites = ArrayList<LineItemsItem>()
+    private var _favourites = ArrayList<LineItemsItem>()
 
     private val _products: MutableLiveData<NetworkResult<List<Product>>> = MutableLiveData()
     val products: LiveData<NetworkResult<List<Product>>> = _products
@@ -56,7 +55,7 @@ class SearchViewModel @Inject constructor(
         )
         if (draftResponse.isSuccessful) {
             draftResponse.body()?.let {
-                favourites = it.draftOrder?.lineItems as ArrayList<LineItemsItem>
+                _favourites = it.draftOrder?.lineItems as ArrayList<LineItemsItem>
                 for (j in 1 until it.draftOrder.lineItems.size) {
                     for (i in products.indices) {
                         if (products[i].title.equals(it.draftOrder.lineItems[j].title))
@@ -77,21 +76,21 @@ class SearchViewModel @Inject constructor(
                 quantity = 1,
                 sku = product.id.toString()
             )
-            favourites.add(fav)
+            _favourites.add(fav)
             repository.modifyFavourites(
                 favouritesId,
-                DraftOrderResponse(DraftOrder(lineItems = favourites))
+                DraftOrderResponse(DraftOrder(lineItems = _favourites))
             )
         }
     }
 
     fun deleteFavourite(product: Product) {
         viewModelScope.launch {
-            favourites =
-                favourites.filter { !it.title.equals(product.title)} as ArrayList<LineItemsItem>
+            _favourites =
+                _favourites.filter { !it.title.equals(product.title)} as ArrayList<LineItemsItem>
             repository.modifyFavourites(
                 favouritesId,
-                DraftOrderResponse(DraftOrder(lineItems = favourites))
+                DraftOrderResponse(DraftOrder(lineItems = _favourites))
             )
         }
     }
