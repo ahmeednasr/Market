@@ -83,6 +83,13 @@ class AccountFragment : Fragment() {
         }
         observeSearchButton()
         observeConvertCurrencyResponse()
+        navigateToOrders()
+    }
+
+    private fun navigateToOrders() {
+        binding.llOrders.setOnClickListener {
+            findNavController().navigate(R.id.action_accountFragment_to_ordersFragment)
+        }
     }
 
     private fun observeSearchButton() {

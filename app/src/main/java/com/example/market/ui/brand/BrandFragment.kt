@@ -66,17 +66,34 @@ class BrandFragment : Fragment() {
         viewModel.products.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is NetworkResult.Success -> {
+                    stopShimmer()
                     response.data?.let {
                         brandProductsAdapter.submitList(it.products)
                     }
                 }
                 is NetworkResult.Error -> {
-
+                    stopShimmer()
                 }
                 is NetworkResult.Loading -> {
-
+                    startShimmer()
                 }
             }
+        }
+    }
+
+    private fun startShimmer() {
+        binding.apply {
+            rvProducts.visibility = View.GONE
+            shimmerViewContainer.visibility = View.VISIBLE
+            shimmerViewContainer.startShimmerAnimation()
+        }
+    }
+
+    private fun stopShimmer() {
+        binding.apply {
+            rvProducts.visibility = View.VISIBLE
+            shimmerViewContainer.visibility = View.GONE
+            shimmerViewContainer.stopShimmerAnimation()
         }
     }
 
