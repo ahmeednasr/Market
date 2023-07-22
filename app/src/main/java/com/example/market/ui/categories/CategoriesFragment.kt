@@ -28,7 +28,7 @@ class CategoriesFragment : Fragment() {
     private val productsAdapter by lazy {
         ProductsAdapter(object : ProductsAdapter.ProductClickListener {
             override fun onItemClicked(product: Product) {
-                //navigate to product info
+                findNavController().navigate(CategoriesFragmentDirections.actionCategoriesFragmentToProductDetails(product))
             }
         })
     }
@@ -54,7 +54,7 @@ class CategoriesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setAnimation()
+        setFabAnimation()
         hideAllFabs()
         observeCategoryFab()
         observeSearchButton()
@@ -72,7 +72,7 @@ class CategoriesFragment : Fragment() {
         }
     }
 
-    private fun setAnimation() {
+    private fun setFabAnimation() {
         fabClose = AnimationUtils.loadAnimation(requireContext(), R.anim.fab_close)
         fabOpen = AnimationUtils.loadAnimation(requireContext(), R.anim.fab_open)
         fabClock = AnimationUtils.loadAnimation(requireContext(), R.anim.fab_rotate_clock)
@@ -82,13 +82,10 @@ class CategoriesFragment : Fragment() {
     private fun hideAllFabs() {
         binding.apply {
             fabAccessories.visibility = View.GONE
-            tvAccessories.visibility = View.GONE
             fabAccessories.startAnimation(fabClose)
             fabShirt.visibility = View.GONE
-            tvShirt.visibility = View.GONE
             fabShirt.startAnimation(fabClose)
             fabShoes.visibility = View.GONE
-            tvShoes.visibility = View.GONE
             fabShoes.startAnimation(fabClose)
             fabCategory.startAnimation(fabAntiClock)
         }
@@ -97,13 +94,10 @@ class CategoriesFragment : Fragment() {
     private fun showAllFabs() {
         binding.apply {
             fabAccessories.visibility = View.VISIBLE
-            tvAccessories.visibility = View.VISIBLE
             fabAccessories.startAnimation(fabOpen)
             fabShirt.visibility = View.VISIBLE
-            tvShirt.visibility = View.VISIBLE
             fabShirt.startAnimation(fabOpen)
             fabShoes.visibility = View.VISIBLE
-            tvShoes.visibility = View.VISIBLE
             fabShoes.startAnimation(fabOpen)
             fabCategory.startAnimation(fabClock)
         }
@@ -123,18 +117,56 @@ class CategoriesFragment : Fragment() {
         viewModel.products.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is NetworkResult.Success -> {
+                    stopShimmer()
                     response.data?.let {
                         Log.d("observeProductsResponse", "size: ${it.size}")
-                        productsAdapter.submitList(it)
+                        if (it.isEmpty()){
+                            handleNoDataState()
+                        } else {
+                            productsAdapter.submitList(it)
+                            handleDataState()
+                        }
                     }
                 }
                 is NetworkResult.Error -> {
-
+                    stopShimmer()
                 }
                 is NetworkResult.Loading -> {
-
+                    startShimmer()
                 }
             }
+        }
+    }
+
+    private fun startShimmer() {
+        binding.apply {
+            rvProducts.visibility = View.GONE
+            shimmerViewContainer.visibility = View.VISIBLE
+            shimmerViewContainer.startShimmerAnimation()
+        }
+    }
+
+    private fun stopShimmer() {
+        binding.apply {
+            rvProducts.visibility = View.VISIBLE
+            shimmerViewContainer.visibility = View.GONE
+            shimmerViewContainer.stopShimmerAnimation()
+        }
+    }
+
+    private fun handleNoDataState() {
+        binding.apply {
+            ivNoData.visibility = View.VISIBLE
+            tvNoData.visibility = View.VISIBLE
+            rvProducts.visibility = View.GONE
+        }
+    }
+
+    private fun handleDataState() {
+        binding.apply {
+            ivNoData.visibility = View.GONE
+            tvNoData.visibility = View.GONE
+            rvProducts.visibility = View.VISIBLE
         }
     }
 

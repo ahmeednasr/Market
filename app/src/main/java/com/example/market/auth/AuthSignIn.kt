@@ -1,9 +1,13 @@
 package com.example.market.auth
 
 import android.app.Activity
+import android.content.ContentValues.TAG
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.util.Patterns
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -11,10 +15,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.market.MainActivity
 import com.example.market.R
 import com.example.market.databinding.FragmentAuthSignInBinding
+import com.example.market.utils.Constants
+import com.example.market.utils.NetworkResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -33,6 +40,8 @@ class AuthSignIn : Fragment() {
     private val binding get() = _binding!!
     private lateinit var auth: FirebaseAuth
     private lateinit var googleSignInClient:GoogleSignInClient
+    private val viewModel:AuthViewModel by viewModels()
+    lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,10 +54,13 @@ class AuthSignIn : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         auth = Firebase.auth
+        sharedPreferences = requireContext().getSharedPreferences(Constants.SharedPreferences,0)
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail().build()
         googleSignInClient = GoogleSignIn.getClient(requireActivity(),gso)
+
+        viewModel.getAllCustomers()
 
         binding.signInButton.setOnClickListener {
             signInUser()
@@ -74,9 +86,10 @@ class AuthSignIn : Fragment() {
                 if(task.isSuccessful){
                     if(auth.currentUser!!.isEmailVerified){
                         binding.progressBar2.visibility = View.GONE
+                        getUserID(email)
+                        Log.i(TAG, "signInUser: ${sharedPreferences.getString(Constants.UserID,"No ID)")}")
                         Toast.makeText(requireContext(),"Login Successfully", Toast.LENGTH_LONG).show()
-                        val intent = Intent(requireActivity(),MainActivity::class.java)
-                        startActivity(intent)
+                        startActivity(Intent(requireActivity(),MainActivity::class.java))
                         requireActivity().finish()
                     }else{
                         binding.progressBar2.visibility = View.GONE
@@ -145,6 +158,32 @@ class AuthSignIn : Fragment() {
                 findNavController().navigate(R.id.action_authSignIn_to_authIntro)
             }
         }
+    }
+
+    private fun getUserID(email:String){
+        val editor = sharedPreferences.edit()
+        viewModel.customers.observe(viewLifecycleOwner){response ->
+            when(response){
+                is NetworkResult.Success -> {
+                    response.data?.let {
+                       for(customer in it){
+                           if (email==customer.email){
+                                editor.putString(Constants.UserID,customer.id.toString())
+                               editor.apply()
+                           }
+                       }
+                    }
+                }
+                is NetworkResult.Error -> {
+
+                }
+                is NetworkResult.Loading -> {
+
+                }
+            }
+
+        }
+
     }
 
 }

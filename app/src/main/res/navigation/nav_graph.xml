@@ -65,6 +65,14 @@
         <action
             android:id="@+id/action_accountFragment_to_addressFormFragment"
             app:destination="@id/addressFormFragment" />
+        <action
+            android:id="@+id/action_accountFragment_to_ordersFragment"
+            app:destination="@id/ordersFragment"
+            app:popUpTo="@id/accountFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
     <fragment
         android:id="@+id/authIntro"
@@ -126,7 +134,7 @@
         tools:layout="@layout/fragment_map" />
     <fragment
         android:id="@+id/productDetails"
-        android:name="com.example.market.product.ProductDetails"
+        android:name="com.example.market.ui.product.ProductDetails"
         android:label="fragment_product_details"
         tools:layout="@layout/fragment_product_details">
         <argument
@@ -142,5 +150,10 @@
             android:id="@+id/action_addressFormFragment_to_mapFragment"
             app:destination="@id/mapFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/ordersFragment"
+        android:name="com.example.market.ui.orders.OrdersFragment"
+        android:label="fragment_orders"
+        tools:layout="@layout/fragment_orders" />
 
 </navigation>
