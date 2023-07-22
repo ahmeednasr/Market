@@ -1,4 +1,5 @@
 package com.example.market.data.pojo
+
 import java.io.Serializable
 
 data class ProductResponse(

@@ -2,6 +2,7 @@ package com.example.market.di
 
 import com.example.market.data.remote.ApiService
 import com.example.market.data.remote.CurrencyApi
+import com.example.market.data.remote.GovernmentAPI
 import com.example.market.data.repo.Repository
 import com.example.market.data.repo.RepositoryImpl
 import dagger.Module
@@ -19,7 +20,8 @@ object RepositoryModule {
     fun provideMoviesRepository(
         apiService: ApiService,
         currencyApi: CurrencyApi,
+        governmentAPI: GovernmentAPI
     ): Repository {
-        return RepositoryImpl(apiService, currencyApi)
+        return RepositoryImpl(apiService, currencyApi, governmentAPI)
     }
 }

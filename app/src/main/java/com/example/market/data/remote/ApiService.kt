@@ -52,4 +52,13 @@ interface ApiService {
         @Body cartDraftOrder: DraftOrderResponse
     ): Response<DraftOrderResponse>
 
+    @GET("/draft_orders/{id}.json")
+    suspend fun getDraftById(
+        @Path("id") draftId: Long
+    ): Response<DraftOrderResponse>
+
+    @GET("price_rules/1401023660351/discount_codes.json")
+    suspend fun getDiscountCodes(
+    ): Response<DiscountResponse>
+
 }
