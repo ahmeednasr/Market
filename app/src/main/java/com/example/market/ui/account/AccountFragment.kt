@@ -60,6 +60,7 @@ class AccountFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         auth = Firebase.auth
+        updateUserUI()
         sharedPreferences = requireContext().getSharedPreferences(Constants.SharedPreferences, 0)
         editor = sharedPreferences.edit()
         currentLocale = Locale.getDefault()
@@ -72,9 +73,6 @@ class AccountFragment : Fragment() {
         binding.currencyValue.text = sharedPreferences.getString(CURRENCY_KEY, "") ?: "EGP"
         binding.llLanguage.setOnClickListener {
             showDialog()
-        }
-        binding.tvLogin.setOnClickListener {
-            startActivity(Intent(requireActivity(), AuthActivity::class.java))
         }
 
         binding.llCurrency.setOnClickListener {
@@ -204,9 +202,19 @@ class AccountFragment : Fragment() {
         dialog.show()
     }
 
-    private fun updateUserUI() {
-        if (auth.currentUser != null) {
-
+    private fun updateUserUI(){
+        if(auth.currentUser!=null){
+            if(auth.currentUser!!.isEmailVerified){
+                binding.tvLogin.text = "Logout"
+                binding.tvUsername.text = auth.currentUser!!.email
+                binding.tvLogin.setOnClickListener {
+                    Firebase.auth.signOut()
+                }
+            }
+        }else{
+            binding.tvLogin.setOnClickListener {
+                startActivity(Intent(requireActivity(), AuthActivity::class.java))
+            }
         }
     }
 

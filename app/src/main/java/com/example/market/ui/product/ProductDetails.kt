@@ -1,18 +1,23 @@
 package com.example.market.ui.product
 
+import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.denzcoskun.imageslider.models.SlideModel
 import com.example.market.R
 import com.example.market.data.pojo.Product
 import com.example.market.databinding.FragmentProductDetailsBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ProductDetails : Fragment() {
 
     private var _binding : FragmentProductDetailsBinding? = null
@@ -60,11 +65,14 @@ class ProductDetails : Fragment() {
         sizeAutoComplete.onItemClickListener = AdapterView.OnItemClickListener{
                 adapterView, view, i,l ->
             itemSelected = adapterView.getItemAtPosition(i).toString()
+            binding.availability.visibility = View.VISIBLE
+
         }
         return itemSelected
     }
 
     private fun setUI(product: Product){
+        binding.availability.visibility = View.GONE
         val imageList = ArrayList<SlideModel>()
         val imgSlider = binding.imageSlider
         for(i in product.images?.indices!!){
@@ -85,7 +93,7 @@ class ProductDetails : Fragment() {
         for(i in product.options[1].values.indices){
             colorList.add(product.options[1].values[i])
         }
-        val variant = "\"" + setColorList(colorList) + " / "+setSizeList(sizeList) + "\""
+        val variant = """""" + setColorList(colorList) + " / "+setSizeList(sizeList) + """"""
 
         for (i in product.variants!!.indices){
             if(product.variants[i].title == variant){
@@ -96,7 +104,9 @@ class ProductDetails : Fragment() {
         binding.addToChartButton.setOnClickListener {
             view
         }
+        Log.i(TAG, "setUI: $variant ${binding.availability.text}")
 
+        binding.priceText.text = product.variants[0].price
     }
 
 }
