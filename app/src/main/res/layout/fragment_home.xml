@@ -144,14 +144,14 @@
                     android:weightSum="2">
 
                     <include
-                        layout="@layout/data_placeholder_layout"
+                        layout="@layout/product_placeholder_layout"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_weight="1" />
 
                     <include
-                        layout="@layout/data_placeholder_layout"
+                        layout="@layout/product_placeholder_layout"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
