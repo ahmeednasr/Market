@@ -32,5 +32,6 @@
     <string name="city">City</string>
     <string name="govern">Govern</string>
     <string name="save">Save</string>
+    <string name="cancel">cancel</string>
 
 </resources>
