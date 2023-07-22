@@ -25,6 +25,7 @@
             android:value="AIzaSyAWElsI7ATMbgeKeX-qZOHD-U5uiSNmzU0" />
         <activity
             android:name=".auth.AuthActivity"
+            android:windowSoftInputMode="adjustPan"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

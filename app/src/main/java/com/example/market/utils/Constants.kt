@@ -18,4 +18,6 @@ object Constants {
     const val ARABIC = "ar"
     const val SharedPreferences = "PREFS"
     const val UserID = "User_ID"
+    const val FAVOURITE_ID = "fav"
+    const val CART_ID = "cart"
 }

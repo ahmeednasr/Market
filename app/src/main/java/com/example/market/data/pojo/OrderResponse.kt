@@ -1,5 +1,8 @@
 package com.example.market.data.pojo
 
+import com.google.gson.annotations.Expose
+import com.google.gson.annotations.SerializedName
+
 
 data class OrderResponse (
     val orders: List<Order>? = null
@@ -81,24 +84,44 @@ enum class OrderCurrency(val value: String) {
     Usd("USD");
 }
 
-data class LineItem (
-    val id: Long? = null,
-    val admin_graphql_api_id: String? = null,
-    val fulfillable_quantity: Long? = null,
-    val fulfillment_service: String? = null,
-    val gift_card: Boolean? = null,
-    val grams: Long? = null,
-    val name: String? = null,
-    val price: String? = null,
-    val product_exists: Boolean? = null,
-    val product_id: Long? = null,
-    val quantity: Long? = null,
-    val requires_shipping: Boolean? = null,
-    val sku: String? = null,
+data class LineItem(
+    var properties: List<Property>? =null,
+
+    @SerializedName("fulfillment_status")
+    @Expose val fulfillmentStatus: String? = null,
+
+    var quantity: Int? = null,
     val taxable: Boolean? = null,
+
+    @SerializedName("gift_card")
+    val giftCard: Boolean? = null,
+
+    @SerializedName("fulfillment_service")
+    val fulfillmentService: String? = null,
+
+    @SerializedName("applied_discount")
+    val appliedDiscount: AppliedDiscount? = null,
+
+    @SerializedName("requires_shipping")
+    val requiresShipping: Boolean? = null,
+
+    val custom: Boolean? = null,
     val title: String? = null,
-    val total_discount: String? = null,
-    val variant_id: Long? = null,
-    val variant_inventory_management: String? = null,
-    val variant_title: String? = null,
+
+    @SerializedName("variant_id")
+    val variantId: Long? = null,
+
+    val price: String? = null,
+
+    @SerializedName("product_id")
+    val productId: Long? = null,
+
+    @SerializedName("admin_graphql_api_id")
+    val adminGraphqlApiId: String? = null,
+
+    val name: String? = null,
+    val id: Long? = null,
+    val sku: String? = null,
+    val grams: Int? = null,
+    val product: Product? = null,
 )
