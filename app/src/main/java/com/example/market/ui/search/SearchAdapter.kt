@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.market.R
 import com.example.market.data.pojo.Product
 import com.example.market.databinding.ItemFavouriteProductBinding
 
@@ -21,7 +22,7 @@ class SearchAdapter(
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.bind(getItem(position), clickListener)
+        holder.bind(getItem(position), clickListener, this)
     }
 
     interface ProductClickListener {
@@ -32,7 +33,7 @@ class SearchAdapter(
     class MyViewHolder(private val binding: ItemFavouriteProductBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(product: Product, clickListener: ProductClickListener) {
+        fun bind(product: Product, clickListener: ProductClickListener, adapter: SearchAdapter) {
             binding.apply {
                 tvProductName.text = product.title
                 Glide
@@ -40,8 +41,13 @@ class SearchAdapter(
                     .load(product.image?.src)
                     .into(ivProduct)
 
+                if (product.isFavourite) {
+                 ivFavourite.setImageDrawable(binding.root.context.getDrawable(R.drawable.ic_filled_heart))
+                }
+
                 ivFavourite.setOnClickListener {
                     clickListener.onFavouriteClicked(product)
+                    adapter.notifyDataSetChanged()
                 }
 
                 cvLayout.setOnClickListener {

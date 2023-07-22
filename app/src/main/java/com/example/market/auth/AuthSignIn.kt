@@ -182,6 +182,7 @@ class AuthSignIn : Fragment() {
                 is NetworkResult.Loading -> {
 
                 }
+                else -> {}
             }
 
         }

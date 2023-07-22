@@ -35,7 +35,12 @@ class SearchFragment : Fragment() {
             }
 
             override fun onFavouriteClicked(product: Product) {
-                //add product to favourites
+                if (product.isFavourite) {
+                    viewModel.deleteFavourite(product)
+                } else {
+                    viewModel.addFavourite(product)
+                }
+                product.isFavourite = !product.isFavourite
             }
         })
     }
