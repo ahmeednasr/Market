@@ -8,7 +8,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.market.data.pojo.Product
 import com.example.market.databinding.FragmentSearchBinding
+import dagger.hilt.android.AndroidEntryPoint
+import kotlin.math.roundToInt
 
+@AndroidEntryPoint
 class SearchFragment : Fragment() {
 
     private var _binding: FragmentSearchBinding? = null
@@ -39,6 +42,48 @@ class SearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupProductsRecyclerView()
+        setupSliderView()
+
+
+    }
+
+    private fun handleNoDataState() {
+        binding.apply {
+            ivNoData.visibility = View.VISIBLE
+            tvNoData.visibility = View.VISIBLE
+            rvProducts.visibility = View.GONE
+        }
+    }
+
+    private fun handleDataState() {
+        binding.apply {
+            ivNoData.visibility = View.GONE
+            tvNoData.visibility = View.GONE
+            rvProducts.visibility = View.VISIBLE
+        }
+    }
+
+    private fun startShimmer() {
+        binding.apply {
+            rvProducts.visibility = View.GONE
+            shimmerViewContainer.visibility = View.VISIBLE
+            shimmerViewContainer.startShimmerAnimation()
+        }
+    }
+
+    private fun stopShimmer() {
+        binding.apply {
+            rvProducts.visibility = View.VISIBLE
+            shimmerViewContainer.visibility = View.GONE
+            shimmerViewContainer.stopShimmerAnimation()
+        }
+    }
+
+    private fun setupSliderView() {
+        binding.continuousSlider.setLabelFormatter { value: Float ->
+            //should change $ to current currency
+            return@setLabelFormatter "$${value.roundToInt()}"
+        }
     }
 
     private fun setupProductsRecyclerView() {

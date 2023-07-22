@@ -9,7 +9,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.market.data.pojo.Product
 import com.example.market.databinding.FragmentFavouritesBinding
+import com.example.market.utils.NetworkResult
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class FavouritesFragment : Fragment() {
 
     private var _binding: FragmentFavouritesBinding? = null
@@ -55,18 +58,51 @@ class FavouritesFragment : Fragment() {
 //        viewModel.products.observe(viewLifecycleOwner) { response ->
 //            when (response) {
 //                is NetworkResult.Success -> {
+//                    stopShimmer()
 //                    response.data?.let {
 //                        brandProductsAdapter.submitList(it.products)
 //                    }
 //                }
 //                is NetworkResult.Error -> {
-//
+//                    stopShimmer()
 //                }
 //                is NetworkResult.Loading -> {
-//
+//                    startShimmer()
 //                }
 //            }
 //        }
+    }
+
+    private fun handleNoDataState() {
+        binding.apply {
+            ivNoData.visibility = View.VISIBLE
+            tvNoData.visibility = View.VISIBLE
+            rvProducts.visibility = View.GONE
+        }
+    }
+
+    private fun handleDataState() {
+        binding.apply {
+            ivNoData.visibility = View.GONE
+            tvNoData.visibility = View.GONE
+            rvProducts.visibility = View.VISIBLE
+        }
+    }
+
+    private fun startShimmer() {
+        binding.apply {
+            rvProducts.visibility = View.GONE
+            shimmerViewContainer.visibility = View.VISIBLE
+            shimmerViewContainer.startShimmerAnimation()
+        }
+    }
+
+    private fun stopShimmer() {
+        binding.apply {
+            rvProducts.visibility = View.VISIBLE
+            shimmerViewContainer.visibility = View.GONE
+            shimmerViewContainer.stopShimmerAnimation()
+        }
     }
 
     private fun setupProductsRecyclerView() {

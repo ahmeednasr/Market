@@ -31,6 +31,16 @@ class RepositoryImpl(
         return currencyApi.convertCurrency(from, to)
     }
 
+    override suspend fun createUser(user: NewUser): Response<CustomerResponse> {
+        return apiService.postCustomer(customer = user)
+    }
+
+    override suspend fun getAllCustomers(): Response<CustomersResponse> {
+        return apiService.getAllCustomers()
+    }
+
+
+
     override suspend fun getGovernment(country: String): Response<GovernmentPojo> {
         val countryObj = Country(country)
         return governmentAPI.getGovernment(countryObj)

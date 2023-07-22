@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.example.market.R
 import com.example.market.databinding.FragmentAuthIntroBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class AuthIntro : Fragment() {
 
     private var _binding : FragmentAuthIntroBinding? = null

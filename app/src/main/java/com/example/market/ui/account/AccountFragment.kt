@@ -1,5 +1,6 @@
 package com.example.market.ui.account
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.content.Intent
 import android.os.Bundle
@@ -19,6 +20,7 @@ import com.example.market.auth.AuthActivity
 import com.example.market.data.pojo.Currency
 import com.example.market.databinding.FragmentAccountBinding
 import com.example.market.databinding.LanguagePopupBinding
+import com.example.market.utils.Constants
 import com.example.market.utils.Constants.ARABIC
 import com.example.market.utils.Constants.CURRENCY_KEY
 import com.example.market.utils.Constants.CURRENCY_VALUE
@@ -27,11 +29,15 @@ import com.example.market.utils.Constants.LANGUAGE_KEY
 import com.example.market.utils.NetworkResult
 import com.example.market.utils.Utils.setLocale
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
 @AndroidEntryPoint
 class AccountFragment : Fragment() {
+
     private var _binding: FragmentAccountBinding? = null
     private val binding get() = _binding!!
     private lateinit var sharedPreferences: SharedPreferences
@@ -40,6 +46,8 @@ class AccountFragment : Fragment() {
     lateinit var currentLocale: Locale
     lateinit var currentLanguage: String
     private val viewModel: AccountViewModel by viewModels()
+    private lateinit var auth:FirebaseAuth
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -51,7 +59,8 @@ class AccountFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        sharedPreferences = requireContext().getSharedPreferences("PREFS", 0)
+        auth = Firebase.auth
+        sharedPreferences = requireContext().getSharedPreferences(Constants.SharedPreferences, 0)
         editor = sharedPreferences.edit()
         currentLocale = Locale.getDefault()
         currentLanguage = currentLocale.language
@@ -76,6 +85,13 @@ class AccountFragment : Fragment() {
         }
         observeSearchButton()
         observeConvertCurrencyResponse()
+        navigateToOrders()
+    }
+
+    private fun navigateToOrders() {
+        binding.llOrders.setOnClickListener {
+            findNavController().navigate(R.id.action_accountFragment_to_ordersFragment)
+        }
     }
 
     private fun observeSearchButton() {
@@ -183,6 +199,12 @@ class AccountFragment : Fragment() {
         dialog = MaterialAlertDialogBuilder(requireContext())
             .setView(popUpBinding.root).create()
         dialog.show()
+    }
+
+    private fun updateUserUI(){
+        if(auth.currentUser!=null){
+
+        }
     }
 
     override fun onDestroyView() {
