@@ -1,5 +1,7 @@
 package com.example.market.data.pojo
 
+import com.google.gson.annotations.SerializedName
+
 import java.io.Serializable
 
 data class CustomerResponse(
@@ -18,7 +20,11 @@ data class User(
     val phone: String,
     val verified_email: Boolean,
     val addresses: List<UserAddress>?,
-    val send_email_invite: Boolean?
+    val send_email_invite: Boolean?,
+    @SerializedName("note")
+    var favouriteId: String? = "",
+    @SerializedName("multipass_identifier")
+    var cartId: String? = ""
 )
 
 data class UserAddress(

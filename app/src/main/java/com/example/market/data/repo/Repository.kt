@@ -9,8 +9,10 @@ interface Repository {
     suspend fun getBrandProducts(vendor: String): Response<ProductResponse>
     suspend fun getCurrencies(): Response<Currencies>
     suspend fun convertCurrency(from: String, to: String): Response<ConvertedCurrency>
+    suspend fun createUser(user: NewUser): Response<CustomerResponse>
+    suspend fun getAllCustomers(): Response<CustomersResponse>
+    suspend fun createFavouriteDraftOrder(favouriteDraftOrder: DraftOrderResponse): Response<DraftOrderResponse>
+    suspend fun createCartDraftOrder(cartDraftOrder: DraftOrderResponse): Response<DraftOrderResponse>
     suspend fun getGovernment(country: String): Response<GovernmentPojo>
     suspend fun getCities(country: String, government: String): Response<CitiesPojo>
-    suspend fun createUser(user: NewUser):Response<CustomerResponse>
-    suspend fun getAllCustomers():Response<CustomersResponse>
 }

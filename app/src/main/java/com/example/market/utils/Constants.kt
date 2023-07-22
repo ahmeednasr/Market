@@ -1,6 +1,5 @@
 package com.example.market.utils
 
-
 object Constants {
     const val BASE_URL =
         "https://itp-sv-and4.myshopify.com/admin/api/2023-07/"
@@ -24,5 +23,6 @@ object Constants {
     const val CITY_KEY="CITY_KEY"
     const val SharedPreferences = "PREFS"
     const val UserID = "User_ID"
-    const val CART_ID = "CART_ID"
+    const val FAVOURITE_ID = "fav"
+    const val CART_ID = "cart"
 }

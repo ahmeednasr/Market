@@ -39,6 +39,14 @@ class RepositoryImpl(
         return apiService.getAllCustomers()
     }
 
+    override suspend fun createFavouriteDraftOrder(favouriteDraftOrder: DraftOrderResponse): Response<DraftOrderResponse> {
+        return apiService.createFavouriteDraftOrder(favouriteDraftOrder = favouriteDraftOrder)
+    }
+
+    override suspend fun createCartDraftOrder(cartDraftOrder: DraftOrderResponse): Response<DraftOrderResponse> {
+        return apiService.createCartDraftOrder(cartDraftOrder = cartDraftOrder)
+    }
+
 
 
     override suspend fun getGovernment(country: String): Response<GovernmentPojo> {

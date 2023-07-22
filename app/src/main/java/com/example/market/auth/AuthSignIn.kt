@@ -168,7 +168,9 @@ class AuthSignIn : Fragment() {
                     response.data?.let {
                        for(customer in it){
                            if (email==customer.email){
-                                editor.putString(Constants.UserID,customer.id.toString())
+                               editor.putString(Constants.UserID, customer.id.toString())
+                               editor.putString(Constants.FAVOURITE_ID, customer.note.toString())
+                               editor.putString(Constants.CART_ID, customer.multipass_identifier.toString())
                                editor.apply()
                            }
                        }
