@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".auth.AuthSignup" >
 
     <ScrollView
@@ -87,7 +88,7 @@
                     android:ems="10"
                     android:hint="First Name"
                     android:inputType="textPersonName"
-                    android:textAlignment="center"
+                    android:paddingHorizontal="16dp"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -96,13 +97,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginStart="32dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="32dp"
                     android:background="@drawable/gery_background"
                     android:ems="10"
                     android:hint="Last Name"
                     android:inputType="textPersonName"
-                    android:textAlignment="center"
+                    android:paddingHorizontal="16dp"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -111,13 +112,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginStart="32dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="32dp"
                     android:background="@drawable/gery_background"
                     android:ems="10"
                     android:hint="Phone"
                     android:inputType="number"
-                    android:textAlignment="center"
+                    android:paddingHorizontal="16dp"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -126,45 +127,63 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginStart="32dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="32dp"
                     android:background="@drawable/gery_background"
                     android:ems="10"
                     android:hint="Email"
                     android:inputType="textEmailAddress"
-                    android:textAlignment="center"
+                    android:paddingHorizontal="16dp"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
-                <EditText
-                    android:id="@+id/passwordText"
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:id="@+id/el_pass"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="32dp"
-                    android:background="@drawable/gery_background"
-                    android:ems="10"
+                    android:layout_height="wrap_content"
                     android:hint="Password"
-                    android:inputType="textPassword"
-                    android:textAlignment="center"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    app:boxStrokeColor="@color/black"
+                    app:passwordToggleEnabled="true"
+                    android:layout_marginHorizontal="30dp"
+                    android:layout_marginTop="4dp"
+                    app:layout_constraintTop_toBottomOf="@id/emailText">
 
-                <EditText
-                    android:id="@+id/rePasswordText"
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/passwordText"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:inputType="textPassword"
+                        android:background="@drawable/gery_background"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:padding="14dp"
+                        tools:ignore="SpeakableTextPresentCheck" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:id="@+id/el_re_pass"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="32dp"
-                    android:background="@drawable/gery_background"
-                    android:ems="10"
+                    android:layout_height="wrap_content"
                     android:hint="RePassword"
-                    android:inputType="textPassword"
-                    android:textAlignment="center"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    app:boxStrokeColor="@color/black"
+                    app:passwordToggleEnabled="true"
+                    android:layout_marginHorizontal="30dp"
+                    android:layout_marginTop="4dp"
+                    app:layout_constraintTop_toBottomOf="@id/el_pass">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/rePasswordText"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:inputType="textPassword"
+                        android:background="@drawable/gery_background"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:padding="14dp"
+                        tools:ignore="SpeakableTextPresentCheck" />
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/signupButton"

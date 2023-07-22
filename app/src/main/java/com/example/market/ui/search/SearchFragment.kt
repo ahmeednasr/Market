@@ -8,8 +8,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.market.data.pojo.Product
 import com.example.market.databinding.FragmentSearchBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.roundToInt
 
+@AndroidEntryPoint
 class SearchFragment : Fragment() {
 
     private var _binding: FragmentSearchBinding? = null
@@ -58,6 +60,22 @@ class SearchFragment : Fragment() {
             ivNoData.visibility = View.GONE
             tvNoData.visibility = View.GONE
             rvProducts.visibility = View.VISIBLE
+        }
+    }
+
+    private fun startShimmer() {
+        binding.apply {
+            rvProducts.visibility = View.GONE
+            shimmerViewContainer.visibility = View.VISIBLE
+            shimmerViewContainer.startShimmerAnimation()
+        }
+    }
+
+    private fun stopShimmer() {
+        binding.apply {
+            rvProducts.visibility = View.VISIBLE
+            shimmerViewContainer.visibility = View.GONE
+            shimmerViewContainer.stopShimmerAnimation()
         }
     }
 
