@@ -21,11 +21,10 @@ class ProductDetailsViewModel @Inject constructor(
 ) : ViewModel() {
 
     var allProducts = ArrayList<Product>()
+    private var _favourites = ArrayList<LineItemsItem>()
+
     private val _products: MutableLiveData<NetworkResult<List<Product>>> = MutableLiveData()
     val products: LiveData<NetworkResult<List<Product>>> = _products
-
-    private var _favourites = ArrayList<LineItemsItem>()
-    private val favouritesId = sharedPreferences.getString(Constants.FAVOURITE_ID, "0")?.toLong()
 
     private val _product: MutableLiveData<NetworkResult<ProductResponse>> = MutableLiveData()
     val product: LiveData<NetworkResult<ProductResponse>> = _product
@@ -76,8 +75,10 @@ class ProductDetailsViewModel @Inject constructor(
                 _favourites = it.draftOrder?.lineItems as ArrayList<LineItemsItem>
                 for (j in 1 until it.draftOrder.lineItems.size) {
                     for (i in products.indices) {
-                        if (products[i].title.equals(it.draftOrder.lineItems[j].title))
+                        if (products[i].id!! == it.draftOrder.lineItems[j].sku?.toLong()) {
+                            Log.d("getFavourites", "getFavourites: ${products[i].title!!}")
                             products[i].isFavourite = true
+                        }
                     }
                 }
             }
@@ -85,14 +86,15 @@ class ProductDetailsViewModel @Inject constructor(
     }
 
     fun addFavourite(product: Product) {
+        val favouritesId = sharedPreferences.getString(Constants.FAVOURITE_ID, "0")!!.toLong()
         viewModelScope.launch {
             Log.d("addFavourite", "product id = ${product.id}")
             val fav = LineItemsItem(
                 title = product.title,
                 price = product.variants?.get(0)?.price,
-                productId = product.id,
                 quantity = 1,
-                sku = product.id.toString()
+                sku = product.id.toString(),
+                properties = listOf(Property("productImage", product.image?.src))
             )
             _favourites.add(fav)
             repository.modifyFavourites(
@@ -103,15 +105,15 @@ class ProductDetailsViewModel @Inject constructor(
     }
 
     fun deleteFavourite(product: Product) {
+        val favouritesId = sharedPreferences.getString(Constants.FAVOURITE_ID, "0")!!.toLong()
         viewModelScope.launch {
             _favourites =
-                _favourites.filter { !it.title.equals(product.title)} as ArrayList<LineItemsItem>
+                _favourites.filter { !it.title.equals(product.title) } as ArrayList<LineItemsItem>
             repository.modifyFavourites(
                 favouritesId?:0,
                 DraftOrderResponse(DraftOrder(lineItems = _favourites))
             )
         }
     }
-
 
 }

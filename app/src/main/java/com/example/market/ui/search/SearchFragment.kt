@@ -1,5 +1,6 @@
 package com.example.market.ui.search
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.market.R
 import com.example.market.data.pojo.Product
 import com.example.market.databinding.FragmentSearchBinding
+import com.example.market.utils.Constants
 import kotlin.math.abs
 import com.example.market.utils.NetworkResult
 import com.google.android.material.slider.Slider
@@ -27,13 +29,14 @@ class SearchFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel:SearchViewModel by viewModels()
+    private lateinit var sharedPreferences: SharedPreferences
 
     private val searchAdapter by lazy {
         SearchAdapter(object : SearchAdapter.ProductClickListener {
             override fun onItemClicked(product: Product) {
                 findNavController().navigate(
                     SearchFragmentDirections.actionSearchFragmentToProductDetails(
-                        product
+                        product.id!!
                     )
                 )
             }
@@ -60,6 +63,7 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        sharedPreferences = requireContext().getSharedPreferences(Constants.SharedPreferences,0)
 
         observeBackButton()
         setupSliderView()
