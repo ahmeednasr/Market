@@ -20,6 +20,10 @@ class RepositoryImpl(
         return apiService.getProducts()
     }
 
+    override suspend fun getSingleProduct(productId: Long): Response<ProductResponse> {
+        return apiService.getSingleProduct(productId)
+    }
+
     override suspend fun getBrandProducts(vendor: String): Response<ProductResponse> {
         return apiService.getBrandProducts(vendor)
     }

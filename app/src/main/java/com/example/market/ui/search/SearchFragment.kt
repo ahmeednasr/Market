@@ -31,7 +31,7 @@ class SearchFragment : Fragment() {
     private val searchAdapter by lazy {
         SearchAdapter(object : SearchAdapter.ProductClickListener {
             override fun onItemClicked(product: Product) {
-                findNavController().navigate(SearchFragmentDirections.actionSearchFragmentToProductDetails(product))
+                findNavController().navigate(SearchFragmentDirections.actionSearchFragmentToProductDetails(product.id!!))
             }
 
             override fun onFavouriteClicked(product: Product) {

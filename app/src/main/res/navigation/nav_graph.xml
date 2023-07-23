@@ -118,8 +118,8 @@
         android:label="fragment_product_details"
         tools:layout="@layout/fragment_product_details">
         <argument
-            android:name="product"
-            app:argType="com.example.market.data.pojo.Product" />
+            android:name="productId"
+            app:argType="long" />
     </fragment>
     <fragment
         android:id="@+id/addressFormFragment"

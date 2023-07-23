@@ -1,6 +1,7 @@
 package com.example.market.ui.product
 
 import android.content.ContentValues.TAG
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -9,12 +10,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.denzcoskun.imageslider.models.SlideModel
 import com.example.market.R
 import com.example.market.data.pojo.Product
 import com.example.market.databinding.FragmentProductDetailsBinding
+import com.example.market.utils.Constants
+import com.example.market.utils.NetworkResult
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.roundToInt
 import kotlin.random.Random
@@ -24,9 +28,12 @@ class ProductDetails : Fragment() {
 
     private var _binding : FragmentProductDetailsBinding? = null
     private val binding get() = _binding!!
+    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var editor: SharedPreferences.Editor
+    private val viewModel : ProductDetailsViewModel by viewModels()
 
     private val args : ProductDetailsArgs by navArgs()
-    lateinit var product:Product
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,11 +46,13 @@ class ProductDetails : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        sharedPreferences = requireContext().getSharedPreferences(Constants.SharedPreferences, 0)
+        editor = sharedPreferences.edit()
 
+        viewModel.getProduct(args.productId)
+        viewModel.getProducts()
 
-        product = args.product
-
-        setUI(product)
+        observeProductResponse()
 
 
     }
@@ -65,7 +74,7 @@ class ProductDetails : Fragment() {
         }
     }
 
-    private fun setSizeList(sizeList : ArrayList<String>) {
+    private fun setSizeList(sizeList : ArrayList<String>,product: Product) {
         var itemSelected = ""
         val sizeAutoComplete = binding.autoCompleteSize
         val sizeAdapter = ArrayAdapter(requireContext(), R.layout.list_item, sizeList)
@@ -108,10 +117,63 @@ class ProductDetails : Fragment() {
             colorList.add(product.options[1].values[i])
         }
         setColorList(colorList)
-        setSizeList(sizeList)
+        setSizeList(sizeList,product)
         binding.priceText.text = product.variants!![0].price
         binding.ratingBar.rating = randomRounded.toFloat()
+        checkFavorite(product)
 
+    }
+
+    private fun checkFavorite(product: Product){
+        if (product.isFavourite){
+            binding.addToFavoriteButton.setImageDrawable(binding.root.context.getDrawable(R.drawable.ic_filled_heart))
+        }
+        binding.addToFavoriteButton.setOnClickListener {
+            if (product.isFavourite) {
+                viewModel.deleteFavourite(product)
+                binding.addToFavoriteButton.setImageDrawable(binding.root.context.getDrawable(R.drawable.ic_heart))
+            } else {
+                viewModel.addFavourite(product)
+                binding.addToFavoriteButton.setImageDrawable(binding.root.context.getDrawable(R.drawable.ic_filled_heart))
+            }
+            product.isFavourite = !product.isFavourite
+        }
+    }
+
+    private fun observeProductResponse() {
+        viewModel.product.observe(viewLifecycleOwner) { response ->
+            when (response) {
+                is NetworkResult.Success -> {
+                    //stopShimmer()
+                    response.data?.let {
+                        setUI(it.product!!)
+                    }
+                }
+                is NetworkResult.Error -> {
+                    //stopShimmer()
+                }
+                is NetworkResult.Loading -> {
+                    //startShimmer()
+                }
+            }
+        }
+    }
+    private fun observeProductsResponse() {
+        viewModel.products.observe(viewLifecycleOwner) { response ->
+            when (response) {
+                is NetworkResult.Success -> {
+                    //stopShimmer()
+                    response.data?.let {
+                    }
+                }
+                is NetworkResult.Error -> {
+                    //stopShimmer()
+                }
+                is NetworkResult.Loading -> {
+                    //startShimmer()
+                }
+            }
+        }
     }
 
 }

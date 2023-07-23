@@ -209,6 +209,8 @@ class AccountFragment : Fragment() {
                 binding.tvUsername.text = auth.currentUser!!.email
                 binding.tvLogin.setOnClickListener {
                     Firebase.auth.signOut()
+                    findNavController().navigate(R.id.accountFragment)
+                    Toast.makeText(requireContext(), "Logged Out", Toast.LENGTH_SHORT).show()
                 }
             }
         }else{

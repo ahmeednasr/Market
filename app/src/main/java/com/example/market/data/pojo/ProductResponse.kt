@@ -3,7 +3,8 @@ package com.example.market.data.pojo
 import java.io.Serializable
 
 data class ProductResponse(
-    val products: List<Product>?
+    val products: List<Product>?,
+    val product: Product?
 )
 
 data class Product(
