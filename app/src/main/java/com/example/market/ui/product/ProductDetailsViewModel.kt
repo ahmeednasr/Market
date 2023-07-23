@@ -10,4 +10,6 @@ class ProductDetailsViewModel @Inject constructor(
     private val repository: Repository,
 ) : ViewModel() {
 
+
+
 }

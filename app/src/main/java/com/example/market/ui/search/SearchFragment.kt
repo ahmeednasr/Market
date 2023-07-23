@@ -78,13 +78,17 @@ class SearchFragment : Fragment() {
 
     private fun filteredList(text: String?) {
         if (text != null) {
-            val filteredList = ArrayList<Product>()
-            for (product in products) {
-                if (product.title!!.toLowerCase().contains(text, false)) {
-                    filteredList.add(product)
+            if (text.isNotEmpty()) {
+                val filteredList = ArrayList<Product>()
+                for (product in products) {
+                    if (product.title!!.toLowerCase().contains(text, false)) {
+                        filteredList.add(product)
+                    }
                 }
+                searchAdapter.submitList(filteredList)
+            }else{
+                searchAdapter.submitList(null)
             }
-            searchAdapter.submitList(filteredList)
         }
 
     }
