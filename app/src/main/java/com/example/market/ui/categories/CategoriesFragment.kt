@@ -40,7 +40,7 @@ class CategoriesFragment : Fragment() {
             override fun onItemClicked(product: Product) {
                 findNavController().navigate(
                     CategoriesFragmentDirections.actionCategoriesFragmentToProductDetails(
-                        product
+                        product.id!!
                     )
                 )
             }

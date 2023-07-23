@@ -78,7 +78,7 @@ class SearchViewModel @Inject constructor(
             )
             _favourites.add(fav)
             repository.modifyFavourites(
-                favouritesId,
+                favouritesId?:0,
                 DraftOrderResponse(DraftOrder(lineItems = _favourites))
             )
         }
@@ -90,7 +90,7 @@ class SearchViewModel @Inject constructor(
             _favourites =
                 _favourites.filter { !it.title.equals(product.title) } as ArrayList<LineItemsItem>
             repository.modifyFavourites(
-                favouritesId,
+                favouritesId?:0,
                 DraftOrderResponse(DraftOrder(lineItems = _favourites))
             )
         }

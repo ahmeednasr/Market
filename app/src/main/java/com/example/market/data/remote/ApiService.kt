@@ -19,6 +19,9 @@ interface ApiService {
     @GET("products.json")
     suspend fun getBrandProducts(@Query("vendor") vendor: String): Response<ProductResponse>
 
+    @GET("products/{id}.json")
+    suspend fun getSingleProduct(@Path("id") productId: Long): Response<ProductResponse>
+
     @POST("customers.json")
     suspend fun postCustomer(
         @Header("Content-Type") contentType: String = "application/json",

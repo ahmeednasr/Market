@@ -65,6 +65,9 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_categoriesFragment_to_favouritesFragment"
+            app:destination="@id/favouritesFragment" />
     </fragment>
 
     <fragment
@@ -135,6 +138,9 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_searchFragment_to_favouritesFragment"
+            app:destination="@id/favouritesFragment" />
     </fragment>
     <fragment
         android:id="@+id/mapFragment"
@@ -147,8 +153,8 @@
         android:label="fragment_product_details"
         tools:layout="@layout/fragment_product_details">
         <argument
-            android:name="product"
-            app:argType="com.example.market.data.pojo.Product" />
+            android:name="productId"
+            app:argType="long" />
     </fragment>
     <fragment
         android:id="@+id/addressFormFragment"

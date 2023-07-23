@@ -95,6 +95,9 @@ class AccountFragment : Fragment() {
         binding.ivCart.setOnClickListener {
 
         }
+        observeSearchButton()
+        observeConvertCurrencyResponse()
+        navigateToOrders()
     }
 
     private fun navigateToOrders() {
