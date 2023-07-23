@@ -172,6 +172,7 @@ class AuthSignIn : Fragment() {
                                editor.putString(Constants.UserID, customer.id.toString())
                                editor.putString(Constants.FAVOURITE_ID, customer.note.toString())
                                editor.putString(Constants.CART_ID, customer.multipass_identifier.toString())
+                               editor.putBoolean(Constants.IS_Logged, true)
                                editor.apply()
                            }
                        }
