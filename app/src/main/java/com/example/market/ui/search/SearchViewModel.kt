@@ -45,17 +45,19 @@ class SearchViewModel @Inject constructor(
     }
 
     private suspend fun getFavourites(products: List<Product>) {
-        val draftResponse = repository.getFavourites(
-            sharedPreferences.getString(Constants.FAVOURITE_ID, "0")!!.toLong()
-        )
-        if (draftResponse.isSuccessful) {
-            draftResponse.body()?.let {
-                _favourites = it.draftOrder?.lineItems as ArrayList<LineItemsItem>
-                for (j in 1 until it.draftOrder.lineItems.size) {
-                    for (i in products.indices) {
-                        if (products[i].id!! == it.draftOrder.lineItems[j].sku?.toLong()) {
-                            Log.d("getFavourites", "getFavourites: ${products[i].title!!}")
-                            products[i].isFavourite = true
+        if (sharedPreferences.getBoolean(Constants.IS_Logged, false)){
+            val draftResponse = repository.getFavourites(
+                sharedPreferences.getString(Constants.FAVOURITE_ID, "0")!!.toLong()
+            )
+            if (draftResponse.isSuccessful) {
+                draftResponse.body()?.let {
+                    _favourites = it.draftOrder?.lineItems as ArrayList<LineItemsItem>
+                    for (j in 1 until it.draftOrder.lineItems.size) {
+                        for (i in products.indices) {
+                            if (products[i].id!! == it.draftOrder.lineItems[j].sku?.toLong()) {
+                                Log.d("getFavourites", "getFavourites: ${products[i].title!!}")
+                                products[i].isFavourite = true
+                            }
                         }
                     }
                 }
@@ -64,8 +66,8 @@ class SearchViewModel @Inject constructor(
     }
 
     fun addFavourite(product: Product) {
-        val favouritesId = sharedPreferences.getString(Constants.FAVOURITE_ID, "0")!!.toLong()
         viewModelScope.launch {
+            val favouritesId = sharedPreferences.getString(Constants.FAVOURITE_ID, "0")!!.toLong()
             Log.d("addFavourite", "product id = ${product.id}")
             val fav = LineItemsItem(
                 title = product.title,
@@ -83,8 +85,8 @@ class SearchViewModel @Inject constructor(
     }
 
     fun deleteFavourite(product: Product) {
-        val favouritesId = sharedPreferences.getString(Constants.FAVOURITE_ID, "0")!!.toLong()
         viewModelScope.launch {
+            val favouritesId = sharedPreferences.getString(Constants.FAVOURITE_ID, "0")!!.toLong()
             _favourites =
                 _favourites.filter { !it.title.equals(product.title) } as ArrayList<LineItemsItem>
             repository.modifyFavourites(

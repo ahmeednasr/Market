@@ -30,7 +30,7 @@ class FavouritesViewModel @Inject constructor(
     private val _products: MutableLiveData<NetworkResult<List<LineItemsItem>>> = MutableLiveData()
     val products: LiveData<NetworkResult<List<LineItemsItem>>> = _products
 
-    private val favouritesId = sharedPreferences.getString(Constants.FAVOURITE_ID, "0")!!.toLong()
+
 
     fun getFavourites() {
         _products.value = NetworkResult.Loading()
@@ -57,6 +57,7 @@ class FavouritesViewModel @Inject constructor(
 
     fun deleteFavourite(product: LineItemsItem) {
         viewModelScope.launch {
+            val favouritesId = sharedPreferences.getString(Constants.FAVOURITE_ID, "0")!!.toLong()
             _favourites =
                 _favourites.filter { !it.title.equals(product.title) } as ArrayList<LineItemsItem>
             repository.modifyFavourites(
