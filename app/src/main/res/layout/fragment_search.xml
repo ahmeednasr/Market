@@ -62,16 +62,38 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.appcompat.widget.Toolbar>
 
-    <com.google.android.material.slider.Slider
-        android:id="@+id/continuousSlider"
+    <LinearLayout
+        android:id="@+id/linear_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:valueFrom="0.0"
-        android:valueTo="300.0"
-        app:labelBehavior="withinBounds"
+        android:orientation="vertical"
+        android:layout_margin="16dp"
+        android:weightSum="2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_search_fragment" />
+        app:layout_constraintTop_toBottomOf="@id/toolbar_search_fragment">
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Filter by Price:"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/continuousSlider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:valueFrom="0.0"
+            android:valueTo="300.0"
+            app:labelBehavior="withinBounds" />
+
+    </LinearLayout>
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_products"
@@ -81,7 +103,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/continuousSlider"
+        app:layout_constraintTop_toBottomOf="@id/linear_layout"
         tools:listitem="@layout/item_favourite_product" />
 
     <androidx.cardview.widget.CardView
@@ -127,7 +149,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/continuousSlider">
+        app:layout_constraintTop_toBottomOf="@+id/linear_layout">
 
         <LinearLayout
             android:layout_width="match_parent"
