@@ -30,16 +30,16 @@
             android:layout_height="25dp"
             android:elevation="16dp"
             app:cardCornerRadius="20dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toEndOf="@id/iv_product"
-            app:layout_constraintTop_toTopOf="@id/iv_product">
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintStart_toStartOf="@id/iv_product"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product">
 
             <ImageView
-                android:id="@+id/iv_unfavourite"
+                android:id="@+id/iv_favourite"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                app:srcCompat="@drawable/ic_cancel"
+                app:srcCompat="@drawable/ic_heart"
                 android:layout_gravity="center"/>
 
         </androidx.cardview.widget.CardView>
@@ -52,9 +52,10 @@
             android:layout_marginTop="8dp"
             android:textColor="@color/black"
             android:textSize="12sp"
-            android:singleLine="true"
-            android:maxLines="1"
+            android:singleLine="false"
+            android:maxLines="2"
             android:ellipsize="end"
+            android:paddingHorizontal="16dp"
             android:layout_marginHorizontal="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

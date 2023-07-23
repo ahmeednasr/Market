@@ -2,7 +2,6 @@ package com.example.market.auth
 
 import android.app.Activity
 import android.content.ContentValues.TAG
-import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -17,7 +16,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.example.market.MainActivity
+import com.example.market.ui.MainActivity
 import com.example.market.R
 import com.example.market.databinding.FragmentAuthSignInBinding
 import com.example.market.utils.Constants
@@ -38,10 +37,12 @@ class AuthSignIn : Fragment() {
 
     private var _binding : FragmentAuthSignInBinding? = null
     private val binding get() = _binding!!
+
     private lateinit var auth: FirebaseAuth
     private lateinit var googleSignInClient:GoogleSignInClient
+
     private val viewModel:AuthViewModel by viewModels()
-    lateinit var sharedPreferences: SharedPreferences
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -89,7 +90,7 @@ class AuthSignIn : Fragment() {
                         getUserID(email)
                         Log.i(TAG, "signInUser: ${sharedPreferences.getString(Constants.UserID,"No ID)")}")
                         Toast.makeText(requireContext(),"Login Successfully", Toast.LENGTH_LONG).show()
-                        startActivity(Intent(requireActivity(),MainActivity::class.java))
+                        startActivity(Intent(requireActivity(), MainActivity::class.java))
                         requireActivity().finish()
                     }else{
                         binding.progressBar2.visibility = View.GONE
@@ -149,7 +150,7 @@ class AuthSignIn : Fragment() {
             if (it.isSuccessful){
                 binding.progressBar2.visibility = View.GONE
                 Toast.makeText(requireContext(),"Login Successfully", Toast.LENGTH_LONG).show()
-                val intent = Intent(requireActivity(),MainActivity::class.java)
+                val intent = Intent(requireActivity(), MainActivity::class.java)
                 startActivity(intent)
                 requireActivity().finish()
             }else{

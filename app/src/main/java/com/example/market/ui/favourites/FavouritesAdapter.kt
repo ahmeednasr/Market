@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.market.data.pojo.Product
 import com.example.market.databinding.ItemFavouriteProductBinding
-import com.example.market.databinding.ItemUnfavouriteBinding
 
 class FavouritesAdapter(
     private val clickListener: ProductClickListener
@@ -30,7 +29,7 @@ class FavouritesAdapter(
         fun onDislikeClicked(product: Product)
     }
 
-    class MyViewHolder(private val binding: ItemUnfavouriteBinding) :
+    class MyViewHolder(private val binding: ItemFavouriteProductBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(product: Product, clickListener: ProductClickListener) {
@@ -54,7 +53,7 @@ class FavouritesAdapter(
         companion object {
             fun from(parent: ViewGroup): MyViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = ItemUnfavouriteBinding.inflate(layoutInflater, parent, false)
+                val binding = ItemFavouriteProductBinding.inflate(layoutInflater, parent, false)
                 return MyViewHolder(binding)
             }
         }
