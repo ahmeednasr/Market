@@ -6,10 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.market.data.pojo.DraftOrder
-import com.example.market.data.pojo.DraftOrderResponse
-import com.example.market.data.pojo.LineItemsItem
-import com.example.market.data.pojo.Product
+import com.example.market.data.pojo.*
 import com.example.market.data.repo.Repository
 import com.example.market.utils.Constants
 import com.example.market.utils.NetworkResult
@@ -31,8 +28,6 @@ class SearchViewModel @Inject constructor(
     private val _products: MutableLiveData<NetworkResult<List<Product>>> = MutableLiveData()
     val products: LiveData<NetworkResult<List<Product>>> = _products
 
-    private val favouritesId = sharedPreferences.getString(Constants.FAVOURITE_ID, "0")!!.toLong()
-
     fun getProducts() {
         _products.value = NetworkResult.Loading()
         viewModelScope.launch {
@@ -41,7 +36,7 @@ class SearchViewModel @Inject constructor(
                 productsResponse.body()?.let {
                     allProducts = it.products as ArrayList<Product>
                     getFavourites(allProducts)
-                    _products.postValue(NetworkResult.Success(it.products))
+                    _products.postValue(NetworkResult.Success(allProducts))
                 }
             } else {
                 _products.postValue(NetworkResult.Error("error"))
@@ -58,8 +53,10 @@ class SearchViewModel @Inject constructor(
                 _favourites = it.draftOrder?.lineItems as ArrayList<LineItemsItem>
                 for (j in 1 until it.draftOrder.lineItems.size) {
                     for (i in products.indices) {
-                        if (products[i].title.equals(it.draftOrder.lineItems[j].title))
+                        if (products[i].id!! == it.draftOrder.lineItems[j].sku?.toLong()) {
+                            Log.d("getFavourites", "getFavourites: ${products[i].title!!}")
                             products[i].isFavourite = true
+                        }
                     }
                 }
             }
@@ -67,14 +64,15 @@ class SearchViewModel @Inject constructor(
     }
 
     fun addFavourite(product: Product) {
+        val favouritesId = sharedPreferences.getString(Constants.FAVOURITE_ID, "0")!!.toLong()
         viewModelScope.launch {
             Log.d("addFavourite", "product id = ${product.id}")
             val fav = LineItemsItem(
                 title = product.title,
                 price = product.variants?.get(0)?.price,
-                productId = product.id,
                 quantity = 1,
-                sku = product.id.toString()
+                sku = product.id.toString(),
+                properties = listOf(Property("productImage", product.image?.src))
             )
             _favourites.add(fav)
             repository.modifyFavourites(
@@ -85,9 +83,10 @@ class SearchViewModel @Inject constructor(
     }
 
     fun deleteFavourite(product: Product) {
+        val favouritesId = sharedPreferences.getString(Constants.FAVOURITE_ID, "0")!!.toLong()
         viewModelScope.launch {
             _favourites =
-                _favourites.filter { !it.title.equals(product.title)} as ArrayList<LineItemsItem>
+                _favourites.filter { !it.title.equals(product.title) } as ArrayList<LineItemsItem>
             repository.modifyFavourites(
                 favouritesId,
                 DraftOrderResponse(DraftOrder(lineItems = _favourites))

@@ -52,6 +52,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        observeFavouritesButton()
         observeSearchButton()
         setupBrandsRecyclerView()
         observeBrandsResponse()
@@ -68,6 +69,12 @@ class HomeFragment : Fragment() {
     private fun observeSearchButton() {
         binding.ivSearch.setOnClickListener {
             findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToSearchFragment())
+        }
+    }
+
+    private fun observeFavouritesButton() {
+        binding.ivFavourite.setOnClickListener {
+            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToFavouritesFragment())
         }
     }
 

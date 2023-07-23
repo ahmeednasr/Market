@@ -40,11 +40,14 @@ class AccountFragment : Fragment() {
 
     private var _binding: FragmentAccountBinding? = null
     private val binding get() = _binding!!
+
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
+
     lateinit var dialog: AlertDialog
     lateinit var currentLocale: Locale
     lateinit var currentLanguage: String
+
     private val viewModel: AccountViewModel by viewModels()
     private lateinit var auth: FirebaseAuth
 

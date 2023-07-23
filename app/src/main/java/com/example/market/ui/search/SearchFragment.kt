@@ -26,12 +26,16 @@ class SearchFragment : Fragment() {
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel:SearchViewModel by viewModels()
+    private val viewModel: SearchViewModel by viewModels()
 
-    private val searchAdapter by lazy {
+    private val searchAdapter =
         SearchAdapter(object : SearchAdapter.ProductClickListener {
             override fun onItemClicked(product: Product) {
-                findNavController().navigate(SearchFragmentDirections.actionSearchFragmentToProductDetails(product))
+                findNavController().navigate(
+                    SearchFragmentDirections.actionSearchFragmentToProductDetails(
+                        product
+                    )
+                )
             }
 
             override fun onFavouriteClicked(product: Product) {
@@ -43,7 +47,6 @@ class SearchFragment : Fragment() {
                 product.isFavourite = !product.isFavourite
             }
         })
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,12 +60,23 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getProducts()
-         setupSliderView()
+        observeBackButton()
+        setupSliderView()
         setupProductsRecyclerView()
         observeProductsResponse()
+        observeSearchText()
+        observeSliderChange()
 
+        viewModel.getProducts()
+    }
 
+    private fun observeBackButton() {
+        binding.ivBackArrow.setOnClickListener {
+            findNavController().popBackStack()
+        }
+    }
+
+    private fun observeSearchText() {
         binding.etSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
             androidx.appcompat.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -78,7 +92,10 @@ class SearchFragment : Fragment() {
                 return true
             }
         })
-        binding.continuousSlider.addOnChangeListener(object: Slider.OnChangeListener {
+    }
+
+    private fun observeSliderChange() {
+        binding.continuousSlider.addOnChangeListener(object : Slider.OnChangeListener {
             override fun onValueChange(slider: Slider, value: Float, fromUser: Boolean) {
                 Log.d("addOnChangeListener", slider.value.toString())
                 if (value < 5.0f) {
@@ -89,7 +106,6 @@ class SearchFragment : Fragment() {
             }
         })
     }
-    
 
     private fun handleNoDataState() {
         binding.apply {
@@ -132,6 +148,7 @@ class SearchFragment : Fragment() {
 
     private fun setupProductsRecyclerView() {
         binding.rvProducts.apply {
+            itemAnimator = null
             adapter = searchAdapter
             layoutManager =
                 GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
@@ -150,7 +167,7 @@ class SearchFragment : Fragment() {
                     stopShimmer()
                     response.data?.let {
                         Log.d("observeProductsResponse", "size: ${it.size}")
-                        if (it.isEmpty()){
+                        if (it.isEmpty()) {
                             handleNoDataState()
                         } else {
                             handleDataState()
