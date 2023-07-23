@@ -29,7 +29,7 @@ class CategoriesFragment : Fragment() {
     private val productsAdapter by lazy {
         ProductsAdapter(object : ProductsAdapter.ProductClickListener {
             override fun onItemClicked(product: Product) {
-                findNavController().navigate(CategoriesFragmentDirections.actionCategoriesFragmentToProductDetails(product))
+                findNavController().navigate(CategoriesFragmentDirections.actionCategoriesFragmentToProductDetails(product.id!!))
             }
         })
     }

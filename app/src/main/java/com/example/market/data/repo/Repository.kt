@@ -9,6 +9,7 @@ import retrofit2.http.Path
 interface Repository {
     suspend fun getBrands(): Response<BrandResponse>
     suspend fun getProducts(): Response<ProductResponse>
+    suspend fun getSingleProduct( productId: Long): Response<ProductResponse>
     suspend fun getBrandProducts(vendor: String): Response<ProductResponse>
     suspend fun getCurrencies(): Response<Currencies>
     suspend fun convertCurrency(from: String, to: String, amount: Double): Response<ConvertedCurrency>

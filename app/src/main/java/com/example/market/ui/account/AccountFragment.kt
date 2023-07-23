@@ -64,6 +64,7 @@ class AccountFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         auth = Firebase.auth
+        updateUserUI()
         sharedPreferences = requireContext().getSharedPreferences(Constants.SharedPreferences, 0)
         editor = sharedPreferences.edit()
 
@@ -94,6 +95,9 @@ class AccountFragment : Fragment() {
         binding.ivCart.setOnClickListener {
 
         }
+        observeSearchButton()
+        observeConvertCurrencyResponse()
+        navigateToOrders()
     }
 
     private fun navigateToOrders() {
