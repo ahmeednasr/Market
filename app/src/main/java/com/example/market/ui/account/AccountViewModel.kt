@@ -42,9 +42,9 @@ class AccountViewModel @Inject constructor(
         }
     }
 
-    fun convertCurrency(from: String, to: String) {
+    fun convertCurrency(from: String, to: String,amount:Double) {
         viewModelScope.launch {
-            val response = repository.convertCurrency(from, to)
+            val response = repository.convertCurrency(from, to,amount)
             if (response.isSuccessful) {
                 response.body()?.let {
                     _conversionResult.postValue(NetworkResult.Success(it.result))

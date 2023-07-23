@@ -53,7 +53,9 @@ class CategoriesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.ivCart.setOnClickListener {
 
+        }
         setFabAnimation()
         hideAllFabs()
         observeCategoryFab()

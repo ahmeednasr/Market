@@ -14,12 +14,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.market.R
 import com.example.market.data.pojo.Product
 import com.example.market.databinding.FragmentSearchBinding
-
+import kotlin.math.abs
 import com.example.market.utils.NetworkResult
+import com.google.android.material.slider.Slider
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
@@ -27,9 +25,8 @@ class SearchFragment : Fragment() {
 
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
-    private val viewModel:SearchViewModel by viewModels()
-    var products = ArrayList<Product>()
 
+    private val viewModel:SearchViewModel by viewModels()
 
     private val searchAdapter by lazy {
         SearchAdapter(object : SearchAdapter.ProductClickListener {
@@ -38,7 +35,12 @@ class SearchFragment : Fragment() {
             }
 
             override fun onFavouriteClicked(product: Product) {
-                //add product to favourites
+                if (product.isFavourite) {
+                    viewModel.deleteFavourite(product)
+                } else {
+                    viewModel.addFavourite(product)
+                }
+                product.isFavourite = !product.isFavourite
             }
         })
     }
@@ -57,10 +59,9 @@ class SearchFragment : Fragment() {
 
         viewModel.getProducts()
          setupSliderView()
-
         setupProductsRecyclerView()
-
         observeProductsResponse()
+
 
         binding.etSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
             androidx.appcompat.widget.SearchView.OnQueryTextListener {
@@ -69,10 +70,15 @@ class SearchFragment : Fragment() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                filteredList(newText)
+                if (newText != null) {
+                    viewModel.filterProductsByTittle(newText)
+                } else {
+                    searchAdapter.submitList(viewModel.allProducts)
+                }
                 return true
             }
         })
+
 
     }
 
@@ -84,12 +90,23 @@ class SearchFragment : Fragment() {
                     if (product.title!!.toLowerCase().contains(text, false)) {
                         filteredList.add(product)
                     }
+
+        binding.continuousSlider.addOnChangeListener(object: Slider.OnChangeListener {
+            override fun onValueChange(slider: Slider, value: Float, fromUser: Boolean) {
+                Log.d("addOnChangeListener", slider.value.toString())
+                if (value < 5.0f) {
+                    searchAdapter.submitList(viewModel.allProducts)
+                } else {
+                    viewModel.filterProductsByPrice(value)
                 }
                 searchAdapter.submitList(filteredList)
             }else{
                 searchAdapter.submitList(null)
             }
+
         }
+        })
+
 
     }
 
@@ -149,19 +166,22 @@ class SearchFragment : Fragment() {
         viewModel.products.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is NetworkResult.Success -> {
+                    stopShimmer()
                     response.data?.let {
                         Log.d("observeProductsResponse", "size: ${it.size}")
                         if (it.isEmpty()){
                             handleNoDataState()
                         } else {
-                            products.addAll(it)
                             handleDataState()
+                            searchAdapter.submitList(it)
                         }
                     }
                 }
                 is NetworkResult.Error -> {
+                    stopShimmer()
                 }
                 is NetworkResult.Loading -> {
+                    startShimmer()
                 }
             }
         }

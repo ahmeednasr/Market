@@ -6,11 +6,7 @@ import com.example.market.data.pojo.Currencies
 import com.example.market.data.pojo.ProductResponse
 import com.example.market.data.pojo.*
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.Path
-import retrofit2.http.POST
+import retrofit2.http.*
 import retrofit2.http.Query
 
 interface ApiService {
@@ -51,5 +47,20 @@ interface ApiService {
         @Header("Accept") accept: String = "application/json",
         @Body cartDraftOrder: DraftOrderResponse
     ): Response<DraftOrderResponse>
+
+    @PUT("draft_orders/{favouriteId}.json")
+    suspend fun modifyFavourites(@Path("favouriteId") favouriteId: Long, @Body modifiedList: DraftOrderResponse)
+
+    @GET("draft_orders/{favouriteId}.json")
+    suspend fun getFavourites(@Path("favouriteId") favouriteId: Long): Response<DraftOrderResponse>
+
+    @GET("/draft_orders/{id}.json")
+    suspend fun getDraftById(
+        @Path("id") draftId: Long
+    ): Response<DraftOrderResponse>
+
+    @GET("price_rules/1401023660351/discount_codes.json")
+    suspend fun getDiscountCodes(
+    ): Response<DiscountResponse>
 
 }

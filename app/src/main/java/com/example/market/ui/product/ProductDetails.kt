@@ -40,9 +40,11 @@ class ProductDetails : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
         product = args.product
 
         setUI(product)
+
 
     }
 
@@ -109,6 +111,7 @@ class ProductDetails : Fragment() {
         setSizeList(sizeList)
         binding.priceText.text = product.variants!![0].price
         binding.ratingBar.rating = randomRounded.toFloat()
+
     }
 
 }
