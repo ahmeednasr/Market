@@ -170,9 +170,9 @@ class SearchFragment : Fragment() {
 
     private fun showAlertDialog() {
         val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Error")
-        builder.setMessage("You Must login first.")
-        builder.setIcon(android.R.drawable.ic_dialog_alert)
+        builder.setTitle("Login Required")
+        builder.setMessage("Please log in to continue.")
+        builder.setIcon(android.R.drawable.ic_dialog_info)
         builder.setPositiveButton(resources.getString(R.string.OK)) { _, _ ->
             val i = Intent(requireActivity(), AuthActivity::class.java)
             i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
