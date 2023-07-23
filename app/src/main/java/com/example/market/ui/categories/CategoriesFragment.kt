@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.market.R
 import com.example.market.data.pojo.Product
 import com.example.market.databinding.FragmentCategoriesBinding
+import com.example.market.ui.home.HomeFragmentDirections
 import com.example.market.utils.NetworkResult
 import dagger.hilt.android.AndroidEntryPoint
 import nl.bryanderidder.themedtogglebuttongroup.ThemedButton
@@ -53,12 +54,14 @@ class CategoriesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         binding.ivCart.setOnClickListener {
 
         }
         setFabAnimation()
         hideAllFabs()
         observeCategoryFab()
+        observeFavouritesButton()
         observeSearchButton()
         setupProductsRecyclerView()
         observeProductsResponse()
@@ -66,6 +69,12 @@ class CategoriesFragment : Fragment() {
         observeFloatingActionButton()
 
         viewModel.getProducts()
+    }
+
+    private fun observeFavouritesButton() {
+        binding.ivFavourite.setOnClickListener {
+            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToFavouritesFragment())
+        }
     }
 
     private fun observeSearchButton() {
