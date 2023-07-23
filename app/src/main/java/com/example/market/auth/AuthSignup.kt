@@ -25,8 +25,10 @@ class AuthSignup : Fragment() {
 
     private var _binding : FragmentAuthSingupBinding? = null
     private val binding get() = _binding!!
+
     private lateinit var auth:FirebaseAuth
     private lateinit var user: User
+
     private val viewModel:AuthViewModel by viewModels()
 
     override fun onCreateView(

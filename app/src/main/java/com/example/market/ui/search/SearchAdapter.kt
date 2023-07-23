@@ -9,6 +9,7 @@ import com.bumptech.glide.Glide
 import com.example.market.R
 import com.example.market.data.pojo.Product
 import com.example.market.databinding.ItemFavouriteProductBinding
+import com.example.market.databinding.ItemSearchProductBinding
 
 class SearchAdapter(
     private val clickListener: ProductClickListener
@@ -30,7 +31,7 @@ class SearchAdapter(
         fun onFavouriteClicked(product: Product)
     }
 
-    class MyViewHolder(private val binding: ItemFavouriteProductBinding) :
+    class MyViewHolder(private val binding: ItemSearchProductBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(product: Product, clickListener: ProductClickListener, adapter: SearchAdapter) {
@@ -59,7 +60,7 @@ class SearchAdapter(
         companion object {
             fun from(parent: ViewGroup): MyViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = ItemFavouriteProductBinding.inflate(layoutInflater, parent, false)
+                val binding = ItemSearchProductBinding.inflate(layoutInflater, parent, false)
                 return MyViewHolder(binding)
             }
         }

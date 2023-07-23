@@ -13,6 +13,7 @@
         android:layout_margin="16dp"
         android:orientation="vertical"
         android:weightSum="4"
+        android:scrollIndicators="none"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

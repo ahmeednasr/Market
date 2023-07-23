@@ -104,7 +104,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/linear_layout"
-        tools:listitem="@layout/item_favourite_product" />
+        tools:listitem="@layout/item_search_product" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/iv_no_data"
