@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import android.widget.SearchView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.market.R
@@ -19,7 +18,6 @@ import com.example.market.auth.AuthActivity
 import com.example.market.data.pojo.Product
 import com.example.market.databinding.FragmentSearchBinding
 import com.example.market.utils.Constants
-import kotlin.math.abs
 import com.example.market.utils.NetworkResult
 import com.google.android.material.slider.Slider
 import dagger.hilt.android.AndroidEntryPoint

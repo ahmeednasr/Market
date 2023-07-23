@@ -20,11 +20,7 @@ class ProductDetailsViewModel @Inject constructor(
     private val sharedPreferences: SharedPreferences
 ) : ViewModel() {
 
-    var allProducts = ArrayList<Product>()
     private var _favourites = ArrayList<LineItemsItem>()
-
-    private val _products: MutableLiveData<NetworkResult<List<Product>>> = MutableLiveData()
-    val products: LiveData<NetworkResult<List<Product>>> = _products
 
     private val _product: MutableLiveData<NetworkResult<ProductResponse>> = MutableLiveData()
     val product: LiveData<NetworkResult<ProductResponse>> = _product
@@ -35,6 +31,9 @@ class ProductDetailsViewModel @Inject constructor(
             val productsResponse = repository.getSingleProduct(productId)
             if (productsResponse.isSuccessful) {
                 productsResponse.body()?.let {
+                    it.product?.let {product->
+                        getFavourites(product)
+                    }
                     _product.postValue(NetworkResult.Success(it))
                 }
             } else {
@@ -50,35 +49,17 @@ class ProductDetailsViewModel @Inject constructor(
         }
     }
 
-    fun getProducts() {
-        _products.value = NetworkResult.Loading()
-        viewModelScope.launch {
-            val productsResponse = repository.getProducts()
-            if (productsResponse.isSuccessful) {
-                productsResponse.body()?.let {
-                    allProducts = it.products as ArrayList<Product>
-                    getFavourites(allProducts)
-                    _products.postValue(NetworkResult.Success(it.products))
-                }
-            } else {
-                _products.postValue(NetworkResult.Error("error"))
-            }
-        }
-    }
 
-    private suspend fun getFavourites(products: List<Product>) {
+    private suspend fun getFavourites(product: Product) {
         val draftResponse = repository.getFavourites(
             sharedPreferences.getString(Constants.FAVOURITE_ID, "0")!!.toLong()
         )
         if (draftResponse.isSuccessful) {
             draftResponse.body()?.let {
-                _favourites = it.draftOrder?.lineItems as ArrayList<LineItemsItem>
-                for (j in 1 until it.draftOrder.lineItems.size) {
-                    for (i in products.indices) {
-                        if (products[i].id!! == it.draftOrder.lineItems[j].sku?.toLong()) {
-                            Log.d("getFavourites", "getFavourites: ${products[i].title!!}")
-                            products[i].isFavourite = true
-                        }
+                 _favourites = it.draftOrder?.lineItems as ArrayList<LineItemsItem>
+                for(favorite in _favourites){
+                    if(product.id!! == favorite.sku?.toLong()){
+                        product.isFavourite = true
                     }
                 }
             }

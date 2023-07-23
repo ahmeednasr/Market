@@ -61,8 +61,7 @@
                         android:layout_gravity="center"
                         android:layout_margin="8dp"
                         android:layout_weight="0.1"
-                        android:text="Brand:"
-                        android:textStyle="bold" />
+                        android:text="Brand:"/>
 
                     <TextView
                         android:id="@+id/brandText"
@@ -98,8 +97,7 @@
                         android:layout_margin="16dp"
                         android:layout_weight="0.75"
                         android:text="Rating:"
-                        android:textSize="16sp"
-                        android:textStyle="bold"/>
+                        android:textSize="16sp"/>
 
                     <RatingBar
                         android:id="@+id/ratingBar"
@@ -112,7 +110,15 @@
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/descreptionText"
+                    android:id="@+id/description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="-Description-"
+                    android:textStyle="bold"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/descriptionText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
@@ -134,8 +140,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="-Select Your Options-"
-                    android:textSize="14sp"
-                    android:textStyle="bold"/>
+                    android:textSize="14sp"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
