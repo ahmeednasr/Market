@@ -6,11 +6,7 @@ import com.example.market.data.pojo.Currencies
 import com.example.market.data.pojo.ProductResponse
 import com.example.market.data.pojo.*
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.Path
-import retrofit2.http.POST
+import retrofit2.http.*
 import retrofit2.http.Query
 
 interface ApiService {
@@ -52,8 +48,27 @@ interface ApiService {
         @Body cartDraftOrder: DraftOrderResponse
     ): Response<DraftOrderResponse>
 
+
+    @GET("draft_orders.json")
+    suspend fun getDraftOrders(): Response<CartResponse>
+
+    @PUT("draft_orders/{id}.json")
+    suspend fun updateDraftOrder(
+        @Path("id") id: Long,
+        @Body order: DraftOrderResponse
+    ): Response<DraftOrderResponse>
+
+    @PUT("variants/{id}.json")
+    suspend fun getVariantById(
+        @Path("id") id: Long,
+    ): Response<Variant>
+
+
+    @DELETE("draft_orders/{id}.json")
+    suspend fun deleteCartByID(@Path("id") id: Long?): Response<DraftOrderResponse>
+
     @GET("/draft_orders/{id}.json")
-    suspend fun getDraftById(
+    suspend fun getCartById(
         @Path("id") draftId: Long
     ): Response<DraftOrderResponse>
 

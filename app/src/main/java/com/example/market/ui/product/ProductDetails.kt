@@ -9,27 +9,33 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.denzcoskun.imageslider.models.SlideModel
 import com.example.market.R
 import com.example.market.data.pojo.Product
 import com.example.market.databinding.FragmentProductDetailsBinding
+import com.example.market.ui.account.AccountViewModel
+import com.example.market.utils.Constants
+import com.example.market.utils.Constants.UserID
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ProductDetails : Fragment() {
 
-    private var _binding : FragmentProductDetailsBinding? = null
+    private var _binding: FragmentProductDetailsBinding? = null
     private val binding get() = _binding!!
+    private val viewModel: ProductDetailsViewModel by viewModels()
 
-    private val args : ProductDetailsArgs by navArgs()
+
+    private val args: ProductDetailsArgs by navArgs()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        _binding = FragmentProductDetailsBinding.inflate(inflater,container,false)
+        _binding = FragmentProductDetailsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -43,39 +49,39 @@ class ProductDetails : Fragment() {
         _binding = null
     }
 
-    private fun setColorList(colorList : ArrayList<String>): String{
+    private fun setColorList(colorList: ArrayList<String>): String {
         var itemSelected = ""
         val colorAutoComplete = binding.autoCompleteColor
         val colorAdapter = ArrayAdapter(requireContext(), R.layout.list_item, colorList)
         colorAutoComplete.setAdapter(colorAdapter)
 
-        colorAutoComplete.onItemClickListener = AdapterView.OnItemClickListener{
-                adapterView, view, i,l ->
-            itemSelected = adapterView.getItemAtPosition(i).toString()
-        }
+        colorAutoComplete.onItemClickListener =
+            AdapterView.OnItemClickListener { adapterView, view, i, l ->
+                itemSelected = adapterView.getItemAtPosition(i).toString()
+            }
         return itemSelected
     }
 
-    private fun setSizeList(sizeList : ArrayList<String>) : String{
+    private fun setSizeList(sizeList: ArrayList<String>): String {
         var itemSelected = ""
         val sizeAutoComplete = binding.autoCompleteSize
         val sizeAdapter = ArrayAdapter(requireContext(), R.layout.list_item, sizeList)
         sizeAutoComplete.setAdapter(sizeAdapter)
 
-        sizeAutoComplete.onItemClickListener = AdapterView.OnItemClickListener{
-                adapterView, view, i,l ->
-            itemSelected = adapterView.getItemAtPosition(i).toString()
-            binding.availability.visibility = View.VISIBLE
+        sizeAutoComplete.onItemClickListener =
+            AdapterView.OnItemClickListener { adapterView, view, i, l ->
+                itemSelected = adapterView.getItemAtPosition(i).toString()
+                binding.availability.visibility = View.VISIBLE
 
-        }
+            }
         return itemSelected
     }
 
-    private fun setUI(product: Product){
+    private fun setUI(product: Product) {
         binding.availability.visibility = View.GONE
         val imageList = ArrayList<SlideModel>()
         val imgSlider = binding.imageSlider
-        for(i in product.images?.indices!!){
+        for (i in product.images?.indices!!) {
             imageList.add(SlideModel(product.images[i].src))
         }
         imgSlider.setImageList(imageList)
@@ -85,18 +91,18 @@ class ProductDetails : Fragment() {
         binding.descreptionText.text = product.body_html
 
         val sizeList = ArrayList<String>()
-        for(i in product.options!![0].values.indices){
+        for (i in product.options!![0].values.indices) {
             sizeList.add(product.options[0].values[i])
         }
 
         val colorList = ArrayList<String>()
-        for(i in product.options[1].values.indices){
+        for (i in product.options[1].values.indices) {
             colorList.add(product.options[1].values[i])
         }
-        val variant = """""" + setColorList(colorList) + " / "+setSizeList(sizeList) + """"""
+        val variant = """""" + setColorList(colorList) + " / " + setSizeList(sizeList) + """"""
 
-        for (i in product.variants!!.indices){
-            if(product.variants[i].title == variant){
+        for (i in product.variants!!.indices) {
+            if (product.variants[i].title == variant) {
                 binding.priceText.text = product.variants[i].price
                 binding.availability.text = product.variants[i].inventory_quantity.toString()
             }
@@ -107,6 +113,14 @@ class ProductDetails : Fragment() {
         Log.i(TAG, "setUI: $variant ${binding.availability.text}")
 
         binding.priceText.text = product.variants[0].price
+        binding.addToChartButton.setOnClickListener {
+            val sharedPreferences = requireContext().getSharedPreferences(
+                Constants.SharedPreferences, 0
+            )
+            var userId = sharedPreferences.getString(UserID, "")
+            Log.i("USERID", userId.toString())
+             viewModel.setInCart(product, userId!!.toLong())
+        }
     }
 
 }

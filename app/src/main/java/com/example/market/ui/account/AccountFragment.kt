@@ -22,8 +22,8 @@ import com.example.market.databinding.FragmentAccountBinding
 import com.example.market.databinding.LanguagePopupBinding
 import com.example.market.utils.Constants
 import com.example.market.utils.Constants.ARABIC
-import com.example.market.utils.Constants.CURRENCY_KEY
-import com.example.market.utils.Constants.CURRENCY_VALUE
+import com.example.market.utils.Constants.CURRENCY_FROM_KEY
+import com.example.market.utils.Constants.CURRENCY_TO_KEY
 import com.example.market.utils.Constants.ENGLISH
 import com.example.market.utils.Constants.LANGUAGE_KEY
 import com.example.market.utils.NetworkResult
@@ -70,7 +70,7 @@ class AccountFragment : Fragment() {
         } else if (currentLanguage == "ar") {
             binding.languageValue.text = resources.getString(R.string.arabic)
         }
-        binding.currencyValue.text = sharedPreferences.getString(CURRENCY_KEY, "") ?: "EGP"
+        binding.currencyValue.text = sharedPreferences.getString(CURRENCY_FROM_KEY, "") ?: "EGP"
         binding.llLanguage.setOnClickListener {
             showDialog()
         }
@@ -85,7 +85,6 @@ class AccountFragment : Fragment() {
 
         }
         observeSearchButton()
-        observeConvertCurrencyResponse()
         navigateToOrders()
     }
 
@@ -119,31 +118,6 @@ class AccountFragment : Fragment() {
         }
     }
 
-    private fun observeConvertCurrencyResponse() {
-        viewModel.conversionResult.observe(viewLifecycleOwner) { response ->
-            when (response) {
-                is NetworkResult.Success -> {
-                    response.data?.let {
-                        Log.i("TAG", "$it")
-                        editor.putFloat(CURRENCY_VALUE, it.toFloat())
-                        editor.apply()
-                        val currencyValue = sharedPreferences.getFloat(CURRENCY_VALUE, 0.0F)
-                        Toast.makeText(
-                            requireContext(),
-                            currencyValue.toString(),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-                is NetworkResult.Error -> {
-                }
-                is NetworkResult.Loading -> {
-
-                }
-            }
-        }
-    }
-
     private fun showCurrenciesMenu(view: View, items: List<Currency>) {
         val popupMenu = PopupMenu(requireContext(), view)
 
@@ -161,11 +135,11 @@ class AccountFragment : Fragment() {
 
     private fun handleMenuItemClick(menuItem: MenuItem) {
         val selectedItem = menuItem.title
-        // val oldCurrency = sharedPreferences.getString(CURRENCY_KEY, "")
-        editor.putString(CURRENCY_KEY, selectedItem as String?)
+        editor.putString(CURRENCY_TO_KEY, selectedItem as String?)
+        //val currencyFrom=
         editor.apply()
         binding.currencyValue.text = selectedItem
-        viewModel.convertCurrency("EGP", selectedItem!!,1.0)
+        viewModel.convertCurrency("EGP", selectedItem!!, 1.0)
         Toast.makeText(requireContext(), selectedItem, Toast.LENGTH_SHORT).show()
 
     }
@@ -202,16 +176,16 @@ class AccountFragment : Fragment() {
         dialog.show()
     }
 
-    private fun updateUserUI(){
-        if(auth.currentUser!=null){
-            if(auth.currentUser!!.isEmailVerified){
+    private fun updateUserUI() {
+        if (auth.currentUser != null) {
+            if (auth.currentUser!!.isEmailVerified) {
                 binding.tvLogin.text = "Logout"
                 binding.tvUsername.text = auth.currentUser!!.email
                 binding.tvLogin.setOnClickListener {
                     Firebase.auth.signOut()
                 }
             }
-        }else{
+        } else {
             binding.tvLogin.setOnClickListener {
                 startActivity(Intent(requireActivity(), AuthActivity::class.java))
             }

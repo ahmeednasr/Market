@@ -1,6 +1,5 @@
 package com.example.market.data.repo
 
-import android.util.Log
 import com.example.market.data.pojo.*
 import com.example.market.data.remote.ApiService
 import com.example.market.data.remote.CurrencyApi
@@ -64,8 +63,10 @@ class RepositoryImpl(
     }
 
     override suspend fun getDiscountCodes(): Response<DiscountResponse> {
-        val res = apiService.getDiscountCodes()
-        Log.i("MYTAG", "repo" + res.body().toString())
-        return res
+        return apiService.getDiscountCodes()
+    }
+
+    override suspend fun getDraftOrders(): Response<CartResponse> {
+        return apiService.getDraftOrders()
     }
 }
