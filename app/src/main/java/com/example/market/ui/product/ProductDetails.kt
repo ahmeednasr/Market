@@ -16,6 +16,8 @@ import com.example.market.R
 import com.example.market.data.pojo.Product
 import com.example.market.databinding.FragmentProductDetailsBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlin.math.roundToInt
+import kotlin.random.Random
 
 @AndroidEntryPoint
 class ProductDetails : Fragment() {
@@ -24,6 +26,8 @@ class ProductDetails : Fragment() {
     private val binding get() = _binding!!
 
     private val args : ProductDetailsArgs by navArgs()
+    lateinit var product:Product
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -35,7 +39,13 @@ class ProductDetails : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setUI(args.product)
+
+
+        product = args.product
+
+        setUI(product)
+
+
     }
 
     override fun onDestroy() {
@@ -43,7 +53,7 @@ class ProductDetails : Fragment() {
         _binding = null
     }
 
-    private fun setColorList(colorList : ArrayList<String>): String{
+    private fun setColorList(colorList : ArrayList<String>){
         var itemSelected = ""
         val colorAutoComplete = binding.autoCompleteColor
         val colorAdapter = ArrayAdapter(requireContext(), R.layout.list_item, colorList)
@@ -53,10 +63,9 @@ class ProductDetails : Fragment() {
                 adapterView, view, i,l ->
             itemSelected = adapterView.getItemAtPosition(i).toString()
         }
-        return itemSelected
     }
 
-    private fun setSizeList(sizeList : ArrayList<String>) : String{
+    private fun setSizeList(sizeList : ArrayList<String>) {
         var itemSelected = ""
         val sizeAutoComplete = binding.autoCompleteSize
         val sizeAdapter = ArrayAdapter(requireContext(), R.layout.list_item, sizeList)
@@ -66,12 +75,20 @@ class ProductDetails : Fragment() {
                 adapterView, view, i,l ->
             itemSelected = adapterView.getItemAtPosition(i).toString()
             binding.availability.visibility = View.VISIBLE
-
+            for(i in product.variants!!.indices){
+                if (itemSelected == product.variants!![i].option1){
+                    binding.availability.text = getString(R.string.availability)+" "+product.variants!![i].inventory_quantity.toString()
+                    binding.availability.visibility = View.VISIBLE
+                }
+            }
         }
-        return itemSelected
     }
 
     private fun setUI(product: Product){
+        val random = Random
+        val randomDouble = random.nextDouble() * 4 + 1
+        val randomRounded = (randomDouble * 2).roundToInt() / 2.0
+
         binding.availability.visibility = View.GONE
         val imageList = ArrayList<SlideModel>()
         val imgSlider = binding.imageSlider
@@ -79,34 +96,22 @@ class ProductDetails : Fragment() {
             imageList.add(SlideModel(product.images[i].src))
         }
         imgSlider.setImageList(imageList)
-
         binding.titleText.text = product.title
         binding.brandText.text = product.vendor
         binding.descreptionText.text = product.body_html
-
         val sizeList = ArrayList<String>()
         for(i in product.options!![0].values.indices){
             sizeList.add(product.options[0].values[i])
         }
-
         val colorList = ArrayList<String>()
         for(i in product.options[1].values.indices){
             colorList.add(product.options[1].values[i])
         }
-        val variant = """""" + setColorList(colorList) + " / "+setSizeList(sizeList) + """"""
+        setColorList(colorList)
+        setSizeList(sizeList)
+        binding.priceText.text = product.variants!![0].price
+        binding.ratingBar.rating = randomRounded.toFloat()
 
-        for (i in product.variants!!.indices){
-            if(product.variants[i].title == variant){
-                binding.priceText.text = product.variants[i].price
-                binding.availability.text = product.variants[i].inventory_quantity.toString()
-            }
-        }
-        binding.addToChartButton.setOnClickListener {
-            view
-        }
-        Log.i(TAG, "setUI: $variant ${binding.availability.text}")
-
-        binding.priceText.text = product.variants[0].price
     }
 
 }

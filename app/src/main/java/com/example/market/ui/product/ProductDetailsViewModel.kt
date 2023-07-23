@@ -11,6 +11,7 @@ import javax.inject.Inject
 class ProductDetailsViewModel @Inject constructor(
     private val repository: Repository,
 ) : ViewModel() {
+
     fun setInCart(productDetails: ProductDetails){
         viewModelScope.launch {
             //repository.addInCart()

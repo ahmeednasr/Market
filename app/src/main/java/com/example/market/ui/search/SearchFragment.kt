@@ -79,6 +79,18 @@ class SearchFragment : Fragment() {
             }
         })
 
+
+    }
+
+    private fun filteredList(text: String?) {
+        if (text != null) {
+            if (text.isNotEmpty()) {
+                val filteredList = ArrayList<Product>()
+                for (product in products) {
+                    if (product.title!!.toLowerCase().contains(text, false)) {
+                        filteredList.add(product)
+                    }
+
         binding.continuousSlider.addOnChangeListener(object: Slider.OnChangeListener {
             override fun onValueChange(slider: Slider, value: Float, fromUser: Boolean) {
                 Log.d("addOnChangeListener", slider.value.toString())
@@ -87,8 +99,14 @@ class SearchFragment : Fragment() {
                 } else {
                     viewModel.filterProductsByPrice(value)
                 }
+                searchAdapter.submitList(filteredList)
+            }else{
+                searchAdapter.submitList(null)
             }
+
+        }
         })
+
 
     }
 
