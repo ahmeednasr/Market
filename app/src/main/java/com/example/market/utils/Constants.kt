@@ -26,4 +26,5 @@ object Constants {
     const val FAVOURITE_ID = "fav"
     const val CART_ID = "cart"
     const val DISCOUNT_ID = "DISCOUNT_ID"
+    const val TITTLE = "shoes"
 }

@@ -1,5 +1,6 @@
 package com.example.market.ui.search
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -23,7 +24,19 @@ class SearchAdapter(
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.bind(getItem(position), clickListener, this)
+        holder.bind(getItem(position), clickListener)
+
+        if (getItem(position).isFavourite) {
+            Log.d("bind", "bind " + getItem(position).title!!)
+            holder.binding.ivFavourite.setImageDrawable(holder.binding.root.context.getDrawable(R.drawable.ic_filled_heart))
+        } else {
+            holder.binding.ivFavourite.setImageDrawable(holder.binding.root.context.getDrawable(R.drawable.ic_heart))
+        }
+
+        holder.binding.ivFavourite.setOnClickListener {
+            clickListener.onFavouriteClicked(getItem(position))
+            notifyItemChanged(position)
+        }
     }
 
     interface ProductClickListener {
@@ -31,25 +44,16 @@ class SearchAdapter(
         fun onFavouriteClicked(product: Product)
     }
 
-    class MyViewHolder(private val binding: ItemSearchProductBinding) :
+    class MyViewHolder(val binding: ItemSearchProductBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(product: Product, clickListener: ProductClickListener, adapter: SearchAdapter) {
+        fun bind(product: Product, clickListener: ProductClickListener) {
             binding.apply {
                 tvProductName.text = product.title
                 Glide
                     .with(binding.root)
                     .load(product.image?.src)
                     .into(ivProduct)
-
-                if (product.isFavourite) {
-                 ivFavourite.setImageDrawable(binding.root.context.getDrawable(R.drawable.ic_filled_heart))
-                }
-
-                ivFavourite.setOnClickListener {
-                    clickListener.onFavouriteClicked(product)
-                    adapter.notifyDataSetChanged()
-                }
 
                 cvLayout.setOnClickListener {
                     clickListener.onItemClicked(product)
