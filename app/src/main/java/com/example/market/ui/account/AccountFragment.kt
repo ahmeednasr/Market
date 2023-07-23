@@ -62,10 +62,18 @@ class AccountFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         auth = Firebase.auth
         updateUserUI()
         sharedPreferences = requireContext().getSharedPreferences(Constants.SharedPreferences, 0)
         editor = sharedPreferences.edit()
+
+        updateUserUI()
+        observeLoginButton()
+        observeSearchButton()
+        observeConvertCurrencyResponse()
+        navigateToOrders()
+
         currentLocale = Locale.getDefault()
         currentLanguage = currentLocale.language
         if (currentLanguage == "en" || currentLanguage.isEmpty()) {
@@ -168,7 +176,7 @@ class AccountFragment : Fragment() {
         editor.putString(CURRENCY_KEY, selectedItem as String?)
         editor.apply()
         binding.currencyValue.text = selectedItem
-        viewModel.convertCurrency("EGP", selectedItem!!,1.0)
+        viewModel.convertCurrency("EGP", selectedItem!!, 1.0)
         Toast.makeText(requireContext(), selectedItem, Toast.LENGTH_SHORT).show()
 
     }
@@ -205,21 +213,26 @@ class AccountFragment : Fragment() {
         dialog.show()
     }
 
-    private fun updateUserUI(){
-        if(auth.currentUser!=null){
-            if(auth.currentUser!!.isEmailVerified){
-                binding.tvLogin.text = "Logout"
-                binding.tvUsername.text = auth.currentUser!!.email
-                binding.tvLogin.setOnClickListener {
-                    Firebase.auth.signOut()
-                    findNavController().navigate(R.id.accountFragment)
-                    Toast.makeText(requireContext(), "Logged Out", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }else{
-            binding.tvLogin.setOnClickListener {
+    private fun updateUserUI() {
+        if (auth.currentUser != null) {
+            binding.tvLogin.text = "Logout"
+            binding.tvUsername.text = auth.currentUser!!.email
+        } else {
+            binding.tvLogin.text = "Login"
+            binding.tvUsername.text = ""
+        }
+    }
+
+    private fun observeLoginButton() {
+        binding.tvLogin.setOnClickListener {
+            if (auth.currentUser != null) {
+                editor.putBoolean(Constants.IS_Logged, false)
+                editor.apply()
+                Firebase.auth.signOut()
+            } else {
                 startActivity(Intent(requireActivity(), AuthActivity::class.java))
             }
+            updateUserUI()
         }
     }
 
