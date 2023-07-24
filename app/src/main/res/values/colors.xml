@@ -19,4 +19,6 @@
     <color name="transparent">#00000000</color>
 
     <color name="background">#dddddd</color>
+    <color name="bg">#EFEEED</color>
+    <color name="status">#95000000</color>
 </resources>

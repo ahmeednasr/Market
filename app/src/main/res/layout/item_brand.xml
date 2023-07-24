@@ -16,8 +16,8 @@
 
         <ImageView
             android:id="@+id/iv_brand"
-            android:layout_width="175dp"
-            android:layout_height="150dp"
+            android:layout_width="200dp"
+            android:layout_height="175dp"
             android:layout_marginBottom="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -32,6 +32,7 @@
             android:layout_marginBottom="8dp"
             android:textColor="@color/black"
             android:textSize="16sp"
+            android:gravity="center"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

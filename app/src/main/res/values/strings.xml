@@ -6,7 +6,6 @@
     <string name="currancy">EGP</string>
     <string name="decrement">decrement</string>
     <string name="increment">increment</string>
-    <string name="home">Home</string>
     <string name="categories">Categories</string>
     <string name="account">Account</string>
     <string name="no_connection">no connection</string>
@@ -35,4 +34,6 @@
     <string name="availability">Available at Stock:</string>
     <string name="cancel">cancel</string>
 
+    <string name="home">Home</string>
+    <string name="brands">Brands</string>
 </resources>
