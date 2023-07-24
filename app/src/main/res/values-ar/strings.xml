@@ -9,7 +9,6 @@
     <string name="decrement">decrement</string>
     <string name="increment">increment</string>
     <string name="no_connection">no connection</string>
-    <string name="home">الرئيسيه</string>
     <string name="categories">الفئات</string>
     <string name="account">الحساب</string>
     <string name="subtotal">المجموع:</string>
@@ -39,5 +38,6 @@
     <string name="in_stock">in Stock</string>
     <string name="rm_msg">هل تريد حذف هذا المنتج</string>
     <string name="delete">حذف</string>
-
+    <string name="home">الصفحة الرئيسية</string>
+    <string name="brands">العلامات التجارية</string>
 </resources>

@@ -5,12 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.market.data.pojo.Order
-import com.example.market.data.pojo.Product
-import com.example.market.databinding.ItemCategoryProductBinding
 import com.example.market.databinding.ItemOrderBinding
-import com.example.market.ui.categories.ProductsAdapter
+import com.example.market.utils.Utils
 
 class OrdersAdapter : ListAdapter<Order, OrdersAdapter.MyViewHolder>(
         DailyDiffCallback()
@@ -29,7 +26,10 @@ class OrdersAdapter : ListAdapter<Order, OrdersAdapter.MyViewHolder>(
 
         fun bind(order: Order) {
             binding.apply {
-               
+                tvOrderNumber.text = order.order_number.toString()
+                tvOrderPrice.text = order.current_total_price.toString()
+                tvProductsNumber.text = order.line_items?.size.toString()
+                tvDate.text = Utils.formatDate(order.created_at.toString())
             }
         }
 

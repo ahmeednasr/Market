@@ -33,4 +33,6 @@ interface Repository {
     suspend fun getDiscountCodes(): Response<DiscountResponse>
     suspend fun getDraftOrders(): Response<CartResponse>
     suspend fun deleteCartByID(id: Long): Response<DraftOrderResponse>
+    suspend fun getDraftOrders():Response<CartResponse>
+    suspend fun getCustomerOrders(userId: Long): Response<OrderResponse>
 }

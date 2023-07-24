@@ -139,7 +139,7 @@
         android:elevation="16dp"
         android:focusable="true"
         android:src="@drawable/ic_categories"
-        app:backgroundTint="#ffffff"
+        app:backgroundTint="@color/orange_700"
         app:fabSize="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
