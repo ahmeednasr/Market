@@ -34,5 +34,7 @@
     <string name="save">Save</string>
     <string name="availability">Available at Stock:</string>
     <string name="cancel">cancel</string>
-
+    <string name="in_stock">in Stock</string>
+    <string name="rm_msg">are you need delete this product</string>
+    <string name="delete" >delete</string>
 </resources>

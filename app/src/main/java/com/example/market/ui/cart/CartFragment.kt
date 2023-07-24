@@ -9,10 +9,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.market.R
 import com.example.market.databinding.FragmentCartBinding
 import com.example.market.utils.Constants
 import com.example.market.utils.Constants.UserID
 import com.example.market.utils.NetworkResult
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -36,14 +38,8 @@ class CartFragment : Fragment(), CartClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val sharedPreferences =
-            requireContext().getSharedPreferences(Constants.SharedPreferences, 0)
-        val id = sharedPreferences.getString(UserID, "")
-        Log.i("LOLOLO", "idddddd= ${id?.toLong()}")
-        if (id != null) {
-            viewModel.getCartItems(id.toLong())
-        }
-        adapter = CartAdapter(requireContext())
+        viewModel.getCartItems()
+        adapter = CartAdapter(requireContext(), this)
         binding.CartRecuclerView.adapter = adapter
         binding.CartRecuclerView.layoutManager =
             LinearLayoutManager(context, RecyclerView.VERTICAL, false)
@@ -79,7 +75,6 @@ class CartFragment : Fragment(), CartClickListener {
     }
 
     override fun removeCartItem(cartId: Long) {
-        TODO("Not yet implemented")
+        viewModel.deleteCartItem(cartId)
     }
-
 }

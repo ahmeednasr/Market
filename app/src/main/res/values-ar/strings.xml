@@ -36,4 +36,8 @@
     <string name="save">حفظ</string>
     <string name="availability">متوفر في المتجر:</string>
     <string name="cancel">إلغاء</string>
+    <string name="in_stock">in Stock</string>
+    <string name="rm_msg">هل تريد حذف هذا المنتج</string>
+    <string name="delete">حذف</string>
+
 </resources>
