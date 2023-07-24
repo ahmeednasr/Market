@@ -228,6 +228,7 @@ class AccountFragment : Fragment() {
             if (auth.currentUser != null) {
                 editor.putBoolean(Constants.IS_Logged, false)
                 editor.apply()
+                Toast.makeText(requireContext(), "Logged Out", Toast.LENGTH_SHORT).show()
                 Firebase.auth.signOut()
             } else {
                 startActivity(Intent(requireActivity(), AuthActivity::class.java))
