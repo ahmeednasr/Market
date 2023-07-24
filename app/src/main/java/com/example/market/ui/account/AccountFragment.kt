@@ -70,10 +70,8 @@ class AccountFragment : Fragment() {
         updateUserUI()
         observeLoginButton()
         observeSearchButton()
-        observeConvertCurrencyResponse()
         navigateToOrders()
         navigateToFavourites()
-
         currentLocale = Locale.getDefault()
         currentLanguage = currentLocale.language
         if (currentLanguage == "en" || currentLanguage.isEmpty()) {

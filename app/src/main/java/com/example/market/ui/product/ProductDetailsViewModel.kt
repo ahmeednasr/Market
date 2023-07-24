@@ -20,18 +20,18 @@ class ProductDetailsViewModel @Inject constructor(
     private val repository: Repository,
     private val sharedPreferences: SharedPreferences
 ) : ViewModel() {
-  
+
     private var _favourites = ArrayList<LineItemsItem>()
     private val _product: MutableLiveData<NetworkResult<ProductResponse>> = MutableLiveData()
     val product: LiveData<NetworkResult<ProductResponse>> = _product
 
-    fun getProduct(productId: Long){
+    fun getProduct(productId: Long) {
         _product.value = NetworkResult.Loading()
         viewModelScope.launch {
             val productsResponse = repository.getSingleProduct(productId)
             if (productsResponse.isSuccessful) {
                 productsResponse.body()?.let {
-                    it.product?.let {product->
+                    it.product?.let { product ->
                         getFavourites(product)
                     }
                     _product.postValue(NetworkResult.Success(it))
@@ -54,7 +54,6 @@ class ProductDetailsViewModel @Inject constructor(
                             price = product.variants?.get(0)?.price,
                             variantId = product.variants?.get(0)?.id,
                             quantity = 1,
-                            product = product,
                             productId = product.id,
                             properties = listOf(
                                 Property(
@@ -77,9 +76,9 @@ class ProductDetailsViewModel @Inject constructor(
         )
         if (draftResponse.isSuccessful) {
             draftResponse.body()?.let {
-                 _favourites = it.draftOrder?.lineItems as ArrayList<LineItemsItem>
-                for(favorite in _favourites){
-                    if(product.id!! == favorite.sku?.toLong()){
+                _favourites = it.draftOrder?.lineItems as ArrayList<LineItemsItem>
+                for (favorite in _favourites) {
+                    if (product.id!! == favorite.sku?.toLong()) {
                         product.isFavourite = true
                     }
                 }
@@ -100,7 +99,7 @@ class ProductDetailsViewModel @Inject constructor(
             )
             _favourites.add(fav)
             repository.modifyFavourites(
-                favouritesId?:0,
+                favouritesId ?: 0,
                 DraftOrderResponse(DraftOrder(lineItems = _favourites))
             )
         }
@@ -112,7 +111,7 @@ class ProductDetailsViewModel @Inject constructor(
             _favourites =
                 _favourites.filter { !it.title.equals(product.title) } as ArrayList<LineItemsItem>
             repository.modifyFavourites(
-                favouritesId?:0,
+                favouritesId ?: 0,
                 DraftOrderResponse(DraftOrder(lineItems = _favourites))
             )
         }
