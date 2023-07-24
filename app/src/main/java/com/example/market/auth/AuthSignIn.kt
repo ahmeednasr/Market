@@ -122,6 +122,7 @@ class AuthSignIn : Fragment() {
     private fun signInWithGoogle(){
         val signIntent = googleSignInClient.signInIntent
         launcher.launch(signIntent)
+        findNavController().navigate(AuthSignInDirections.actionAuthSignInToConfirmData())
     }
 
     private val launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){result->
