@@ -166,6 +166,8 @@ class CategoriesFragment : Fragment() {
             when (response) {
                 is NetworkResult.Success -> {
                     stopShimmer()
+                    changeFabColors()
+                    changeSelectedFabColor()
                     response.data?.let {
                         Log.d("observeProductsResponse", "size: ${it.size}")
                         if (it.isEmpty()) {
@@ -270,6 +272,30 @@ class CategoriesFragment : Fragment() {
             Log.d("setOnSelectListener", "fabAccessories")
             subCategory = ACCESSORIES
             viewModel.filterProducts(mainCategory, subCategory)
+        }
+    }
+
+    private fun changeFabColors() {
+        binding.apply {
+            fabAccessories.backgroundTintList = resources.getColorStateList(R.color.white)
+            fabShirt.backgroundTintList = resources.getColorStateList(R.color.white)
+            fabShoes.backgroundTintList = resources.getColorStateList(R.color.white)
+        }
+    }
+
+    private fun changeSelectedFabColor() {
+        binding.apply {
+            when (subCategory) {
+                ACCESSORIES -> {
+                    fabAccessories.backgroundTintList = resources.getColorStateList(R.color.orange_700)
+                }
+                T_SHIRTS -> {
+                    fabShirt.backgroundTintList = resources.getColorStateList(R.color.orange_700)
+                }
+                SHOES -> {
+                    fabShoes.backgroundTintList = resources.getColorStateList(R.color.orange_700)
+                }
+            }
         }
     }
 
