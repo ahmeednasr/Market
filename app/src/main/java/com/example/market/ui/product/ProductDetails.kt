@@ -13,7 +13,6 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.denzcoskun.imageslider.models.SlideModel
 import com.example.market.R
@@ -21,6 +20,7 @@ import com.example.market.auth.AuthActivity
 import com.example.market.data.pojo.Product
 import com.example.market.databinding.FragmentProductDetailsBinding
 import com.example.market.utils.Constants
+import com.example.market.utils.Constants.UserID
 import com.example.market.utils.NetworkResult
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -54,6 +54,8 @@ class ProductDetails : Fragment() {
         viewModel.getProduct(args.productId)
 
         observeProductResponse()
+
+
 
     }
 
@@ -117,10 +119,19 @@ class ProductDetails : Fragment() {
             colorList.add(product.options[1].values[i])
         }
         setColorList(colorList)
-        setSizeList(sizeList,product)
-        binding.priceText.text = product.variants!![0].price +" "+ sharedPreferences.getString(Constants.CURRENCY_KEY,"EGP")
+        setSizeList(sizeList, product)
+        binding.priceText.text = product.variants!![0].price + " " + sharedPreferences.getString(
+            Constants.CURRENCY_FROM_KEY,
+            "EGP"
+        )
         binding.ratingBar.rating = randomRounded.toFloat()
         checkFavorite(product)
+        val sharedPreferences = requireContext().getSharedPreferences(
+            Constants.SharedPreferences, 0
+        )
+        var userId = sharedPreferences.getString(UserID, "")
+        Log.i("USERID", userId.toString())
+        viewModel.setInCart(product, userId!!.toLong())
 
     }
 
