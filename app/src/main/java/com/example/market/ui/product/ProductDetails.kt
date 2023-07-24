@@ -20,6 +20,9 @@ import com.example.market.R
 import com.example.market.auth.AuthActivity
 import com.example.market.data.pojo.Product
 import com.example.market.databinding.FragmentProductDetailsBinding
+import com.example.market.ui.account.AccountViewModel
+import com.example.market.utils.Constants
+import com.example.market.utils.Constants.UserID
 import com.example.market.utils.Constants
 import com.example.market.utils.NetworkResult
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,21 +33,20 @@ import kotlin.random.Random
 @AndroidEntryPoint
 class ProductDetails : Fragment() {
 
-    private var _binding : FragmentProductDetailsBinding? = null
+    private var _binding: FragmentProductDetailsBinding? = null
     private val binding get() = _binding!!
+    private val args: ProductDetailsArgs by navArgs()
     @Inject
     lateinit var sharedPreferences: SharedPreferences
     private val viewModel : ProductDetailsViewModel by viewModels()
-
     private val args : ProductDetailsArgs by navArgs()
-
-
+    
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        _binding = FragmentProductDetailsBinding.inflate(inflater,container,false)
+        _binding = FragmentProductDetailsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -64,7 +66,7 @@ class ProductDetails : Fragment() {
         _binding = null
     }
 
-    private fun setColorList(colorList : ArrayList<String>){
+        private fun setColorList(colorList : ArrayList<String>){
         var itemSelected = ""
         val colorAutoComplete = binding.autoCompleteColor
         val colorAdapter = ArrayAdapter(requireContext(), R.layout.list_item, colorList)
@@ -76,7 +78,15 @@ class ProductDetails : Fragment() {
         }
     }
 
-    private fun setSizeList(sizeList : ArrayList<String>,product: Product) {
+    private fun setSizeList(sizeList: ArrayList<String>): String {
+=======
+        colorAutoComplete.onItemClickListener = AdapterView.OnItemClickListener{
+                adapterView, view, i,l ->
+            itemSelected = adapterView.getItemAtPosition(i).toString()
+        }
+    }
+
+  private fun setSizeList(sizeList : ArrayList<String>,product: Product) {
         var itemSelected = ""
         val sizeAutoComplete = binding.autoCompleteSize
         val sizeAdapter = ArrayAdapter(requireContext(), R.layout.list_item, sizeList)
@@ -96,7 +106,7 @@ class ProductDetails : Fragment() {
     }
 
     private fun setUI(product: Product){
-        val random = Random
+      val random = Random
         val randomDouble = random.nextDouble() * 4 + 1
         val randomRounded = (randomDouble * 2).roundToInt() / 2.0
 
@@ -123,6 +133,12 @@ class ProductDetails : Fragment() {
         binding.priceText.text = product.variants!![0].price +" "+ sharedPreferences.getString(Constants.CURRENCY_KEY,"EGP")
         binding.ratingBar.rating = randomRounded.toFloat()
         checkFavorite(product)
+        val sharedPreferences = requireContext().getSharedPreferences(
+                Constants.SharedPreferences, 0
+            )
+            var userId = sharedPreferences.getString(UserID, "")
+            Log.i("USERID", userId.toString())
+             viewModel.setInCart(product, userId!!.toLong())
 
     }
 
@@ -164,7 +180,8 @@ class ProductDetails : Fragment() {
             }
         }
     }
-    private fun showAlertDialog() {
+    
+   private fun showAlertDialog() {
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle("Error")
         builder.setMessage("You Must login first.")

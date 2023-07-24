@@ -7,12 +7,15 @@ import java.io.Serializable
 data class CustomerResponse(
     val customer: Customer
 )
+
 data class CustomersResponse(
     val customers: List<Customer>
 )
+
 data class NewUser(
-    val customer:User
+    val customer: User
 )
+
 data class User(
     val first_name: String,
     val last_name: String,
@@ -39,33 +42,33 @@ data class UserAddress(
 ) : Serializable
 
 data class Customer(
-    val id: Long,
-    val email: String,
-    val accepts_marketing: Boolean,
-    val created_at: String,
-    val updated_at: String,
-    val first_name: String,
-    val last_name: String,
-    val orders_count: Int,
-    val state: String,
-    val total_spent: String,
-    val last_order_id: Long?,
-    val note: String?,
-    val verified_email: Boolean,
-    val multipass_identifier: String?,
-    val tax_exempt: Boolean,
-    val tags: String,
-    val last_order_name: String?,
-    val currency: String,
-    val phone: String,
-    val addresses: List<CustomerAddress>,
-    val accepts_marketing_updated_at: String,
-    val marketing_opt_in_level: String?,
-    val tax_exemptions: List<String>,
-    val email_marketing_consent: EmailMarketingConsent?,
-    val sms_marketing_consent: SmsMarketingConsent?,
-    val admin_graphql_api_id: String,
-    val default_address: CustomerAddress
+    val id: Long? = null,
+    val email: String? = null,
+    val accepts_marketing: Boolean? = null,
+    val created_at: String? = null,
+    val updated_at: String? = null,
+    val first_name: String? = null,
+    val last_name: String? = null,
+    val orders_count: Int? = null,
+    val state: String? = null,
+    val total_spent: String? = null,
+    val last_order_id: Long? = null,
+    val note: String? = null,
+    val verified_email: Boolean? = null,
+    val multipass_identifier: String? = null,
+    val tax_exempt: Boolean? = null,
+    val tags: String? = null,
+    val last_order_name: String? = null,
+    val currency: String? = null,
+    val phone: String? = null,
+    val addresses: List<CustomerAddress>? = null,
+    val accepts_marketing_updated_at: String? = null,
+    val marketing_opt_in_level: String? = null,
+    val tax_exemptions: List<String>? = null,
+    val email_marketing_consent: EmailMarketingConsent? = null,
+    val sms_marketing_consent: SmsMarketingConsent? = null,
+    val admin_graphql_api_id: String? = null,
+    val default_address: CustomerAddress? = null
 )
 
 data class CustomerAddress(
