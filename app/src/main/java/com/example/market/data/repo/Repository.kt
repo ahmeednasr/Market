@@ -23,5 +23,6 @@ interface Repository {
     suspend fun getCities(country: String, government: String): Response<CitiesPojo>
     suspend fun getDiscountCodes(): Response<DiscountResponse>
     suspend fun getDraftOrders():Response<CartResponse>
+    suspend fun getCustomerOrders(userId: Long): Response<OrderResponse>
 
 }
