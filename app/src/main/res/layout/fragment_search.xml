@@ -40,6 +40,7 @@
                 android:drawableStart="@drawable/ic_search"
                 android:drawablePadding="8dp"
                 android:drawableTint="@color/black"
+                app:iconifiedByDefault="false"
                 android:ems="10"
                 app:queryHint="Search"
                 android:inputType="text"

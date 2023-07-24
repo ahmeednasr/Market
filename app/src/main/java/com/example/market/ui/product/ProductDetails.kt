@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.denzcoskun.imageslider.models.SlideModel
 import com.example.market.R
 import com.example.market.auth.AuthActivity
@@ -35,6 +36,11 @@ class ProductDetails : Fragment() {
     @Inject
     lateinit var sharedPreferences: SharedPreferences
     private val viewModel : ProductDetailsViewModel by viewModels()
+    private val reviewAdaptor by lazy { ReviewAdaptor() }
+    var reviewsList = listOf<UserReview>(UserReview("John Doe","Good product with high quality."),
+        UserReview("Mahmoud Ism","As expected to be."),UserReview("Mo Ali",
+            "The product is good but the delivery was bit slow."))
+    private var reviewShow = true
 
     private val args : ProductDetailsArgs by navArgs()
 
@@ -126,13 +132,21 @@ class ProductDetails : Fragment() {
         )
         binding.ratingBar.rating = randomRounded.toFloat()
         checkFavorite(product)
-        val sharedPreferences = requireContext().getSharedPreferences(
-            Constants.SharedPreferences, 0
-        )
+
         var userId = sharedPreferences.getString(UserID, "")
         Log.i("USERID", userId.toString())
         viewModel.setInCart(product, userId!!.toLong())
-
+        reviewAdaptor.submitList(reviewsList)
+        setupReviewRecyclerView()
+        binding.reviewCard.setOnClickListener {
+            if(reviewShow){
+                binding.revRV.visibility = View.VISIBLE
+                reviewShow = false
+            }else{
+                binding.revRV.visibility = View.GONE
+                reviewShow = true
+            }
+        }
     }
 
     private fun checkFavorite(product: Product){
@@ -191,6 +205,13 @@ class ProductDetails : Fragment() {
         val alertDialog: AlertDialog = builder.create()
         alertDialog.setCancelable(false)
         alertDialog.show()
+    }
+
+    private fun setupReviewRecyclerView() {
+        binding.revRV.apply {
+            adapter = reviewAdaptor
+            layoutManager = LinearLayoutManager(requireContext())
+        }
     }
 
 }
