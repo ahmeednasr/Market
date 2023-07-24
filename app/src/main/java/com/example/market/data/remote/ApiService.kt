@@ -51,6 +51,24 @@ interface ApiService {
         @Body cartDraftOrder: DraftOrderResponse
     ): Response<DraftOrderResponse>
 
+    @GET("draft_orders.json")
+    suspend fun getDraftOrders(): Response<CartResponse>
+
+    @PUT("draft_orders/{id}.json")
+    suspend fun updateDraftOrder(
+        @Path("id") id: Long,
+        @Body order: DraftOrderResponse
+    ): Response<DraftOrderResponse>
+
+    @PUT("variants/{id}.json")
+    suspend fun getVariantById(
+        @Path("id") id: Long,
+    ): Response<Variant>
+
+
+    @DELETE("draft_orders/{id}.json")
+    suspend fun deleteCartByID(@Path("id") id: Long?): Response<DraftOrderResponse>
+  
     @PUT("draft_orders/{favouriteId}.json")
     suspend fun modifyFavourites(@Path("favouriteId") favouriteId: Long, @Body modifiedList: DraftOrderResponse)
 
@@ -58,7 +76,7 @@ interface ApiService {
     suspend fun getFavourites(@Path("favouriteId") favouriteId: Long): Response<DraftOrderResponse>
 
     @GET("/draft_orders/{id}.json")
-    suspend fun getDraftById(
+    suspend fun getCartById(
         @Path("id") draftId: Long
     ): Response<DraftOrderResponse>
 

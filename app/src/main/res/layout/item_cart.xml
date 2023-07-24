@@ -36,6 +36,7 @@
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
+            android:minWidth="48dp"
             android:minHeight="48dp"
             android:text="@string/remove"
             android:textColor="@color/orange"
@@ -65,6 +66,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:text="985.58"
+            android:textColor="#000000"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/currency"
             app:layout_constraintTop_toTopOf="@+id/currency" />
@@ -75,6 +77,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="@string/currancy"
+            android:textColor="#000000"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/product_name"
             app:layout_constraintTop_toBottomOf="@+id/product_name" />
@@ -88,6 +91,7 @@
             android:text="-15%"
             android:textColor="@color/red_orange"
             android:textSize="12sp"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="@+id/current_price"
             app:layout_constraintStart_toEndOf="@+id/current_price"
             app:layout_constraintTop_toTopOf="@+id/current_price"

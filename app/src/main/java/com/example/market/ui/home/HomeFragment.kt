@@ -161,7 +161,7 @@ class HomeFragment : Fragment() {
                     val alertDialog: AlertDialog? = activity?.let {
                         val builder = AlertDialog.Builder(it)
                         builder.apply {
-                            setTitle("congrats. you get discount code")
+                            setTitle("you get discount code")
                             setMessage(discountCode)
                             setPositiveButton(
                                 R.string.save,
