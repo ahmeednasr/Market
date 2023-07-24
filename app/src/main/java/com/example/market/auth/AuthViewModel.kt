@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.market.data.pojo.*
 import com.example.market.data.repo.Repository
+import com.example.market.utils.Constants.TITTLE
 import com.example.market.utils.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
@@ -24,7 +25,7 @@ class AuthViewModel @Inject constructor(
     var customers: LiveData<NetworkResult<List<Customer>>> = _customers
 
     val fav = DraftOrderResponse(DraftOrder(lineItems = mutableListOf(
-        LineItemsItem(title = "shoes", price = "100.00", quantity = 1))
+        LineItemsItem(title = TITTLE, price = "100.00", quantity = 1, sku = "1"))
     )
     )
 

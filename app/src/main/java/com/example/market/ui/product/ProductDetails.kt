@@ -1,6 +1,8 @@
 package com.example.market.ui.product
 
 import android.content.ContentValues.TAG
+import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -9,27 +11,36 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.denzcoskun.imageslider.models.SlideModel
 import com.example.market.R
+import com.example.market.auth.AuthActivity
 import com.example.market.data.pojo.Product
 import com.example.market.databinding.FragmentProductDetailsBinding
 import com.example.market.ui.account.AccountViewModel
 import com.example.market.utils.Constants
 import com.example.market.utils.Constants.UserID
+import com.example.market.utils.Constants
+import com.example.market.utils.NetworkResult
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+import kotlin.math.roundToInt
+import kotlin.random.Random
 
 @AndroidEntryPoint
 class ProductDetails : Fragment() {
 
     private var _binding: FragmentProductDetailsBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: ProductDetailsViewModel by viewModels()
-
-
     private val args: ProductDetailsArgs by navArgs()
+    @Inject
+    lateinit var sharedPreferences: SharedPreferences
+    private val viewModel : ProductDetailsViewModel by viewModels()
+    private val args : ProductDetailsArgs by navArgs()
+    
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -41,7 +52,13 @@ class ProductDetails : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setUI(args.product)
+
+        viewModel.getProduct(args.productId)
+
+        observeProductResponse()
+
+
+
     }
 
     override fun onDestroy() {
@@ -49,78 +66,139 @@ class ProductDetails : Fragment() {
         _binding = null
     }
 
-    private fun setColorList(colorList: ArrayList<String>): String {
+        private fun setColorList(colorList : ArrayList<String>){
         var itemSelected = ""
         val colorAutoComplete = binding.autoCompleteColor
         val colorAdapter = ArrayAdapter(requireContext(), R.layout.list_item, colorList)
         colorAutoComplete.setAdapter(colorAdapter)
 
-        colorAutoComplete.onItemClickListener =
-            AdapterView.OnItemClickListener { adapterView, view, i, l ->
-                itemSelected = adapterView.getItemAtPosition(i).toString()
-            }
-        return itemSelected
+        colorAutoComplete.onItemClickListener = AdapterView.OnItemClickListener{
+                adapterView, view, i,l ->
+            itemSelected = adapterView.getItemAtPosition(i).toString()
+        }
     }
 
     private fun setSizeList(sizeList: ArrayList<String>): String {
+=======
+        colorAutoComplete.onItemClickListener = AdapterView.OnItemClickListener{
+                adapterView, view, i,l ->
+            itemSelected = adapterView.getItemAtPosition(i).toString()
+        }
+    }
+
+  private fun setSizeList(sizeList : ArrayList<String>,product: Product) {
         var itemSelected = ""
         val sizeAutoComplete = binding.autoCompleteSize
         val sizeAdapter = ArrayAdapter(requireContext(), R.layout.list_item, sizeList)
         sizeAutoComplete.setAdapter(sizeAdapter)
 
-        sizeAutoComplete.onItemClickListener =
-            AdapterView.OnItemClickListener { adapterView, view, i, l ->
-                itemSelected = adapterView.getItemAtPosition(i).toString()
-                binding.availability.visibility = View.VISIBLE
-
+        sizeAutoComplete.onItemClickListener = AdapterView.OnItemClickListener{
+                adapterView, view, i,l ->
+            itemSelected = adapterView.getItemAtPosition(i).toString()
+            binding.availability.visibility = View.VISIBLE
+            for(i in product.variants!!.indices){
+                if (itemSelected == product.variants!![i].option1){
+                    binding.availability.text = getString(R.string.availability)+" "+product.variants!![i].inventory_quantity.toString()
+                    binding.availability.visibility = View.VISIBLE
+                }
             }
-        return itemSelected
+        }
     }
 
-    private fun setUI(product: Product) {
+    private fun setUI(product: Product){
+      val random = Random
+        val randomDouble = random.nextDouble() * 4 + 1
+        val randomRounded = (randomDouble * 2).roundToInt() / 2.0
+
         binding.availability.visibility = View.GONE
         val imageList = ArrayList<SlideModel>()
         val imgSlider = binding.imageSlider
-        for (i in product.images?.indices!!) {
+        for(i in product.images?.indices!!){
             imageList.add(SlideModel(product.images[i].src))
         }
         imgSlider.setImageList(imageList)
-
         binding.titleText.text = product.title
         binding.brandText.text = product.vendor
-        binding.descreptionText.text = product.body_html
-
+        binding.descriptionText.text = product.body_html
         val sizeList = ArrayList<String>()
-        for (i in product.options!![0].values.indices) {
+        for(i in product.options!![0].values.indices){
             sizeList.add(product.options[0].values[i])
         }
-
         val colorList = ArrayList<String>()
-        for (i in product.options[1].values.indices) {
+        for(i in product.options[1].values.indices){
             colorList.add(product.options[1].values[i])
         }
-        val variant = """""" + setColorList(colorList) + " / " + setSizeList(sizeList) + """"""
-
-        for (i in product.variants!!.indices) {
-            if (product.variants[i].title == variant) {
-                binding.priceText.text = product.variants[i].price
-                binding.availability.text = product.variants[i].inventory_quantity.toString()
-            }
-        }
-        binding.addToChartButton.setOnClickListener {
-            view
-        }
-        Log.i(TAG, "setUI: $variant ${binding.availability.text}")
-
-        binding.priceText.text = product.variants[0].price
-        binding.addToChartButton.setOnClickListener {
-            val sharedPreferences = requireContext().getSharedPreferences(
+        setColorList(colorList)
+        setSizeList(sizeList,product)
+        binding.priceText.text = product.variants!![0].price +" "+ sharedPreferences.getString(Constants.CURRENCY_KEY,"EGP")
+        binding.ratingBar.rating = randomRounded.toFloat()
+        checkFavorite(product)
+        val sharedPreferences = requireContext().getSharedPreferences(
                 Constants.SharedPreferences, 0
             )
             var userId = sharedPreferences.getString(UserID, "")
             Log.i("USERID", userId.toString())
              viewModel.setInCart(product, userId!!.toLong())
+
+    }
+
+    private fun checkFavorite(product: Product){
+        if (product.isFavourite){
+            binding.addToFavoriteButton.setImageDrawable(binding.root.context.getDrawable(R.drawable.ic_filled_heart))
         }
+        binding.addToFavoriteButton.setOnClickListener{
+            if (sharedPreferences.getBoolean(Constants.IS_Logged, false)) {
+                if (product.isFavourite) {
+                    viewModel.deleteFavourite(product)
+                    binding.addToFavoriteButton.setImageDrawable(binding.root.context.getDrawable(R.drawable.ic_heart))
+                } else {
+                    viewModel.addFavourite(product)
+                    binding.addToFavoriteButton.setImageDrawable(binding.root.context.getDrawable(R.drawable.ic_filled_heart))
+                }
+                product.isFavourite = !product.isFavourite
+            } else {
+                showAlertDialog()
+            }
+        }
+    }
+
+    private fun observeProductResponse() {
+        viewModel.product.observe(viewLifecycleOwner) { response ->
+            when (response) {
+                is NetworkResult.Success -> {
+                    //stopShimmer()
+                    response.data?.let {
+                        setUI(it.product!!)
+                    }
+                }
+                is NetworkResult.Error -> {
+                    //stopShimmer()
+                }
+                is NetworkResult.Loading -> {
+                    //startShimmer()
+                }
+            }
+        }
+    }
+    
+   private fun showAlertDialog() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Error")
+        builder.setMessage("You Must login first.")
+        builder.setIcon(android.R.drawable.ic_dialog_alert)
+        builder.setPositiveButton(resources.getString(R.string.OK)) { _, _ ->
+            val i = Intent(requireActivity(), AuthActivity::class.java)
+            i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(i)
+            activity?.finish()
+        }
+        builder.setNegativeButton(resources.getString(R.string.cancel)) { dialogInterface, _ ->
+            dialogInterface.dismiss()
+        }
+
+        val alertDialog: AlertDialog = builder.create()
+        alertDialog.setCancelable(false)
+        alertDialog.show()
     }
 
 }

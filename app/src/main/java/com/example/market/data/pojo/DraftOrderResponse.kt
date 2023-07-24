@@ -25,7 +25,7 @@ data class DraftOrder(
     @Expose val taxesIncluded: Boolean? = null,
 
     @field:SerializedName("line_items")
-    @Expose val lineItems: MutableList<LineItemsItem?>? = null,
+    @Expose val lineItems: List<LineItemsItem?>? = null,
 
     @field:SerializedName("payment_terms")
     @Expose val paymentTerms: Any? = null,
@@ -164,8 +164,9 @@ data class LineItemsItem(
 
     @SerializedName("properties")
     var properties: List<Property>? = null,
-    @field:SerializedName("fulfillment_status")
-    @Expose val fulfillmentStatus: String? = null,
+
+    @field:SerializedName("vendor")
+    @Expose val vendor: String? = null,
 
     @field:SerializedName("quantity")
     var quantity: Int? = null,
@@ -215,8 +216,8 @@ data class LineItemsItem(
     @field:SerializedName("grams")
     @Expose val grams: Int? = null,
 
-    @field:SerializedName("product")
-    @Expose val product: Product? = null,
+    @field:SerializedName("variant_title")
+    @Expose val variantTitle: String? = null
 )
 
 data class TaxLinesItem(

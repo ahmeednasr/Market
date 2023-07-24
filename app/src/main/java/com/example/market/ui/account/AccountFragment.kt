@@ -1,6 +1,5 @@
 package com.example.market.ui.account
 
-import android.content.Context
 import android.content.SharedPreferences
 import android.content.Intent
 import android.os.Bundle
@@ -34,17 +33,22 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class AccountFragment : Fragment() {
 
     private var _binding: FragmentAccountBinding? = null
     private val binding get() = _binding!!
-    private lateinit var sharedPreferences: SharedPreferences
-    private lateinit var editor: SharedPreferences.Editor
+
     lateinit var dialog: AlertDialog
     lateinit var currentLocale: Locale
     lateinit var currentLanguage: String
+
+    @Inject
+    lateinit var sharedPreferences: SharedPreferences
+    private lateinit var editor: SharedPreferences.Editor
+
     private val viewModel: AccountViewModel by viewModels()
     private lateinit var auth: FirebaseAuth
 
@@ -59,10 +63,17 @@ class AccountFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         auth = Firebase.auth
-        updateUserUI()
-        sharedPreferences = requireContext().getSharedPreferences(Constants.SharedPreferences, 0)
         editor = sharedPreferences.edit()
+
+        updateUserUI()
+        observeLoginButton()
+        observeSearchButton()
+        observeConvertCurrencyResponse()
+        navigateToOrders()
+        navigateToFavourites()
+
         currentLocale = Locale.getDefault()
         currentLanguage = currentLocale.language
         if (currentLanguage == "en" || currentLanguage.isEmpty()) {
@@ -79,7 +90,7 @@ class AccountFragment : Fragment() {
             observeCurrenciesResponse()
         }
         binding.llAddress.setOnClickListener {
-            findNavController().navigate(R.id.action_accountFragment_to_addressFormFragment)
+            findNavController().navigate(AccountFragmentDirections.actionAccountFragmentToAddressFormFragment())
         }
         binding.ivCart.setOnClickListener {
 
@@ -90,8 +101,42 @@ class AccountFragment : Fragment() {
 
     private fun navigateToOrders() {
         binding.llOrders.setOnClickListener {
-            findNavController().navigate(R.id.action_accountFragment_to_ordersFragment)
+            if (sharedPreferences.getBoolean(Constants.IS_Logged, false)) {
+                findNavController().navigate(AccountFragmentDirections.actionAccountFragmentToOrdersFragment())
+            } else {
+                showAlertDialog()
+            }
         }
+    }
+
+    private fun navigateToFavourites() {
+        binding.llOrders.setOnClickListener {
+            if (sharedPreferences.getBoolean(Constants.IS_Logged, false)) {
+                findNavController().navigate(AccountFragmentDirections.actionAccountFragmentToFavouritesFragment())
+            } else {
+                showAlertDialog()
+            }
+        }
+    }
+
+    private fun showAlertDialog() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Login Required")
+        builder.setMessage("Please log in to continue.")
+        builder.setIcon(android.R.drawable.ic_dialog_info)
+        builder.setPositiveButton(resources.getString(R.string.OK)) { _, _ ->
+            val i = Intent(requireActivity(), AuthActivity::class.java)
+            i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(i)
+            activity?.finish()
+        }
+        builder.setNegativeButton(resources.getString(R.string.cancel)) { dialogInterface, _ ->
+            dialogInterface.dismiss()
+        }
+
+        val alertDialog: AlertDialog = builder.create()
+        alertDialog.setCancelable(false)
+        alertDialog.show()
     }
 
     private fun observeSearchButton() {
@@ -178,17 +223,24 @@ class AccountFragment : Fragment() {
 
     private fun updateUserUI() {
         if (auth.currentUser != null) {
-            if (auth.currentUser!!.isEmailVerified) {
-                binding.tvLogin.text = "Logout"
-                binding.tvUsername.text = auth.currentUser!!.email
-                binding.tvLogin.setOnClickListener {
-                    Firebase.auth.signOut()
-                }
-            }
+            binding.tvLogin.text = "Logout"
+            binding.tvUsername.text = auth.currentUser!!.email
         } else {
-            binding.tvLogin.setOnClickListener {
+            binding.tvLogin.text = "Login"
+            binding.tvUsername.text = ""
+        }
+    }
+
+    private fun observeLoginButton() {
+        binding.tvLogin.setOnClickListener {
+            if (auth.currentUser != null) {
+                editor.putBoolean(Constants.IS_Logged, false)
+                editor.apply()
+                Firebase.auth.signOut()
+            } else {
                 startActivity(Intent(requireActivity(), AuthActivity::class.java))
             }
+            updateUserUI()
         }
     }
 

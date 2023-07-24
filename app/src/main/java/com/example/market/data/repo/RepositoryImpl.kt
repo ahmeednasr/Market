@@ -19,6 +19,10 @@ class RepositoryImpl(
         return apiService.getProducts()
     }
 
+    override suspend fun getSingleProduct(productId: Long): Response<ProductResponse> {
+        return apiService.getSingleProduct(productId)
+    }
+
     override suspend fun getBrandProducts(vendor: String): Response<ProductResponse> {
         return apiService.getBrandProducts(vendor)
     }
@@ -49,6 +53,14 @@ class RepositoryImpl(
 
     override suspend fun createCartDraftOrder(cartDraftOrder: DraftOrderResponse): Response<DraftOrderResponse> {
         return apiService.createCartDraftOrder(cartDraftOrder = cartDraftOrder)
+    }
+
+    override suspend fun modifyFavourites(favouriteId: Long, modifiedList: DraftOrderResponse) {
+        apiService.modifyFavourites(favouriteId, modifiedList)
+    }
+
+    override suspend fun getFavourites(favouriteId: Long): Response<DraftOrderResponse> {
+        return apiService.getFavourites(favouriteId)
     }
 
 

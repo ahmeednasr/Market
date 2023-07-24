@@ -1,13 +1,16 @@
 package com.example.market.ui.search
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.market.R
 import com.example.market.data.pojo.Product
 import com.example.market.databinding.ItemFavouriteProductBinding
+import com.example.market.databinding.ItemSearchProductBinding
 
 class SearchAdapter(
     private val clickListener: ProductClickListener
@@ -22,6 +25,18 @@ class SearchAdapter(
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.bind(getItem(position), clickListener)
+
+        if (getItem(position).isFavourite) {
+            Log.d("bind", "bind " + getItem(position).title!!)
+            holder.binding.ivFavourite.setImageDrawable(holder.binding.root.context.getDrawable(R.drawable.ic_filled_heart))
+        } else {
+            holder.binding.ivFavourite.setImageDrawable(holder.binding.root.context.getDrawable(R.drawable.ic_heart))
+        }
+
+        holder.binding.ivFavourite.setOnClickListener {
+            clickListener.onFavouriteClicked(getItem(position))
+            notifyItemChanged(position)
+        }
     }
 
     interface ProductClickListener {
@@ -29,7 +44,7 @@ class SearchAdapter(
         fun onFavouriteClicked(product: Product)
     }
 
-    class MyViewHolder(private val binding: ItemFavouriteProductBinding) :
+    class MyViewHolder(val binding: ItemSearchProductBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(product: Product, clickListener: ProductClickListener) {
@@ -40,10 +55,6 @@ class SearchAdapter(
                     .load(product.image?.src)
                     .into(ivProduct)
 
-                ivFavourite.setOnClickListener {
-                    clickListener.onFavouriteClicked(product)
-                }
-
                 cvLayout.setOnClickListener {
                     clickListener.onItemClicked(product)
                 }
@@ -53,7 +64,7 @@ class SearchAdapter(
         companion object {
             fun from(parent: ViewGroup): MyViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = ItemFavouriteProductBinding.inflate(layoutInflater, parent, false)
+                val binding = ItemSearchProductBinding.inflate(layoutInflater, parent, false)
                 return MyViewHolder(binding)
             }
         }

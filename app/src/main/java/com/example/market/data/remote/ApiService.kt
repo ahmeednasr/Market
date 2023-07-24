@@ -19,6 +19,9 @@ interface ApiService {
     @GET("products.json")
     suspend fun getBrandProducts(@Query("vendor") vendor: String): Response<ProductResponse>
 
+    @GET("products/{id}.json")
+    suspend fun getSingleProduct(@Path("id") productId: Long): Response<ProductResponse>
+
     @POST("customers.json")
     suspend fun postCustomer(
         @Header("Content-Type") contentType: String = "application/json",
@@ -48,7 +51,6 @@ interface ApiService {
         @Body cartDraftOrder: DraftOrderResponse
     ): Response<DraftOrderResponse>
 
-
     @GET("draft_orders.json")
     suspend fun getDraftOrders(): Response<CartResponse>
 
@@ -66,6 +68,12 @@ interface ApiService {
 
     @DELETE("draft_orders/{id}.json")
     suspend fun deleteCartByID(@Path("id") id: Long?): Response<DraftOrderResponse>
+  
+    @PUT("draft_orders/{favouriteId}.json")
+    suspend fun modifyFavourites(@Path("favouriteId") favouriteId: Long, @Body modifiedList: DraftOrderResponse)
+
+    @GET("draft_orders/{favouriteId}.json")
+    suspend fun getFavourites(@Path("favouriteId") favouriteId: Long): Response<DraftOrderResponse>
 
     @GET("/draft_orders/{id}.json")
     suspend fun getCartById(

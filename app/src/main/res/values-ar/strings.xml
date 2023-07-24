@@ -34,5 +34,6 @@
     <string name="city">مدينه</string>
     <string name="govern">محافظه</string>
     <string name="save">حفظ</string>
+    <string name="availability">متوفر في المتجر:</string>
     <string name="cancel">إلغاء</string>
 </resources>

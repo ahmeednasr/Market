@@ -1,6 +1,8 @@
 package com.example.market.ui.home
 
 import android.content.DialogInterface
+import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -13,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.market.R
+import com.example.market.auth.AuthActivity
 import com.example.market.databinding.FragmentHomeBinding
 import com.example.market.utils.Constants
 import com.example.market.utils.Constants.DISCOUNT_ID
@@ -26,6 +29,9 @@ class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+
+    @Inject
+    lateinit var sharedPreferences: SharedPreferences
 
     private val viewModel: HomeViewModel by viewModels()
     private val brandsAdapter by lazy {
@@ -52,6 +58,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        observeFavouritesButton()
         observeSearchButton()
         setupBrandsRecyclerView()
         observeBrandsResponse()
@@ -69,6 +76,36 @@ class HomeFragment : Fragment() {
         binding.ivSearch.setOnClickListener {
             findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToSearchFragment())
         }
+    }
+
+    private fun observeFavouritesButton() {
+        binding.ivFavourite.setOnClickListener {
+            if (sharedPreferences.getBoolean(Constants.IS_Logged, false)) {
+                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToFavouritesFragment())
+            } else {
+                showAlertDialog()
+            }
+        }
+    }
+
+    private fun showAlertDialog() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Login Required")
+        builder.setMessage("Please log in to continue.")
+        builder.setIcon(android.R.drawable.ic_dialog_info)
+        builder.setPositiveButton(resources.getString(R.string.OK)) { _, _ ->
+            val i = Intent(requireActivity(), AuthActivity::class.java)
+            i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(i)
+            activity?.finish()
+        }
+        builder.setNegativeButton(resources.getString(R.string.cancel)) { dialogInterface, _ ->
+            dialogInterface.dismiss()
+        }
+
+        val alertDialog: AlertDialog = builder.create()
+        alertDialog.setCancelable(false)
+        alertDialog.show()
     }
 
     private fun observeBrandsResponse() {

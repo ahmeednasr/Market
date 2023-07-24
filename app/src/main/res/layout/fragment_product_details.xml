@@ -13,6 +13,7 @@
         android:layout_margin="16dp"
         android:orientation="vertical"
         android:weightSum="4"
+        android:scrollIndicators="none"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -60,8 +61,7 @@
                         android:layout_gravity="center"
                         android:layout_margin="8dp"
                         android:layout_weight="0.1"
-                        android:text="Brand:"
-                        android:textStyle="bold" />
+                        android:text="Brand:"/>
 
                     <TextView
                         android:id="@+id/brandText"
@@ -97,8 +97,7 @@
                         android:layout_margin="16dp"
                         android:layout_weight="0.75"
                         android:text="Rating:"
-                        android:textSize="16sp"
-                        android:textStyle="bold"/>
+                        android:textSize="16sp"/>
 
                     <RatingBar
                         android:id="@+id/ratingBar"
@@ -111,27 +110,59 @@
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/descreptionText"
+                    android:id="@+id/description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="-Description-"
+                    android:textStyle="bold"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/descriptionText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:text="Product Description"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/availability"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:gravity="center"
+                    android:text="availability"
+                    android:textSize="18sp"
+                    android:textStyle="bold|italic" />
 
                 <TextView
                     android:id="@+id/textView7"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="-Select Your Options-"
-                    android:textSize="14sp"
-                    android:textStyle="bold"/>
+                    android:textSize="14sp"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:orientation="horizontal">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="8dp"
+                        android:layout_weight="1"
+                        android:focusableInTouchMode="true">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/auto_complete_color"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Color"
+                            android:inputType="none" />
+                    </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
@@ -151,32 +182,9 @@
 
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_margin="8dp"
-                        android:layout_weight="1"
-                        android:focusableInTouchMode="true">
 
-                        <AutoCompleteTextView
-                            android:id="@+id/auto_complete_color"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="Color"
-                            android:inputType="none" />
-                    </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/availability"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
-                    android:gravity="center"
-                    android:text="availability"
-                    android:textSize="14sp"
-                    android:textStyle="bold|italic" />
 
             </LinearLayout>
         </ScrollView>
