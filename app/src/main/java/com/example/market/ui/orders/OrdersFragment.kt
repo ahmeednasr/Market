@@ -35,7 +35,7 @@ class OrdersFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         observeBackButton()
-        setupProductsRecyclerView()
+        setupOrdersRecyclerView()
         observeOrdersResponse()
 
         viewModel.getOrders()
@@ -88,7 +88,7 @@ class OrdersFragment : Fragment() {
         }
     }
 
-    private fun setupProductsRecyclerView() {
+    private fun setupOrdersRecyclerView() {
         binding.rvOrders.apply {
             adapter = ordersAdapter
             layoutManager = LinearLayoutManager(requireContext())

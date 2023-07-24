@@ -68,9 +68,6 @@ class CategoriesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.ivCart.setOnClickListener {
-
-        }
         setFabAnimation()
         hideAllFabs()
         observeCategoryFab()
@@ -79,6 +76,7 @@ class CategoriesFragment : Fragment() {
         setupProductsRecyclerView()
         observeProductsResponse()
         observeButtonsGroup()
+        observeCartButton()
         observeFloatingActionButton()
 
         viewModel.getProducts()
@@ -87,7 +85,17 @@ class CategoriesFragment : Fragment() {
     private fun observeFavouritesButton() {
         binding.ivFavourite.setOnClickListener {
             if (sharedPreferences.getBoolean(Constants.IS_Logged, false)) {
-                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToFavouritesFragment())
+                findNavController().navigate(CategoriesFragmentDirections.actionCategoriesFragmentToFavouritesFragment())
+            } else {
+                showAlertDialog()
+            }
+        }
+    }
+
+    private fun observeCartButton() {
+        binding.ivCart.setOnClickListener {
+            if (sharedPreferences.getBoolean(Constants.IS_Logged, false)) {
+                findNavController().navigate(CategoriesFragmentDirections.actionCategoriesFragmentToCartFragment())
             } else {
                 showAlertDialog()
             }
@@ -96,8 +104,8 @@ class CategoriesFragment : Fragment() {
 
     private fun showAlertDialog() {
         val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Login Required")
-        builder.setMessage("Please log in to continue.")
+        builder.setTitle(resources.getString(R.string.login_required))
+        builder.setMessage(resources.getString(R.string.alert_msg))
         builder.setIcon(android.R.drawable.ic_dialog_info)
         builder.setPositiveButton(resources.getString(R.string.OK)) { _, _ ->
             val i = Intent(requireActivity(), AuthActivity::class.java)

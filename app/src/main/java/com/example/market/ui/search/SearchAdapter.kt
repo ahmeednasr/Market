@@ -13,18 +13,25 @@ import com.example.market.databinding.ItemFavouriteProductBinding
 import com.example.market.databinding.ItemSearchProductBinding
 
 class SearchAdapter(
+    private val currency: String,
     private val clickListener: ProductClickListener
 ) :
     ListAdapter<Product, SearchAdapter.MyViewHolder>(
         DailyDiffCallback()
     ) {
 
+        var exchangeRate: Double? = null
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         return MyViewHolder.from(parent)
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.bind(getItem(position), clickListener)
+        holder.bind(getItem(position), clickListener, exchangeRate, currency)
 
         if (getItem(position).isFavourite) {
             Log.d("bind", "bind " + getItem(position).title!!)
@@ -47,9 +54,13 @@ class SearchAdapter(
     class MyViewHolder(val binding: ItemSearchProductBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(product: Product, clickListener: ProductClickListener) {
+        fun bind(product: Product, clickListener: ProductClickListener, exchangeRate: Double?, currency: String,) {
             binding.apply {
                 tvProductName.text = product.title
+                Log.d("bind", "exchangeRate "+ exchangeRate.toString())
+                Log.d("bind", "currency " + currency)
+                tvProductPrice.text = "$currency ${product.variants?.get(0)?.price?.toDouble()?.times(exchangeRate ?: 1.0)}"
+
                 Glide
                     .with(binding.root)
                     .load(product.image?.src)
