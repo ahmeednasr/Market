@@ -55,8 +55,6 @@ class ProductDetails : Fragment() {
 
         observeProductResponse()
 
-
-
     }
 
     override fun onDestroy() {
