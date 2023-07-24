@@ -10,12 +10,13 @@ import com.example.market.data.pojo.DiscountResponse
 import com.example.market.data.repo.Repository
 import com.example.market.utils.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val repository: Repository,
+    private val repository: Repository
 ) : ViewModel() {
 
     private val _brands: MutableLiveData<NetworkResult<BrandResponse>> = MutableLiveData()
@@ -24,9 +25,15 @@ class HomeViewModel @Inject constructor(
     private val _discountCodes: MutableLiveData<NetworkResult<DiscountResponse>> = MutableLiveData()
     val discountCodes: LiveData<NetworkResult<DiscountResponse>> = _discountCodes
 
+    private val coroutineExceptionHandler= CoroutineExceptionHandler { _, throwable ->
+        _brands.postValue(NetworkResult.Error("error"))
+        _discountCodes.postValue(NetworkResult.Error("error"))
+        Log.e("TAG", ": "+throwable.message)
+    }
+
     fun getBrands() {
         _brands.value = NetworkResult.Loading()
-        viewModelScope.launch {
+        viewModelScope.launch(coroutineExceptionHandler) {
             val brandsResponse = repository.getBrands()
             if (brandsResponse.isSuccessful) {
                 brandsResponse.body()?.let {
@@ -40,7 +47,7 @@ class HomeViewModel @Inject constructor(
 
     fun getDiscountCodes() {
         _discountCodes.value = NetworkResult.Loading()
-        viewModelScope.launch {
+        viewModelScope.launch(coroutineExceptionHandler)  {
             val discountResponse = repository.getDiscountCodes()
             Log.i("MYTAG", "call" + discountResponse.toString())
 

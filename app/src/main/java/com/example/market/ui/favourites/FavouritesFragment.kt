@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.market.data.pojo.LineItemsItem
 import com.example.market.databinding.FragmentFavouritesBinding
+import com.example.market.ui.account.AccountFragmentDirections
 import com.example.market.utils.NetworkResult
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -25,11 +26,16 @@ class FavouritesFragment : Fragment() {
     private val favouritesAdapter by lazy {
         FavouritesAdapter(object : FavouritesAdapter.ProductClickListener {
             override fun onItemClicked(product: LineItemsItem) {
-                //navigate to product details
+                product.sku?.toLong()?.let {
+                    findNavController().navigate(
+                        AccountFragmentDirections.actionAccountFragmentToProductDetails(
+                            it
+                        )
+                    )
+                }
             }
 
             override fun onDislikeClicked(product: LineItemsItem) {
-                //remove item from favourites
                 viewModel.deleteFavourite(product)
             }
         })

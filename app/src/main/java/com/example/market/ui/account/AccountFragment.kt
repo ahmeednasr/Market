@@ -14,9 +14,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.market.R
 import com.example.market.auth.AuthActivity
 import com.example.market.data.pojo.Currency
+import com.example.market.data.pojo.LineItemsItem
 import com.example.market.databinding.FragmentAccountBinding
 import com.example.market.databinding.LanguagePopupBinding
 import com.example.market.utils.Constants
@@ -52,6 +55,22 @@ class AccountFragment : Fragment() {
     private val viewModel: AccountViewModel by viewModels()
     private lateinit var auth: FirebaseAuth
 
+    private val favouritesAccountAdapter by lazy {
+        FavouritesAccountAdapter(object : FavouritesAccountAdapter.ClickListener {
+            override fun onItemClicked(product: LineItemsItem) {
+                product.sku?.toLong()?.let {
+                    findNavController().navigate(
+                        AccountFragmentDirections.actionAccountFragmentToProductDetails(
+                            it
+                        )
+                    )
+                }
+            }
+        })
+    }
+
+    private val ordersAccountAdapter by lazy { OrdersAccountAdapter() }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -68,10 +87,18 @@ class AccountFragment : Fragment() {
         editor = sharedPreferences.edit()
 
         updateUserUI()
+        setupProductsRecyclerView()
+        setupOrdersRecyclerView()
+        observeOrdersResponse()
+        observeProductsResponse()
         observeLoginButton()
         observeSearchButton()
         navigateToOrders()
         navigateToFavourites()
+
+        viewModel.getOrders()
+        viewModel.getFavourites()
+
         currentLocale = Locale.getDefault()
         currentLanguage = currentLocale.language
         if (currentLanguage == "en" || currentLanguage.isEmpty()) {
@@ -119,8 +146,8 @@ class AccountFragment : Fragment() {
 
     private fun showAlertDialog() {
         val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Login Required")
-        builder.setMessage("Please log in to continue.")
+        builder.setTitle(resources.getString(R.string.login_required))
+        builder.setMessage(resources.getString(R.string.alert_msg))
         builder.setIcon(android.R.drawable.ic_dialog_info)
         builder.setPositiveButton(resources.getString(R.string.OK)) { _, _ ->
             val i = Intent(requireActivity(), AuthActivity::class.java)
@@ -239,6 +266,57 @@ class AccountFragment : Fragment() {
                 startActivity(Intent(requireActivity(), AuthActivity::class.java))
             }
             updateUserUI()
+        }
+    }
+
+    private fun observeProductsResponse() {
+        viewModel.products.observe(viewLifecycleOwner) { response ->
+            when (response) {
+                is NetworkResult.Success -> {
+                    response.data?.let {
+                        Log.d("observeProductsResponse", "size: ${it.size}")
+                        favouritesAccountAdapter.submitList(it.take(2))
+                    }
+                }
+                is NetworkResult.Error -> {
+                }
+                is NetworkResult.Loading -> {
+                }
+            }
+        }
+    }
+
+    private fun setupProductsRecyclerView() {
+        binding.rvFavourites.apply {
+            adapter = favouritesAccountAdapter
+            layoutManager =
+                GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
+        }
+    }
+
+    private fun observeOrdersResponse() {
+        viewModel.orders.observe(viewLifecycleOwner) { response ->
+            when (response) {
+                is NetworkResult.Success -> {
+                    response.data?.orders?.let {
+                        Log.d("observeProductsResponse", "size: ${it.size}")
+                        ordersAccountAdapter.submitList(it.take(2))
+                    }
+                }
+                is NetworkResult.Error -> {
+
+                }
+                is NetworkResult.Loading -> {
+
+                }
+            }
+        }
+    }
+
+    private fun setupOrdersRecyclerView() {
+        binding.rvOrders.apply {
+            adapter = ordersAccountAdapter
+            layoutManager = LinearLayoutManager(requireContext())
         }
     }
 

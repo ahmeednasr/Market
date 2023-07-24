@@ -40,4 +40,17 @@
     <string name="delete">حذف</string>
     <string name="home">الصفحة الرئيسية</string>
     <string name="brands">العلامات التجارية</string>
+    <string name="addresses">العناوين</string>
+    <string name="category">التصنيفات</string>
+    <string name="women">نسائي</string>
+    <string name="kid">أطفال</string>
+    <string name="men">رجالي</string>
+    <string name="sale">مخفض</string>
+    <string name="favourites">المفضلات</string>
+    <string name="filter_price">تصفية حسب السعر:</string>
+    <string name="Order_number">رقم الطلب:</string>
+    <string name="Order_total">السعر الكلي:</string>
+    <string name="items_number">عدد المشتروات:</string>
+    <string name="login_required">يجب التسجيل</string>
+    <string name="alert_msg">يرجى تسجيل الدخول للمتابعة.</string>
 </resources>
