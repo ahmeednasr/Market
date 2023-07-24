@@ -3,6 +3,7 @@ package com.example.market.ui.cart
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -10,8 +11,10 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.market.R
 import com.example.market.data.pojo.CartDraftOrder
 import com.example.market.databinding.ItemCartBinding
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
-class CartAdapter(val ctx: Context) : RecyclerView.Adapter<CartAdapter.ViewHolder>() {
+class CartAdapter(val ctx: Context, private val onClick: CartClickListener) :
+    RecyclerView.Adapter<CartAdapter.ViewHolder>() {
     lateinit var binding: ItemCartBinding
     private var cartList = mutableListOf<CartDraftOrder>()
 
@@ -36,9 +39,21 @@ class CartAdapter(val ctx: Context) : RecyclerView.Adapter<CartAdapter.ViewHolde
                     .apply(RequestOptions().override(300, 250))
                     .placeholder(R.drawable.ic_launcher_background)
                     .error(R.drawable.ic_launcher_background).into(holder.binding.productIcon)
+            }
+            binding.removeBtn.setOnClickListener {
+                MaterialAlertDialogBuilder(ctx)
+                    .setTitle(ctx.resources.getString(R.string.app_name))
+                    .setMessage(ctx.resources.getString(R.string.rm_msg))
+                    .setNeutralButton(ctx.resources.getString(R.string.cancel)) { dialog, which ->
+                        // Respond to neutral button press
+                    }
+                    .setNegativeButton(ctx.resources.getString(R.string.delete)) { dialog, which ->
+                        // Respond to positive button press
+                        onClick.removeCartItem(current.id)
+                    }
+                    .show()
 
             }
-
         }
 
     }

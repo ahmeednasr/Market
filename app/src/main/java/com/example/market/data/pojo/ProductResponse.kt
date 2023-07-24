@@ -26,7 +26,7 @@ data class Product(
     val updated_at: String?,
     val variants: List<Variant>?,
     val vendor: String?,
-    var isFavourite: Boolean = false
+    var isFavourite: Boolean = false,
 ) : Serializable
 
 data class Variant(

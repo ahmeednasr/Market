@@ -10,6 +10,7 @@ import com.example.market.data.pojo.*
 import com.example.market.data.repo.Repository
 import com.example.market.utils.Constants.CART_ID
 import com.example.market.utils.Constants
+import com.example.market.utils.Constants.UserID
 import com.example.market.utils.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -24,6 +25,9 @@ class ProductDetailsViewModel @Inject constructor(
     private var _favourites = ArrayList<LineItemsItem>()
     private val _product: MutableLiveData<NetworkResult<ProductResponse>> = MutableLiveData()
     val product: LiveData<NetworkResult<ProductResponse>> = _product
+
+    private val _addOperation: MutableLiveData<NetworkResult<Boolean>> = MutableLiveData()
+    val addOperation: LiveData<NetworkResult<Boolean>> = _addOperation
 
     fun getProduct(productId: Long) {
         _product.value = NetworkResult.Loading()
@@ -42,30 +46,47 @@ class ProductDetailsViewModel @Inject constructor(
         }
     }
 
-
-    fun setInCart(product: Product, userID: Long) {
+    fun setInCart(product: Product) {
         viewModelScope.launch {
-
-            val cart = DraftOrderResponse(
-                DraftOrder(
-                    lineItems = mutableListOf(
-                        LineItemsItem(
-                            title = product.title,
-                            price = product.variants?.get(0)?.price,
-                            variantId = product.variants?.get(0)?.id,
-                            quantity = 1,
-                            productId = product.id,
-                            properties = listOf(
-                                Property(
-                                    "productImage",
-                                    product.images?.get(0)?.src
+            val cartList = repository.getDraftOrders().body()
+            val userId = sharedPreferences.getString(UserID, "0")?.toLong()
+            if (userId != null) {
+                val filtered = cartList?.draft_orders?.filter {
+                    it.customer?.id == userId && it.tags == "cart"
+                }
+                var list =
+                    filtered?.filter { it.line_items?.get(0)?.variant_id == product.variants?.get(0)?.id }
+                Log.i("FILTERD", list.toString())
+                if (list?.isEmpty() == true) {
+                    val cart = DraftOrderResponse(
+                        DraftOrder(
+                            lineItems = mutableListOf(
+                                LineItemsItem(
+                                    title = product.title,
+                                    price = product.variants?.get(0)?.price,
+                                    variantId = product.variants?.get(0)?.id,
+                                    quantity = 1,
+                                    productId = product.id,
+                                    properties = listOf(
+                                        Property(
+                                            "productImage",
+                                            product.images?.get(0)?.src
+                                        )
+                                    )
                                 )
-                            )
+                            ),
+                            customer = Customer(id = userId),
+                            tags = CART_ID
                         )
-                    ), customer = Customer(id = userID), tags = CART_ID
-                )
-            )
-            repository.createCartDraftOrder(cart)
+                    )
+                    repository.createCartDraftOrder(cart)
+                    _addOperation.postValue(NetworkResult.Success(true))
+                } else {
+                    _addOperation.postValue(NetworkResult.Error("added before"))
+                }
+
+            }
+
         }
     }
 
