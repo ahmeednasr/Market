@@ -122,7 +122,7 @@ class AuthSignIn : Fragment() {
     private fun signInWithGoogle(){
         val signIntent = googleSignInClient.signInIntent
         launcher.launch(signIntent)
-        findNavController().navigate(AuthSignInDirections.actionAuthSignInToConfirmData())
+        getUserData()
     }
 
     private val launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){result->
@@ -185,11 +185,20 @@ class AuthSignIn : Fragment() {
                 is NetworkResult.Loading -> {
 
                 }
-                else -> {}
             }
 
         }
 
+    }
+
+    private fun getUserData(){
+        binding.progressBar2.visibility =View.VISIBLE
+        if(auth.currentUser!=null){
+            binding.progressBar2.visibility =View.GONE
+            findNavController().navigate(AuthSignInDirections.actionAuthSignInToConfirmData())
+        }else{
+
+        }
     }
 
 }

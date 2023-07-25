@@ -1,6 +1,5 @@
 package com.example.market.ui.product
 
-import android.content.ContentValues.TAG
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -15,6 +14,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.denzcoskun.imageslider.models.SlideModel
 import com.example.market.R
 import com.example.market.auth.AuthActivity
@@ -133,7 +133,7 @@ class ProductDetails : Fragment() {
 
         var userId = sharedPreferences.getString(UserID, "")
         Log.i("USERID", userId.toString())
-        viewModel.setInCart(product, userId!!.toLong())
+        viewModel.setInCart(product)
         reviewAdaptor.submitList(reviewsList)
         setupReviewRecyclerView()
         binding.reviewCard.setOnClickListener {
