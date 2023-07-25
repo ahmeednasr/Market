@@ -26,7 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:text="Category"
+                android:text="@string/category"
                 android:textColor="@color/white"
                 android:textSize="24sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -83,7 +83,7 @@
             app:toggle_selectAnimation="horizontal_slide"
             app:toggle_selectedBackgroundColor="@color/orange_500"
             app:toggle_selectedTextColor="@color/white"
-            app:toggle_text="WOMEN" />
+            app:toggle_text="@string/women" />
 
         <nl.bryanderidder.themedtogglebuttongroup.ThemedButton
             android:id="@+id/btn_kid"
@@ -93,7 +93,7 @@
             app:toggle_selectAnimation="horizontal_slide"
             app:toggle_selectedBackgroundColor="@color/orange_500"
             app:toggle_selectedTextColor="@color/white"
-            app:toggle_text="KID" />
+            app:toggle_text="@string/kid" />
 
         <nl.bryanderidder.themedtogglebuttongroup.ThemedButton
             android:id="@+id/btn_men"
@@ -103,7 +103,7 @@
             app:toggle_selectAnimation="horizontal_slide"
             app:toggle_selectedBackgroundColor="@color/orange_500"
             app:toggle_selectedTextColor="@color/white"
-            app:toggle_text="MEN" />
+            app:toggle_text="@string/men" />
 
         <nl.bryanderidder.themedtogglebuttongroup.ThemedButton
             android:id="@+id/btn_sale"
@@ -113,7 +113,7 @@
             app:toggle_selectAnimation="horizontal_slide"
             app:toggle_selectedBackgroundColor="@color/orange_500"
             app:toggle_selectedTextColor="@color/white"
-            app:toggle_text="SALE" />
+            app:toggle_text="@string/sale" />
     </nl.bryanderidder.themedtogglebuttongroup.ThemedToggleButtonGroup>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -139,7 +139,7 @@
         android:elevation="16dp"
         android:focusable="true"
         android:src="@drawable/ic_categories"
-        app:backgroundTint="#ffffff"
+        app:backgroundTint="@color/orange_700"
         app:fabSize="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

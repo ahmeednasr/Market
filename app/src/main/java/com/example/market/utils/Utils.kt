@@ -17,6 +17,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
 import com.example.market.R
 import com.example.market.auth.AuthActivity
+import java.text.SimpleDateFormat
 import java.util.*
 
 object Utils {
@@ -31,4 +32,10 @@ object Utils {
         res.updateConfiguration(conf, dm)
     }
 
+    fun formatDate(date: String) : String{
+        val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val formattedDate: Date = format.parse(date) as Date
+        val stringFormat = SimpleDateFormat("dd/MM/yyy", Locale.getDefault())
+        return stringFormat.format(formattedDate)
+    }
 }

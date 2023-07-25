@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:text="Order number:"
+            android:text="@string/Order_number"
             android:textColor="@color/black"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -51,7 +51,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_number" />
 
         <TextView
-            android:id="@+id/tv_product_price"
+            android:id="@+id/tv_order_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
@@ -68,14 +68,14 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:text="number of Items:"
+            android:text="@string/items_number"
             android:textColor="@color/black"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_price" />
 
         <TextView
-            android:id="@+id/tv_product_number"
+            android:id="@+id/tv_products_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
@@ -98,7 +98,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_num"
             tools:text="20/7/2023" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

@@ -1,4 +1,4 @@
-package com.example.market.ui.orders
+package com.example.market.ui.account
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -9,7 +9,7 @@ import com.example.market.data.pojo.Order
 import com.example.market.databinding.ItemOrderBinding
 import com.example.market.utils.Utils
 
-class OrdersAdapter : ListAdapter<Order, OrdersAdapter.MyViewHolder>(
+class OrdersAccountAdapter : ListAdapter<Order, OrdersAccountAdapter.MyViewHolder>(
         DailyDiffCallback()
     ) {
 

@@ -30,8 +30,6 @@ class FavouritesViewModel @Inject constructor(
     private val _products: MutableLiveData<NetworkResult<List<LineItemsItem>>> = MutableLiveData()
     val products: LiveData<NetworkResult<List<LineItemsItem>>> = _products
 
-
-
     fun getFavourites() {
         _products.value = NetworkResult.Loading()
         viewModelScope.launch {

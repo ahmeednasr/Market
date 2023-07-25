@@ -35,29 +35,32 @@ class SearchFragment : Fragment() {
     @Inject
     lateinit var sharedPreferences: SharedPreferences
 
-    private val searchAdapter =
-        SearchAdapter(object : SearchAdapter.ProductClickListener {
-            override fun onItemClicked(product: Product) {
-                findNavController().navigate(
-                    SearchFragmentDirections.actionSearchFragmentToProductDetails(
-                        product.id!!
+    private val searchAdapter by lazy {
+        SearchAdapter(
+            sharedPreferences.getString(Constants.CURRENCY_TO_KEY, "") ?: "EGP",
+            object : SearchAdapter.ProductClickListener {
+                override fun onItemClicked(product: Product) {
+                    findNavController().navigate(
+                        SearchFragmentDirections.actionSearchFragmentToProductDetails(
+                            product.id!!
+                        )
                     )
-                )
-            }
-
-            override fun onFavouriteClicked(product: Product) {
-                if (sharedPreferences.getBoolean(Constants.IS_Logged, false)) {
-                    if (product.isFavourite) {
-                        viewModel.deleteFavourite(product)
-                    } else {
-                        viewModel.addFavourite(product)
-                    }
-                    product.isFavourite = !product.isFavourite
-                } else {
-                    showAlertDialog()
                 }
-            }
-        })
+
+                override fun onFavouriteClicked(product: Product) {
+                    if (sharedPreferences.getBoolean(Constants.IS_Logged, false)) {
+                        if (product.isFavourite) {
+                            viewModel.deleteFavourite(product)
+                        } else {
+                            viewModel.addFavourite(product)
+                        }
+                        product.isFavourite = !product.isFavourite
+                    } else {
+                        showAlertDialog()
+                    }
+                }
+            })
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -71,12 +74,22 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.convertCurrency(
+            sharedPreferences.getString(Constants.CURRENCY_FROM_KEY, "") ?: "EGP",
+            sharedPreferences.getString(Constants.CURRENCY_TO_KEY, "") ?: "EGP",
+            1.00
+        )
+
         observeBackButton()
         setupSliderView()
         setupProductsRecyclerView()
         observeProductsResponse()
         observeSearchText()
         observeSliderChange()
+
+        viewModel.conversionResult.observe(viewLifecycleOwner){
+            searchAdapter.exchangeRate = it
+        }
 
         viewModel.getProducts()
     }
@@ -168,8 +181,8 @@ class SearchFragment : Fragment() {
 
     private fun showAlertDialog() {
         val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Login Required")
-        builder.setMessage("Please log in to continue.")
+        builder.setTitle(resources.getString(R.string.login_required))
+        builder.setMessage(resources.getString(R.string.alert_msg))
         builder.setIcon(android.R.drawable.ic_dialog_info)
         builder.setPositiveButton(resources.getString(R.string.OK)) { _, _ ->
             val i = Intent(requireActivity(), AuthActivity::class.java)

@@ -28,6 +28,20 @@ class SearchViewModel @Inject constructor(
     private val _products: MutableLiveData<NetworkResult<List<Product>>> = MutableLiveData()
     val products: LiveData<NetworkResult<List<Product>>> = _products
 
+    private val _conversionResult: MutableLiveData<Double> = MutableLiveData()
+    val conversionResult: LiveData<Double> = _conversionResult
+
+    fun convertCurrency(from: String, to: String,amount:Double) {
+        viewModelScope.launch {
+            val response = repository.convertCurrency(from, to,amount)
+            if (response.isSuccessful) {
+                response.body()?.result?.let {
+                    _conversionResult.postValue(it)
+                }
+            }
+        }
+    }
+
     fun getProducts() {
         _products.value = NetworkResult.Loading()
         viewModelScope.launch {
