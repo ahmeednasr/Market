@@ -23,6 +23,8 @@ class ProductDetailsViewModel @Inject constructor(
 ) : ViewModel() {
 
     private var _favourites = ArrayList<LineItemsItem>()
+    private var _cart = ArrayList<LineItemsItem>()
+
     private val _product: MutableLiveData<NetworkResult<ProductResponse>> = MutableLiveData()
     val product: LiveData<NetworkResult<ProductResponse>> = _product
 
@@ -135,6 +137,25 @@ class ProductDetailsViewModel @Inject constructor(
                 favouritesId ?: 0,
                 DraftOrderResponse(DraftOrder(lineItems = _favourites))
             )
+        }
+    }
+
+    private suspend fun getCart(product: Product, variantId: Long) {
+        val draftResponse = repository.getCart(
+            sharedPreferences.getString(Constants.CART_ID, "0")!!.toLong()
+        )
+        if (draftResponse.isSuccessful) {
+            draftResponse.body()?.let { it ->
+                _cart = it.draftOrder?.lineItems as ArrayList<LineItemsItem>
+                _cart.filter {
+                    it.variantId == variantId
+                }
+                for (cartItem in _cart) {
+                    if (product.id!! == cartItem.sku?.toLong()) {
+
+                    }
+                }
+            }
         }
     }
 
