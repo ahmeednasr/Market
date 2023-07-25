@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
@@ -31,6 +32,7 @@ class ProductDetails : Fragment() {
 
     private var _binding: FragmentProductDetailsBinding? = null
     private val binding get() = _binding!!
+    var avilable: Int = 0
 
     @Inject
     lateinit var sharedPreferences: SharedPreferences
@@ -82,6 +84,7 @@ class ProductDetails : Fragment() {
                 binding.availability.visibility = View.VISIBLE
                 for (i in product.variants!!.indices) {
                     if (itemSelected == product.variants!![i].option1) {
+                        avilable = product.variants[i].inventory_quantity!!
                         binding.availability.text =
                             getString(R.string.availability) + " " + product.variants!![i].inventory_quantity.toString()
                         binding.availability.visibility = View.VISIBLE
@@ -94,7 +97,7 @@ class ProductDetails : Fragment() {
         val random = Random
         val randomDouble = random.nextDouble() * 4 + 1
         val randomRounded = (randomDouble * 2).roundToInt() / 2.0
-
+        avilable = 0
         binding.availability.visibility = View.GONE
         val imageList = ArrayList<SlideModel>()
         val imgSlider = binding.imageSlider
@@ -121,13 +124,15 @@ class ProductDetails : Fragment() {
         )
         binding.ratingBar.rating = randomRounded.toFloat()
         checkFavorite(product)
-        val sharedPreferences = requireContext().getSharedPreferences(
-            Constants.SharedPreferences, 0
-        )
-        var userId = sharedPreferences.getString(UserID, "")
-        Log.i("USERID", userId.toString())
-        viewModel.setInCart(product, userId!!.toLong())
+        binding.addToChartButton.setOnClickListener {
+            if (avilable > 0) {
+                viewModel.setInCart(product)
+                observeAddOperation()
+            } else {
+                Toast.makeText(requireContext(), "size and color not selected", Toast.LENGTH_SHORT).show()
+            }
 
+        }
     }
 
     private fun checkFavorite(product: Product) {
@@ -183,10 +188,31 @@ class ProductDetails : Fragment() {
         builder.setNegativeButton(resources.getString(R.string.cancel)) { dialogInterface, _ ->
             dialogInterface.dismiss()
         }
-
         val alertDialog: AlertDialog = builder.create()
         alertDialog.setCancelable(false)
         alertDialog.show()
+    }
+
+    private fun observeAddOperation() {
+        viewModel.addOperation.observe(viewLifecycleOwner) { response ->
+            when (response) {
+                is NetworkResult.Success -> {
+                    if (response.data == true) {
+                        Toast.makeText(requireContext(), "added", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                is NetworkResult.Error -> {
+                    Toast.makeText(
+                        requireContext(),
+                        response.message,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                is NetworkResult.Loading -> {
+
+                }
+            }
+        }
     }
 
 }

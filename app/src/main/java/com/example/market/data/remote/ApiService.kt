@@ -60,6 +60,7 @@ interface ApiService {
         @Body order: DraftOrderResponse
     ): Response<DraftOrderResponse>
 
+    //to getMax num of product
     @PUT("variants/{id}.json")
     suspend fun getVariantById(
         @Path("id") id: Long,
@@ -68,9 +69,12 @@ interface ApiService {
 
     @DELETE("draft_orders/{id}.json")
     suspend fun deleteCartByID(@Path("id") id: Long?): Response<DraftOrderResponse>
-  
+
     @PUT("draft_orders/{favouriteId}.json")
-    suspend fun modifyFavourites(@Path("favouriteId") favouriteId: Long, @Body modifiedList: DraftOrderResponse)
+    suspend fun modifyFavourites(
+        @Path("favouriteId") favouriteId: Long,
+        @Body modifiedList: DraftOrderResponse
+    )
 
     @GET("draft_orders/{favouriteId}.json")
     suspend fun getFavourites(@Path("favouriteId") favouriteId: Long): Response<DraftOrderResponse>

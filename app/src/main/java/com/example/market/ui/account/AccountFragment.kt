@@ -209,9 +209,7 @@ class AccountFragment : Fragment() {
         //val currencyFrom=
         editor.apply()
         binding.currencyValue.text = selectedItem
-       // viewModel.convertCurrency("EGP", selectedItem!!, 1.0)
         Toast.makeText(requireContext(), selectedItem, Toast.LENGTH_SHORT).show()
-
     }
 
     private fun showDialog() {
