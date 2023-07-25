@@ -35,16 +35,20 @@ class SearchFragment : Fragment() {
     @Inject
     lateinit var sharedPreferences: SharedPreferences
 
+    private lateinit var currency: String
+
     private val searchAdapter by lazy {
         SearchAdapter(
             sharedPreferences.getString(Constants.CURRENCY_TO_KEY, "") ?: "EGP",
             object : SearchAdapter.ProductClickListener {
                 override fun onItemClicked(product: Product) {
-                    findNavController().navigate(
-                        SearchFragmentDirections.actionSearchFragmentToProductDetails(
-                            product.id!!
+                    product.id?.let {
+                        findNavController().navigate(
+                            SearchFragmentDirections.actionSearchFragmentToProductDetails(
+                                it
+                            )
                         )
-                    )
+                    }
                 }
 
                 override fun onFavouriteClicked(product: Product) {
@@ -74,12 +78,11 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Log.i(
-            "TAG",   sharedPreferences.getString(Constants.CURRENCY_TO_KEY, "").toString()
-        )
+        currency = sharedPreferences.getString(Constants.CURRENCY_TO_KEY, "") ?: "EGP"
+        Log.i("TAG", currency)
         viewModel.convertCurrency(
             "EGP",
-            sharedPreferences.getString(Constants.CURRENCY_TO_KEY, "") ?: "EGP",
+            currency,
             1.00
         )
 
@@ -92,6 +95,7 @@ class SearchFragment : Fragment() {
 
         viewModel.conversionResult.observe(viewLifecycleOwner){
             searchAdapter.exchangeRate = it
+            binding.tvMax.text = "${(300*it).roundToInt()} ${currency}"
         }
 
         viewModel.getProducts()
@@ -169,7 +173,8 @@ class SearchFragment : Fragment() {
     private fun setupSliderView() {
         binding.continuousSlider.setLabelFormatter { value: Float ->
             //should change $ to current currency
-            return@setLabelFormatter "$${value.roundToInt()}"
+            binding.tvSlider.text = "${value.roundToInt()} ${currency}"
+            return@setLabelFormatter "${value.roundToInt()} ${currency}"
         }
     }
 

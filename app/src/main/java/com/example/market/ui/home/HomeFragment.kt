@@ -20,6 +20,8 @@ import com.example.market.databinding.FragmentHomeBinding
 import com.example.market.utils.Constants
 import com.example.market.utils.Constants.DISCOUNT_ID
 import com.example.market.utils.NetworkResult
+import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType
+import com.smarteist.autoimageslider.SliderAnimations
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -46,7 +48,8 @@ class HomeFragment : Fragment() {
         })
     }
     private val discountAdapter by lazy {
-        DiscountAdapter(object : DiscountAdapter.DiscountClickListener {
+        DiscountAdapter( requireContext(),
+            object : DiscountAdapter.DiscountClickListener {
             override fun onItemClicked(discount: PriceRule) {
                 val alertDialog: AlertDialog? = activity?.let {
                     val builder = AlertDialog.Builder(it)
@@ -96,8 +99,12 @@ class HomeFragment : Fragment() {
         observeBrandsResponse()
         observeDiscountResponse()
         observeCartButton()
-        binding.rvDiscount.layoutManager = layoutManager
-        binding.rvDiscount.adapter = discountAdapter
+
+        binding.rvDiscount.setSliderAdapter(discountAdapter)
+        binding.rvDiscount.setIndicatorAnimation(IndicatorAnimationType.WORM)
+        binding.rvDiscount.setSliderTransformAnimation(SliderAnimations.DEPTHTRANSFORMATION)
+        binding.rvDiscount.startAutoCycle()
+
         viewModel.getDiscountCodes()
         viewModel.getBrands()
     }
@@ -199,7 +206,7 @@ class HomeFragment : Fragment() {
             when (response) {
                 is NetworkResult.Success -> {
                     response.data?.let {
-                        discountAdapter.submitList(it.price_rules)
+                        discountAdapter.renewItems(it.price_rules as ArrayList<PriceRule>)
                     }
                 }
                 is NetworkResult.Error -> {
