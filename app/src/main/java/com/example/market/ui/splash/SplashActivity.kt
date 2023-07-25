@@ -44,7 +44,7 @@ class SplashActivity : AppCompatActivity() {
                 editor.apply()
             }
             if (language == null || language.isEmpty()) {
-                editor.putString(CURRENCY_TO_KEY, ENGLISH)
+                editor.putString(LANGUAGE_KEY, ENGLISH)
                 editor.apply()
                 setLocale(ENGLISH, this)
             } else {

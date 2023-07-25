@@ -154,7 +154,7 @@ class ProductDetails : Fragment() {
         }
         binding.addToChartButton.setOnClickListener {
             if (quantity > 0) {
-                viewModel.g(product)
+                //viewModel.g(product)
                 observeAddOperation()
             } else {
                 Toast.makeText(requireContext(), "size and color not selected", Toast.LENGTH_SHORT)
