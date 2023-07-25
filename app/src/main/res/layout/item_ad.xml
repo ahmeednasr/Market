@@ -1,17 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <ImageView
-        android:id="@+id/iv_image_slider"
+        android:id="@+id/iv_discount"
         android:layout_width="match_parent"
         android:layout_height="300dp"
         app:iss_auto_cycle="true"
         app:iss_text_align="CENTER"
+        android:scaleType="fitXY"
+        tools:srcCompat="@drawable/copon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/tv_discount_name"
+        android:layout_width="0dp"
+        android:layout_height="27dp"
+        android:background="#BD0119"
+        android:gravity="center"
+        android:textColor="@color/bg"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_discount"
+        tools:text="discount" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

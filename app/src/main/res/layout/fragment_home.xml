@@ -82,21 +82,11 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar_home_fragment" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_discount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_discount"
-            tools:listitem="@layout/item_discount" />
-
         <TextView
             android:id="@+id/tv_brand"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:text="@string/brands"
             android:textColor="@color/black"
             android:textSize="20sp"
@@ -111,22 +101,22 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
-            android:layout_marginVertical="24dp"
+            android:layout_marginTop="8dp"
             app:cardCornerRadius="15dp"
             app:cardElevation="20dp"
             app:cardMaxElevation="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar_home_fragment">
+            app:layout_constraintTop_toBottomOf="@+id/tv_discount">
 
             <com.smarteist.autoimageslider.SliderView
-                android:id="@+id/discount_btn"
+                android:id="@+id/rv_discount"
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
-                app:sliderAnimationDuration="600"
+                app:sliderAnimationDuration="1000"
                 app:sliderAutoCycleDirection="back_and_forth"
                 app:sliderAutoCycleEnabled="true"
-                app:sliderIndicatorAnimationDuration="600"
+                app:sliderIndicatorAnimationDuration="1000"
                 app:sliderIndicatorGravity="center_horizontal|bottom"
                 app:sliderIndicatorMargin="15dp"
                 app:sliderIndicatorOrientation="horizontal"
@@ -134,7 +124,7 @@
                 app:sliderIndicatorRadius="2dp"
                 app:sliderIndicatorSelectedColor="#5A5A5A"
                 app:sliderIndicatorUnselectedColor="#FFF"
-                app:sliderScrollTimeInSec="1"
+                app:sliderScrollTimeInSec="2"
                 app:sliderStartAutoCycle="true" />
         </androidx.cardview.widget.CardView>
 
