@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.denzcoskun.imageslider.models.SlideModel
 import com.example.market.R
 import com.example.market.auth.AuthActivity
@@ -30,21 +31,27 @@ import kotlin.random.Random
 @AndroidEntryPoint
 class ProductDetails : Fragment() {
 
-    private var _binding: FragmentProductDetailsBinding? = null
+    private var _binding : FragmentProductDetailsBinding? = null
     private val binding get() = _binding!!
     var avilable: Int = 0
 
     @Inject
     lateinit var sharedPreferences: SharedPreferences
-    private val viewModel: ProductDetailsViewModel by viewModels()
-    private val args: ProductDetailsArgs by navArgs()
+    private val viewModel : ProductDetailsViewModel by viewModels()
+    private val reviewAdaptor by lazy { ReviewAdaptor() }
+    var reviewsList = listOf<UserReview>(UserReview("John Doe","Good product with high quality."),
+        UserReview("Mahmoud Ism","As expected to be."),UserReview("Mo Ali",
+            "The product is good but the delivery was bit slow."))
+    private var reviewShow = true
+
+    private val args : ProductDetailsArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        _binding = FragmentProductDetailsBinding.inflate(inflater, container, false)
+        _binding = FragmentProductDetailsBinding.inflate(inflater,container,false)
         return binding.root
     }
 
@@ -124,6 +131,21 @@ class ProductDetails : Fragment() {
         )
         binding.ratingBar.rating = randomRounded.toFloat()
         checkFavorite(product)
+
+        var userId = sharedPreferences.getString(UserID, "")
+        Log.i("USERID", userId.toString())
+        viewModel.setInCart(product)
+        reviewAdaptor.submitList(reviewsList)
+        setupReviewRecyclerView()
+        binding.reviewCard.setOnClickListener {
+            if(reviewShow){
+                binding.revRV.visibility = View.VISIBLE
+                reviewShow = false
+            }else{
+                binding.revRV.visibility = View.GONE
+                reviewShow = true
+            }
+        }
         binding.addToChartButton.setOnClickListener {
             if (avilable > 0) {
                 viewModel.setInCart(product)
@@ -188,6 +210,7 @@ class ProductDetails : Fragment() {
         builder.setNegativeButton(resources.getString(R.string.cancel)) { dialogInterface, _ ->
             dialogInterface.dismiss()
         }
+
         val alertDialog: AlertDialog = builder.create()
         alertDialog.setCancelable(false)
         alertDialog.show()
@@ -212,6 +235,13 @@ class ProductDetails : Fragment() {
 
                 }
             }
+        }
+    }
+
+    private fun setupReviewRecyclerView() {
+        binding.revRV.apply {
+            adapter = reviewAdaptor
+            layoutManager = LinearLayoutManager(requireContext())
         }
     }
 
