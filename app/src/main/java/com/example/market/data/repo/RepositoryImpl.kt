@@ -85,7 +85,17 @@ class RepositoryImpl(
     override suspend fun deleteCartByID(id: Long): Response<DraftOrderResponse> {
         return apiService.deleteCartByID(id)
     }
+
     override suspend fun getCustomerOrders(userId: Long): Response<OrderResponse> {
         return apiService.getCustomerOrders(userId)
     }
+
+    override suspend fun modifyCart(cartId: Long, modifiedList: DraftOrderResponse) {
+        apiService.modifyCart(cartId, modifiedList)
+    }
+
+    override suspend fun getCart(cartId: Long): Response<DraftOrderResponse> {
+        return apiService.getCart(cartId)
+    }
+
 }
