@@ -1,11 +1,15 @@
-package com.example.market
+package com.example.market.ui
 
-import androidx.appcompat.app.AppCompatActivity
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI.setupWithNavController
+import com.example.market.R
 import com.example.market.databinding.ActivityMainBinding
+import com.example.market.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -20,6 +24,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(view)
 
         val navController = Navigation.findNavController(this, R.id.nav_host_fragment)
-        setupWithNavController(binding.navigationBar, navController,false)
+        setupWithNavController(binding.navigationBar, navController, false)
     }
+
 }

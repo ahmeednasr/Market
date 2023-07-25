@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Market</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">اهلا بكم</string>
     <string name="your_cart_is_empty">حقيبه التسوق فارغه!</string>
     <string name="remove">حذف</string>
@@ -9,10 +8,9 @@
     <string name="decrement">decrement</string>
     <string name="increment">increment</string>
     <string name="no_connection">no connection</string>
-    <string name="home">الرئيسيه</string>
     <string name="categories">الفئات</string>
     <string name="account">الحساب</string>
-    <string name="subtotal">Subtotal:</string>
+    <string name="subtotal">المجموع:</string>
     <string name="cart">السله</string>
     <string name="filter">filter</string>
     <string name="map">خريطه</string>
@@ -28,10 +26,32 @@
     <string name="orders">الطلبات</string>
     <string name="saved_items">العناصر المحفوظه</string>
     <string name="phone">الهاتف</string>
-    <string name="zipcode">كود</string>
-    <string name="country">البلد</string>
+    <string name="zipcode">الكود البريدي</string>
+    <string name="country">الدوله</string>
     <string name="egypt">Egypt</string>
-    <string name="city">مدينه</string>
-    <string name="govern">محافظه</string>
+    <string name="city">المدينه</string>
+    <string name="govern">المحافظه</string>
     <string name="save">حفظ</string>
+    <string name="availability">متوفر في المتجر:</string>
+    <string name="cancel">إلغاء</string>
+    <string name="in_stock">in Stock</string>
+    <string name="rm_msg">هل تريد حذف هذا المنتج</string>
+    <string name="delete">حذف</string>
+    <string name="home">الصفحة الرئيسية</string>
+    <string name="brands">العلامات التجارية</string>
+    <string name="addresses">العناوين</string>
+    <string name="category">التصنيفات</string>
+    <string name="all">الكل</string>
+    <string name="women">نسائي</string>
+    <string name="kid">أطفال</string>
+    <string name="men">رجالي</string>
+    <string name="sale">مخفض</string>
+    <string name="favourites">المفضلات</string>
+    <string name="filter_price">تصفية حسب السعر:</string>
+    <string name="Order_number">رقم الطلب:</string>
+    <string name="Order_total">السعر الكلي:</string>
+    <string name="items_number">عدد المشتروات:</string>
+    <string name="login_required">يجب التسجيل</string>
+    <string name="alert_msg">يرجى تسجيل الدخول للمتابعة.</string>
+    <string name="coupons">كوبونات</string>
 </resources>

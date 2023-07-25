@@ -26,6 +26,22 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_homeFragment_to_cartFragment"
+            app:destination="@id/cartFragment"
+            app:popUpTo="@id/homeFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_homeFragment_to_favouritesFragment"
+            app:destination="@id/favouritesFragment"
+            app:popUpTo="@id/homeFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment
@@ -43,7 +59,28 @@
             app:popExitAnim="@anim/slide_out_right"/>
         <action
             android:id="@+id/action_categoriesFragment_to_productDetails"
-            app:destination="@id/productDetails" />
+            app:destination="@id/productDetails"
+            app:popUpTo="@id/categoriesFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_categoriesFragment_to_favouritesFragment"
+            app:destination="@id/favouritesFragment"
+            app:popUpTo="@id/categoriesFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_categoriesFragment_to_cartFragment"
+            app:destination="@id/cartFragment"
+            app:popUpTo="@id/categoriesFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
 
     <fragment
@@ -51,9 +88,6 @@
         android:name="com.example.market.ui.account.AccountFragment"
         android:label="fragment_account"
         tools:layout="@layout/fragment_account">
-        <action
-            android:id="@+id/action_accountFragment_to_authIntro"
-            app:destination="@id/authIntro" />
         <action
             android:id="@+id/action_accountFragment_to_searchFragment"
             app:destination="@id/searchFragment"
@@ -63,44 +97,32 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
         <action
-            android:id="@+id/action_accountFragment_to_addressFormFragment"
-            app:destination="@id/addressFormFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/authIntro"
-        android:name="com.example.market.auth.AuthIntro"
-        android:label="fragment_auth_intro"
-        tools:layout="@layout/fragment_auth_intro">
+            android:id="@+id/action_accountFragment_to_ordersFragment"
+            app:destination="@id/ordersFragment"
+            app:popUpTo="@id/accountFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
         <action
-            android:id="@+id/action_authIntro_to_authSignIn"
-            app:destination="@id/authSignIn" />
+            android:id="@+id/action_accountFragment_to_favouritesFragment"
+            app:destination="@id/favouritesFragment"
+            app:popUpTo="@id/accountFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
         <action
-            android:id="@+id/action_authIntro_to_authSignup"
-            app:destination="@id/authSignup" />
-    </fragment>
-    <fragment
-        android:id="@+id/authSignIn"
-        android:name="com.example.market.auth.AuthSignIn"
-        android:label="fragment_auth_sign_in"
-        tools:layout="@layout/fragment_auth_sign_in">
+            android:id="@+id/action_accountFragment_to_productDetails"
+            app:destination="@id/productDetails"
+            app:popUpTo="@id/accountFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
         <action
-            android:id="@+id/action_authSignIn_to_accountFragment"
-            app:destination="@id/accountFragment" />
-        <action
-            android:id="@+id/action_authSignIn_to_authIntro"
-            app:destination="@id/authIntro" />
-    </fragment>
-    <fragment
-        android:id="@+id/authSignup"
-        android:name="com.example.market.auth.AuthSignup"
-        android:label="fragment_auth_singup"
-        tools:layout="@layout/fragment_auth_singup">
-        <action
-            android:id="@+id/action_authSignup_to_accountFragment"
-            app:destination="@id/accountFragment" />
-        <action
-            android:id="@+id/action_authSignup_to_authIntro"
-            app:destination="@id/authIntro" />
+            android:id="@+id/action_accountFragment_to_addressesFragment"
+            app:destination="@id/addressesFragment" />
     </fragment>
     <fragment
         android:id="@+id/brandFragment"
@@ -112,26 +134,48 @@
             app:argType="string" />
         <action
             android:id="@+id/action_brandFragment_to_productDetails"
-            app:destination="@id/productDetails" />
+            app:destination="@id/productDetails"
+            app:popUpTo="@id/brandFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.example.market.ui.search.SearchFragment"
         android:label="fragment_search"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_searchFragment_to_productDetails"
+            app:destination="@id/productDetails"
+            app:popUpTo="@id/searchFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_searchFragment_to_favouritesFragment"
+            app:destination="@id/favouritesFragment"
+            app:popUpTo="@id/searchFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
     <fragment
         android:id="@+id/mapFragment"
-        android:name="com.example.market.MapFragment"
+        android:name="com.example.market.ui.map.MapFragment"
         android:label="fragment_map"
         tools:layout="@layout/fragment_map" />
     <fragment
         android:id="@+id/productDetails"
-        android:name="com.example.market.product.ProductDetails"
+        android:name="com.example.market.ui.product.ProductDetails"
         android:label="fragment_product_details"
         tools:layout="@layout/fragment_product_details">
         <argument
-            android:name="product"
-            app:argType="com.example.market.data.pojo.Product" />
+            android:name="productId"
+            app:argType="long" />
     </fragment>
     <fragment
         android:id="@+id/addressFormFragment"
@@ -140,7 +184,45 @@
         tools:layout="@layout/fragment_address_form" >
         <action
             android:id="@+id/action_addressFormFragment_to_mapFragment"
-            app:destination="@id/mapFragment" />
+            app:destination="@id/mapFragment"
+            app:popUpTo="@id/addressFormFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
+    <fragment
+        android:id="@+id/ordersFragment"
+        android:name="com.example.market.ui.orders.OrdersFragment"
+        android:label="fragment_orders"
+        tools:layout="@layout/fragment_orders" />
+    <fragment
+        android:id="@+id/cartFragment"
+        android:name="com.example.market.ui.cart.CartFragment"
+        android:label="fragment_cart"
+        tools:layout="@layout/fragment_cart" />
+    <fragment
+        android:id="@+id/favouritesFragment"
+        android:name="com.example.market.ui.favourites.FavouritesFragment"
+        android:label="fragment_favourites"
+        tools:layout="@layout/fragment_favourites" >
+        <action
+            android:id="@+id/action_favouritesFragment_to_productDetails"
+            app:destination="@id/productDetails"
+            app:popUpTo="@id/favouritesFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
+    <fragment
+        android:id="@+id/addressesFragment"
+        android:name="com.example.market.ui.addresses.AddressesFragment"
+        android:label="fragment_addresses"
+        tools:layout="@layout/fragment_addresses" >
+        <action
+            android:id="@+id/action_addressesFragment_to_addressFormFragment"
+            app:destination="@id/addressFormFragment" />
     </fragment>
 
 </navigation>

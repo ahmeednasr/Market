@@ -2,11 +2,13 @@ package com.example.market.di
 
 import com.example.market.data.remote.ApiService
 import com.example.market.data.remote.CurrencyApi
+import com.example.market.data.remote.GovernmentAPI
 import com.example.market.utils.Constants.API_ACCESS_TOKEN
 import com.example.market.utils.Constants.API_KEY
 import com.example.market.utils.Constants.BASE_URL
 import com.example.market.utils.Constants.CURRENCY_API_KEY
 import com.example.market.utils.Constants.CURRENCY_URL
+import com.example.market.utils.Constants.GOVERNMENT_URL
 import com.example.market.utils.Constants.NETWORK_TIMEOUT
 import dagger.Module
 import dagger.Provides
@@ -130,6 +132,38 @@ object NetworkModule {
     fun currencyAPIService(@CustomCurrencyApi retrofit: Retrofit): CurrencyApi {
         return retrofit.create(CurrencyApi::class.java)
     }
+
+    @CustomGovernmentApi
+    @Provides
+    @Singleton
+    fun provideGovernmentOkHttpClient(
+        headersInterceptor: Interceptor,
+        logging: HttpLoggingInterceptor,
+    ): OkHttpClient {
+        return OkHttpClient.Builder()
+            .readTimeout(NETWORK_TIMEOUT, TimeUnit.SECONDS)
+            .connectTimeout(NETWORK_TIMEOUT, TimeUnit.SECONDS)
+            .addInterceptor(headersInterceptor)
+            .addInterceptor(logging)
+            .build()
+    }
+
+    @CustomGovernmentApi
+    @Provides
+    @Singleton
+    fun governmentRetrofit(@CustomGovernmentApi okHttpClient: OkHttpClient): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(GOVERNMENT_URL)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun governmentAPIService(@CustomGovernmentApi retrofit: Retrofit): GovernmentAPI {
+        return retrofit.create(GovernmentAPI::class.java)
+    }
 }
 
 @Qualifier
@@ -139,3 +173,7 @@ annotation class CustomApiService
 @Qualifier
 @Retention(AnnotationRetention.RUNTIME)
 annotation class CustomCurrencyApi
+
+@Qualifier
+@Retention(AnnotationRetention.RUNTIME)
+annotation class CustomGovernmentApi

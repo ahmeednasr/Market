@@ -1,29 +1,69 @@
 package com.example.market.ui.search
 
+import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.market.R
+import com.example.market.auth.AuthActivity
 import com.example.market.data.pojo.Product
 import com.example.market.databinding.FragmentSearchBinding
+import com.example.market.utils.Constants
+import com.example.market.utils.NetworkResult
+import com.google.android.material.slider.Slider
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+import kotlin.math.roundToInt
 
+@AndroidEntryPoint
 class SearchFragment : Fragment() {
 
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
-    private val searchAdapter by lazy {
-        SearchAdapter(object : SearchAdapter.ProductClickListener {
-            override fun onItemClicked(product: Product) {
-                //navigate to product details
-            }
+    private val viewModel: SearchViewModel by viewModels()
 
-            override fun onFavouriteClicked(product: Product) {
-                //add product to favourites
-            }
-        })
+    @Inject
+    lateinit var sharedPreferences: SharedPreferences
+
+    private lateinit var currency: String
+
+    private val searchAdapter by lazy {
+        SearchAdapter(
+            sharedPreferences.getString(Constants.CURRENCY_TO_KEY, "") ?: "EGP",
+            object : SearchAdapter.ProductClickListener {
+                override fun onItemClicked(product: Product) {
+                    product.id?.let {
+                        findNavController().navigate(
+                            SearchFragmentDirections.actionSearchFragmentToProductDetails(
+                                it
+                            )
+                        )
+                    }
+                }
+
+                override fun onFavouriteClicked(product: Product) {
+                    if (sharedPreferences.getBoolean(Constants.IS_Logged, false)) {
+                        if (product.isFavourite) {
+                            viewModel.deleteFavourite(product)
+                        } else {
+                            viewModel.addFavourite(product)
+                        }
+                        product.isFavourite = !product.isFavourite
+                    } else {
+                        showAlertDialog()
+                    }
+                }
+            })
     }
 
     override fun onCreateView(
@@ -38,20 +78,163 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        currency = sharedPreferences.getString(Constants.CURRENCY_TO_KEY, "") ?: "EGP"
+        Log.i("TAG", currency)
+        viewModel.convertCurrency(
+            "EGP",
+            currency,
+            1.00
+        )
+
+        observeBackButton()
+        setupSliderView()
         setupProductsRecyclerView()
+        observeProductsResponse()
+        observeSearchText()
+        observeSliderChange()
+
+        viewModel.conversionResult.observe(viewLifecycleOwner){
+            searchAdapter.exchangeRate = it
+            binding.tvMax.text = "${(300*it).roundToInt()} ${currency}"
+        }
+
+        viewModel.getProducts()
+    }
+
+    private fun observeBackButton() {
+        binding.ivBackArrow.setOnClickListener {
+            findNavController().popBackStack()
+        }
+    }
+
+    private fun observeSearchText() {
+        binding.etSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
+            androidx.appcompat.widget.SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (newText != null) {
+                    viewModel.filterProductsByTittle(newText)
+                } else {
+                    searchAdapter.submitList(viewModel.allProducts)
+                }
+                return true
+            }
+        })
+    }
+
+    private fun observeSliderChange() {
+        binding.continuousSlider.addOnChangeListener(object : Slider.OnChangeListener {
+            override fun onValueChange(slider: Slider, value: Float, fromUser: Boolean) {
+                Log.d("addOnChangeListener", slider.value.toString())
+                if (value < 5.0f) {
+                    searchAdapter.submitList(viewModel.allProducts)
+                } else {
+                    viewModel.filterProductsByPrice(value)
+                }
+            }
+        })
+    }
+
+    private fun handleNoDataState() {
+        binding.apply {
+            ivNoData.visibility = View.VISIBLE
+            tvNoData.visibility = View.VISIBLE
+            rvProducts.visibility = View.GONE
+        }
+    }
+
+    private fun handleDataState() {
+        binding.apply {
+            ivNoData.visibility = View.GONE
+            tvNoData.visibility = View.GONE
+            rvProducts.visibility = View.VISIBLE
+        }
+    }
+
+    private fun startShimmer() {
+        binding.apply {
+            rvProducts.visibility = View.GONE
+            shimmerViewContainer.visibility = View.VISIBLE
+            shimmerViewContainer.startShimmerAnimation()
+        }
+    }
+
+    private fun stopShimmer() {
+        binding.apply {
+            rvProducts.visibility = View.VISIBLE
+            shimmerViewContainer.visibility = View.GONE
+            shimmerViewContainer.stopShimmerAnimation()
+        }
+    }
+
+    private fun setupSliderView() {
+        binding.continuousSlider.setLabelFormatter { value: Float ->
+            //should change $ to current currency
+            binding.tvSlider.text = "${value.roundToInt()} ${currency}"
+            return@setLabelFormatter "${value.roundToInt()} ${currency}"
+        }
     }
 
     private fun setupProductsRecyclerView() {
         binding.rvProducts.apply {
+            itemAnimator = null
             adapter = searchAdapter
             layoutManager =
                 GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
         }
     }
 
+    private fun showAlertDialog() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle(resources.getString(R.string.login_required))
+        builder.setMessage(resources.getString(R.string.alert_msg))
+        builder.setIcon(android.R.drawable.ic_dialog_info)
+        builder.setPositiveButton(resources.getString(R.string.OK)) { _, _ ->
+            val i = Intent(requireActivity(), AuthActivity::class.java)
+            i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(i)
+            activity?.finish()
+        }
+        builder.setNegativeButton(resources.getString(R.string.cancel)) { dialogInterface, _ ->
+            dialogInterface.dismiss()
+        }
+
+        val alertDialog: AlertDialog = builder.create()
+        alertDialog.setCancelable(false)
+        alertDialog.show()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun observeProductsResponse() {
+        viewModel.products.observe(viewLifecycleOwner) { response ->
+            when (response) {
+                is NetworkResult.Success -> {
+                    stopShimmer()
+                    response.data?.let {
+                        Log.d("observeProductsResponse", "size: ${it.size}")
+                        if (it.isEmpty()) {
+                            handleNoDataState()
+                        } else {
+                            handleDataState()
+                            searchAdapter.submitList(it)
+                        }
+                    }
+                }
+                is NetworkResult.Error -> {
+                    stopShimmer()
+                }
+                is NetworkResult.Loading -> {
+                    startShimmer()
+                }
+            }
+        }
     }
 
 }

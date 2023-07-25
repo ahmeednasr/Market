@@ -10,6 +10,6 @@ interface CurrencyApi {
     suspend fun convertCurrency(
         @Query("to") from: String,
         @Query("from") to: String,
-        @Query("amount") amount: String = "1"
+        @Query("amount") amount: String,
     ): Response<ConvertedCurrency>
 }

@@ -6,14 +6,14 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.market.data.pojo.LineItemsItem
 import com.example.market.data.pojo.Product
 import com.example.market.databinding.ItemFavouriteProductBinding
-import com.example.market.databinding.ItemUnfavouriteBinding
 
 class FavouritesAdapter(
     private val clickListener: ProductClickListener
 ) :
-    ListAdapter<Product, FavouritesAdapter.MyViewHolder>(
+    ListAdapter<LineItemsItem, FavouritesAdapter.MyViewHolder>(
         DailyDiffCallback()
     ) {
 
@@ -26,19 +26,20 @@ class FavouritesAdapter(
     }
 
     interface ProductClickListener {
-        fun onItemClicked(product: Product)
-        fun onDislikeClicked(product: Product)
+        fun onItemClicked(product: LineItemsItem)
+        fun onDislikeClicked(product: LineItemsItem)
     }
 
-    class MyViewHolder(private val binding: ItemUnfavouriteBinding) :
+    class MyViewHolder(private val binding: ItemFavouriteProductBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(product: Product, clickListener: ProductClickListener) {
+        fun bind(product: LineItemsItem, clickListener: ProductClickListener) {
             binding.apply {
                 tvProductName.text = product.title
+
                 Glide
                     .with(binding.root)
-                    .load(product.image?.src)
+                    .load(product.properties?.get(0)?.value)
                     .into(ivProduct)
 
                 ivUnfavourite.setOnClickListener {
@@ -54,18 +55,18 @@ class FavouritesAdapter(
         companion object {
             fun from(parent: ViewGroup): MyViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = ItemUnfavouriteBinding.inflate(layoutInflater, parent, false)
+                val binding = ItemFavouriteProductBinding.inflate(layoutInflater, parent, false)
                 return MyViewHolder(binding)
             }
         }
     }
 
-    class DailyDiffCallback : DiffUtil.ItemCallback<Product>() {
-        override fun areItemsTheSame(oldItem: Product, newItem: Product): Boolean {
+    class DailyDiffCallback : DiffUtil.ItemCallback<LineItemsItem>() {
+        override fun areItemsTheSame(oldItem: LineItemsItem, newItem: LineItemsItem): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: Product, newItem: Product): Boolean {
+        override fun areContentsTheSame(oldItem: LineItemsItem, newItem: LineItemsItem): Boolean {
             return oldItem == newItem
         }
     }

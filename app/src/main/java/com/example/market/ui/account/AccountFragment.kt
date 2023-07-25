@@ -13,33 +13,65 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.market.R
 import com.example.market.auth.AuthActivity
 import com.example.market.data.pojo.Currency
+import com.example.market.data.pojo.LineItemsItem
 import com.example.market.databinding.FragmentAccountBinding
 import com.example.market.databinding.LanguagePopupBinding
+import com.example.market.utils.Constants
 import com.example.market.utils.Constants.ARABIC
-import com.example.market.utils.Constants.CURRENCY_KEY
-import com.example.market.utils.Constants.CURRENCY_VALUE
+import com.example.market.utils.Constants.CURRENCY_FROM_KEY
+import com.example.market.utils.Constants.CURRENCY_TO_KEY
 import com.example.market.utils.Constants.ENGLISH
 import com.example.market.utils.Constants.LANGUAGE_KEY
 import com.example.market.utils.NetworkResult
 import com.example.market.utils.Utils.setLocale
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class AccountFragment : Fragment() {
+
     private var _binding: FragmentAccountBinding? = null
     private val binding get() = _binding!!
-    private lateinit var sharedPreferences: SharedPreferences
-    private lateinit var editor: SharedPreferences.Editor
+
     lateinit var dialog: AlertDialog
     lateinit var currentLocale: Locale
     lateinit var currentLanguage: String
+
+    @Inject
+    lateinit var sharedPreferences: SharedPreferences
+    private lateinit var editor: SharedPreferences.Editor
+
     private val viewModel: AccountViewModel by viewModels()
+    private lateinit var auth: FirebaseAuth
+
+    private val favouritesAccountAdapter by lazy {
+        FavouritesAccountAdapter(object : FavouritesAccountAdapter.ClickListener {
+            override fun onItemClicked(product: LineItemsItem) {
+                product.sku?.toLong()?.let {
+                    findNavController().navigate(
+                        AccountFragmentDirections.actionAccountFragmentToProductDetails(
+                            it
+                        )
+                    )
+                }
+            }
+        })
+    }
+
+    private val ordersAccountAdapter by lazy { OrdersAccountAdapter() }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -51,31 +83,86 @@ class AccountFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        sharedPreferences = requireContext().getSharedPreferences("PREFS", 0)
+        auth = Firebase.auth
         editor = sharedPreferences.edit()
-        currentLocale = Locale.getDefault()
-        currentLanguage = currentLocale.language
+
+        updateUserUI()
+        setupProductsRecyclerView()
+        setupOrdersRecyclerView()
+        observeOrdersResponse()
+        observeProductsResponse()
+        observeLoginButton()
+        observeSearchButton()
+        navigateToOrders()
+        navigateToFavourites()
+
+//        currentLocale = Locale.getDefault()
+//        currentLanguage = currentLocale.language
+        currentLanguage = sharedPreferences.getString(LANGUAGE_KEY, "").toString()
+        Log.i("LANGUAGE", "test 1${currentLanguage}")
+
         if (currentLanguage == "en" || currentLanguage.isEmpty()) {
             binding.languageValue.text = resources.getString(R.string.english)
         } else if (currentLanguage == "ar") {
             binding.languageValue.text = resources.getString(R.string.arabic)
         }
-        binding.currencyValue.text=sharedPreferences.getString(CURRENCY_KEY, "")?:"EGP"
+
+        binding.currencyValue.text = sharedPreferences.getString(CURRENCY_TO_KEY, "") ?: "EGP"
         binding.llLanguage.setOnClickListener {
             showDialog()
-        }
-        binding.tvLogin.setOnClickListener {
-            startActivity(Intent(requireActivity(), AuthActivity::class.java))
         }
 
         binding.llCurrency.setOnClickListener {
             observeCurrenciesResponse()
         }
         binding.llAddress.setOnClickListener {
-            findNavController().navigate(R.id.action_accountFragment_to_addressFormFragment)
+            findNavController().navigate(AccountFragmentDirections.actionAccountFragmentToAddressesFragment())
+        }
+        binding.ivCart.setOnClickListener {
+
         }
         observeSearchButton()
-        observeConvertCurrencyResponse()
+        navigateToOrders()
+    }
+
+    private fun navigateToOrders() {
+        binding.llOrders.setOnClickListener {
+            if (sharedPreferences.getBoolean(Constants.IS_Logged, false)) {
+                findNavController().navigate(AccountFragmentDirections.actionAccountFragmentToOrdersFragment())
+            } else {
+                showAlertDialog()
+            }
+        }
+    }
+
+    private fun navigateToFavourites() {
+        binding.llOrders.setOnClickListener {
+            if (sharedPreferences.getBoolean(Constants.IS_Logged, false)) {
+                findNavController().navigate(AccountFragmentDirections.actionAccountFragmentToFavouritesFragment())
+            } else {
+                showAlertDialog()
+            }
+        }
+    }
+
+    private fun showAlertDialog() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle(resources.getString(R.string.login_required))
+        builder.setMessage(resources.getString(R.string.alert_msg))
+        builder.setIcon(android.R.drawable.ic_dialog_info)
+        builder.setPositiveButton(resources.getString(R.string.OK)) { _, _ ->
+            val i = Intent(requireActivity(), AuthActivity::class.java)
+            i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(i)
+            activity?.finish()
+        }
+        builder.setNegativeButton(resources.getString(R.string.cancel)) { dialogInterface, _ ->
+            dialogInterface.dismiss()
+        }
+
+        val alertDialog: AlertDialog = builder.create()
+        alertDialog.setCancelable(false)
+        alertDialog.show()
     }
 
     private fun observeSearchButton() {
@@ -91,31 +178,6 @@ class AccountFragment : Fragment() {
                     response.data?.let {
                         Log.i("TAG", "${it.currencies}")
                         showCurrenciesMenu(binding.llCurrency, it.currencies)
-                    }
-                }
-                is NetworkResult.Error -> {
-                }
-                is NetworkResult.Loading -> {
-
-                }
-            }
-        }
-    }
-
-    private fun observeConvertCurrencyResponse() {
-        viewModel.conversionResult.observe(viewLifecycleOwner) { response ->
-            when (response) {
-                is NetworkResult.Success -> {
-                    response.data?.let {
-                        Log.i("TAG", "$it")
-                        editor.putFloat(CURRENCY_VALUE, it.toFloat())
-                        editor.apply()
-                        val currencyValue = sharedPreferences.getFloat(CURRENCY_VALUE, 0.0F)
-                        Toast.makeText(
-                            requireContext(),
-                            currencyValue.toString(),
-                            Toast.LENGTH_SHORT
-                        ).show()
                     }
                 }
                 is NetworkResult.Error -> {
@@ -144,20 +206,17 @@ class AccountFragment : Fragment() {
 
     private fun handleMenuItemClick(menuItem: MenuItem) {
         val selectedItem = menuItem.title
-        // val oldCurrency = sharedPreferences.getString(CURRENCY_KEY, "")
-        editor.putString(CURRENCY_KEY, selectedItem as String?)
+        editor.putString(CURRENCY_TO_KEY, selectedItem as String?)
         editor.apply()
-        binding.currencyValue.text=selectedItem
-        viewModel.convertCurrency("EGP", selectedItem!!)
+        binding.currencyValue.text = selectedItem
         Toast.makeText(requireContext(), selectedItem, Toast.LENGTH_SHORT).show()
-
     }
 
     private fun showDialog() {
 
         var popUpBinding = LanguagePopupBinding.inflate(layoutInflater)
-        currentLocale = Locale.getDefault()
-        currentLanguage = currentLocale.language
+//        currentLocale = Locale.getDefault()
+//        currentLanguage = currentLocale.language
         Log.i("LANGUAGE", currentLanguage)
         if (currentLanguage == "en" || currentLanguage.isEmpty()) {
             popUpBinding.english.isChecked = true
@@ -183,6 +242,83 @@ class AccountFragment : Fragment() {
         dialog = MaterialAlertDialogBuilder(requireContext())
             .setView(popUpBinding.root).create()
         dialog.show()
+    }
+
+    private fun updateUserUI() {
+        if (auth.currentUser != null) {
+            viewModel.getOrders()
+            viewModel.getFavourites()
+            binding.tvLogin.text = "Logout"
+            binding.tvUsername.text = auth.currentUser!!.email
+        } else {
+            binding.tvLogin.text = "Login"
+            binding.tvUsername.text = ""
+        }
+    }
+
+    private fun observeLoginButton() {
+        binding.tvLogin.setOnClickListener {
+            if (auth.currentUser != null) {
+                editor.putBoolean(Constants.IS_Logged, false)
+                editor.apply()
+                Firebase.auth.signOut()
+                findNavController().navigate(R.id.accountFragment)
+                Toast.makeText(requireContext(), "Logged Out", Toast.LENGTH_SHORT).show()
+            } else {
+                startActivity(Intent(requireActivity(), AuthActivity::class.java))
+            }
+        }
+    }
+
+    private fun observeProductsResponse() {
+        viewModel.products.observe(viewLifecycleOwner) { response ->
+            when (response) {
+                is NetworkResult.Success -> {
+                    response.data?.let {
+                        Log.d("observeProductsResponse", "size: ${it.size}")
+                        favouritesAccountAdapter.submitList(it.take(2))
+                    }
+                }
+                is NetworkResult.Error -> {
+                }
+                is NetworkResult.Loading -> {
+                }
+            }
+        }
+    }
+
+    private fun setupProductsRecyclerView() {
+        binding.rvFavourites.apply {
+            adapter = favouritesAccountAdapter
+            layoutManager =
+                GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
+        }
+    }
+
+    private fun observeOrdersResponse() {
+        viewModel.orders.observe(viewLifecycleOwner) { response ->
+            when (response) {
+                is NetworkResult.Success -> {
+                    response.data?.orders?.let {
+                        Log.d("observeProductsResponse", "size: ${it.size}")
+                        ordersAccountAdapter.submitList(it.take(2))
+                    }
+                }
+                is NetworkResult.Error -> {
+
+                }
+                is NetworkResult.Loading -> {
+
+                }
+            }
+        }
+    }
+
+    private fun setupOrdersRecyclerView() {
+        binding.rvOrders.apply {
+            adapter = ordersAccountAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+        }
     }
 
     override fun onDestroyView() {

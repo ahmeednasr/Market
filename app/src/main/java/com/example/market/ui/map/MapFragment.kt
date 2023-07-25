@@ -1,4 +1,4 @@
-package com.example.market
+package com.example.market.ui.map
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -17,11 +17,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.fragment.findNavController
+import com.example.market.data.pojo.UserAddress
 import com.example.market.databinding.FragmentMapBinding
+import com.example.market.utils.Constants.ADDRESS_KEY
+import com.example.market.utils.Constants.CITY_KEY
+import com.example.market.utils.Constants.GOVERN_KEY
 import com.example.market.utils.Constants.MAP
+import com.example.market.utils.Constants.POSTAL_KEY
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -34,7 +37,6 @@ import java.util.*
 
 class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickListener {
     lateinit var mMap: GoogleMap
-    lateinit var mapView: MapView
     lateinit var binding: FragmentMapBinding
     lateinit var location: Location
     lateinit var mFusedLocationClient: FusedLocationProviderClient
@@ -42,6 +44,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickListener
     var latitude: Double? = null
     var longitude: Double? = null
     private var isLocationViaGPS = true
+    lateinit var userAddress: UserAddress
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +61,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickListener
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        geocoder = Geocoder(requireContext(), Locale("ar"))
+        geocoder = Geocoder(requireContext(), Locale("en"))
         binding.mapView.onCreate(savedInstanceState)
         binding.mapView.getMapAsync(this)
 
@@ -68,30 +71,75 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickListener
             getLastLocation()
         }
         binding.okBtn.setOnClickListener {
+            val addressList =
+                geocoder.getFromLocation(latitude!!, longitude!!, 1)
+
+            if (addressList != null && addressList.isNotEmpty()) {
+                Log.i("MAP", "$addressList")
+                val address = addressList[0]
+                if (address.countryCode != null && address.countryCode == "EG") {
+                    val newLocality = addressList[0].locality
+                    val subAdmin = addressList[0].subAdminArea
+                    val subLocality = addressList[0].subLocality
+
+                    val cityName = newLocality ?: subAdmin ?: subLocality
+                    if (cityName != null) {
+                        val government = address.adminArea
+                        val city = address.subAdminArea
+                        val postalCode = address.postalCode
+                        val feature = address.featureName
+                        val addressDetails = "$feature-$city-$government-GE"
+                        userAddress = UserAddress(
+                            addressDetails,
+                            city,
+                            government,
+                            null,
+                            postalCode,
+                            null,
+                            null,
+                            address.countryCode
+                        )
+                        Toast.makeText(
+                            requireContext(),
+                            cityName,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            "name not found",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "must choose from egypt only",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
             parentFragmentManager.setFragmentResult(MAP, Bundle().apply {
-                putDouble("latitude", latitude!!)
-                putDouble("longitude", longitude!!)
+                putString(ADDRESS_KEY, userAddress.address1)
+                putString(POSTAL_KEY, userAddress.zip)
+                putString(GOVERN_KEY, userAddress.province)
+                putString(CITY_KEY, userAddress.city)
+                findNavController().navigateUp()
             })
         }
-
     }
 
     override fun onResume() {
         super.onResume()
         binding.mapView.onResume()
-//        getLastLocation()
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        // Set an OnMapClickListener on the map
         mMap.setOnMapClickListener(this)
-        // Add a marker in Sydney and move the camera
         latitude = 30.04
         longitude = 31.23
         val cairo = LatLng(latitude!!, longitude!!)
-//        val cairo = LatLng(location.latitude, location.longitude)
-        // mMap.addMarker(MarkerOptions().position(cairo).title("cairo"))
         mMap.moveCamera(CameraUpdateFactory.newLatLng(cairo))
     }
 
@@ -100,34 +148,6 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickListener
         mMap.clear()
         latitude = latLng.latitude
         longitude = latLng.longitude
-        val addressList =
-            geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
-
-        if (addressList != null && addressList.isNotEmpty()) {
-            Log.i("MAP", addressList[0].getAddressLine(0))
-            Log.i("MAP", "address name: $addressList")
-            val newLocality = addressList[0].locality
-            val subAdmin = addressList[0].subAdminArea
-            val subLocality = addressList[0].subLocality
-
-            val cityName = newLocality ?: subAdmin ?: subLocality
-            if (cityName != null) {
-                Toast.makeText(
-                    requireContext(),
-                    cityName,
-                    Toast.LENGTH_SHORT
-                ).show()
-            } else {
-                Toast.makeText(
-                    requireContext(),
-                    "name not found",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-
-            Log.i("err", "City in name: $cityName")
-        }
-
         mMap.addMarker(MarkerOptions().position(latLng).title("New Marker"))
     }
 
@@ -139,22 +159,14 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickListener
             when (isLocationViaGPS) {
                 true -> {
                     if (mLastLocation != null) {
-                        val addressList =
-                            geocoder.getFromLocation(
-                                mLastLocation.latitude,
-                                mLastLocation.longitude,
-                                1
-                            )
-                        if (addressList != null && addressList.isNotEmpty()) {
-                            Log.i("MAP", addressList[0].getAddressLine(0))
-                            var newLocality = addressList[0].locality
-                            location = mLastLocation
-                            mMap.clear()
-                            val latLng = LatLng(location.latitude, location.longitude)
-                            mMap.addMarker(MarkerOptions().position(latLng).title("$newLocality"))
-                            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10f))
-                            mFusedLocationClient.removeLocationUpdates(this)
-                        }
+                        location = mLastLocation
+                        mMap.clear()
+                        latitude = location.latitude
+                        longitude = location.longitude
+                        val latLng = LatLng(location.latitude, location.longitude)
+                        mMap.addMarker(MarkerOptions().position(latLng).title("new marker"))
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10f))
+                        mFusedLocationClient.removeLocationUpdates(this)
                     }
                 }
                 false -> {
