@@ -63,12 +63,11 @@ class HomeFragment : Fragment() {
         setupBrandsRecyclerView()
         observeBrandsResponse()
         observeDiscountResponse()
+        observeCartButton()
         binding.discountBtn.setOnClickListener {
             viewModel.getDiscountCodes()
         }
-        binding.ivCart.setOnClickListener {
-            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToCartFragment())
-        }
+
         viewModel.getBrands()
     }
 
@@ -88,10 +87,20 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun observeCartButton() {
+        binding.ivCart.setOnClickListener {
+            if (sharedPreferences.getBoolean(Constants.IS_Logged, false)) {
+                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToCartFragment())
+            } else {
+                showAlertDialog()
+            }
+        }
+    }
+
     private fun showAlertDialog() {
         val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Login Required")
-        builder.setMessage("Please log in to continue.")
+        builder.setTitle(resources.getString(R.string.login_required))
+        builder.setMessage(resources.getString(R.string.alert_msg))
         builder.setIcon(android.R.drawable.ic_dialog_info)
         builder.setPositiveButton(resources.getString(R.string.OK)) { _, _ ->
             val i = Intent(requireActivity(), AuthActivity::class.java)

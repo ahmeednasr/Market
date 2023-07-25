@@ -56,6 +56,7 @@ data class Order (
     val updated_at: String? = null,
     val billing_address: Address? = null,
     val shipping_address: Address? = null,
+    val line_items: List<LineItem>? = null
 )
 
 data class Address (

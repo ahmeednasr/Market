@@ -6,7 +6,6 @@
     <string name="currancy">EGP</string>
     <string name="decrement">decrement</string>
     <string name="increment">increment</string>
-    <string name="home">Home</string>
     <string name="categories">Categories</string>
     <string name="account">Account</string>
     <string name="no_connection">no connection</string>
@@ -37,4 +36,19 @@
     <string name="in_stock">in Stock</string>
     <string name="rm_msg">are you need delete this product</string>
     <string name="delete" >delete</string>
+    <string name="home">Home</string>
+    <string name="brands">Brands</string>
+    <string name="addresses">Addresses</string>
+    <string name="category">Category</string>
+    <string name="women">WOMEN</string>
+    <string name="kid">KID</string>
+    <string name="men">MEN</string>
+    <string name="sale">SALE</string>
+    <string name="favourites">Favourites</string>
+    <string name="filter_price">Filter by Price:</string>
+    <string name="Order_number">Order number:</string>
+    <string name="Order_total">Order total:</string>
+    <string name="items_number">number of Items:</string>
+    <string name="login_required">Login Required</string>
+    <string name="alert_msg">Please log in to continue.</string>
 </resources>
