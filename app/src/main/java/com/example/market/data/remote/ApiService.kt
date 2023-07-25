@@ -88,4 +88,13 @@ interface ApiService {
     suspend fun getDiscountCodes(
     ): Response<DiscountResponse>
 
+    @PUT("draft_orders/{cartId}.json")
+    suspend fun modifyCart(
+        @Path("cartId") cartId: Long,
+        @Body modifiedList: DraftOrderResponse
+    )
+
+    @GET("draft_orders/{cartId}.json")
+    suspend fun getCart(@Path("cartId") cartId: Long): Response<DraftOrderResponse>
+
 }
