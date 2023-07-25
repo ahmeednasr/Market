@@ -1,6 +1,7 @@
 package com.example.market.ui.orders
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -34,7 +35,7 @@ class OrdersFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         observeBackButton()
-        setupProductsRecyclerView()
+        setupOrdersRecyclerView()
         observeOrdersResponse()
 
         viewModel.getOrders()
@@ -50,12 +51,19 @@ class OrdersFragment : Fragment() {
         viewModel.orders.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is NetworkResult.Success -> {
-                    response.data?.let {
-
+                    stopShimmer()
+                    response.data?.orders?.let {
+                        Log.d("observeProductsResponse", "size: ${it.size}")
+                        if (it.isEmpty()){
+                            handleNoDataState()
+                        } else {
+                            handleDataState()
+                            ordersAdapter.submitList(it)
+                        }
                     }
                 }
                 is NetworkResult.Error -> {
-
+                    stopShimmer()
                 }
                 is NetworkResult.Loading -> {
                     startShimmer()
@@ -80,7 +88,7 @@ class OrdersFragment : Fragment() {
         }
     }
 
-    private fun setupProductsRecyclerView() {
+    private fun setupOrdersRecyclerView() {
         binding.rvOrders.apply {
             adapter = ordersAdapter
             layoutManager = LinearLayoutManager(requireContext())

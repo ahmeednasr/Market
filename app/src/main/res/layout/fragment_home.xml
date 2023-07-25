@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".ui.home.HomeFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -28,7 +29,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:text="Home"
+                    android:text="@string/home"
                     android:textColor="@color/white"
                     android:textSize="24sp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -67,23 +68,13 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.appcompat.widget.Toolbar>
 
-        <com.denzcoskun.imageslider.ImageSlider
-            android:id="@+id/iv_image_slider"
-            android:layout_width="0dp"
-            android:layout_height="150dp"
-            android:visibility="gone"
-            app:iss_auto_cycle="true"
-            app:iss_text_align="CENTER"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar_home_fragment" />
-
         <TextView
             android:id="@+id/tv_brand"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginTop="16dp"
-            android:text="Brands"
+            android:text="@string/brands"
+            android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -95,8 +86,8 @@
             android:id="@+id/cardView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="24dp"
             app:cardCornerRadius="15dp"
             app:cardElevation="20dp"
             app:cardMaxElevation="10dp"
@@ -107,7 +98,7 @@
             <ImageView
                 android:id="@+id/discount_btn"
                 android:layout_width="match_parent"
-                android:layout_height="233dp"
+                android:layout_height="250dp"
                 android:layout_gravity="center"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
@@ -119,6 +110,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
+            android:padding="16dp"
             android:elevation="8dp"
             app:cardCornerRadius="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -129,13 +121,14 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#EFEEED">
+                android:background="@color/bg">
 
                 <com.jackandphantom.carouselrecyclerview.CarouselRecyclerview
                     android:id="@+id/rv_brands"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="8dp"
+                    tools:listitem="@layout/item_brand"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -151,7 +144,7 @@
             android:layout_margin="8dp"
             android:orientation="vertical"
             android:visibility="gone"
-            android:background="#EFEEED"
+            android:background="@color/bg"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
