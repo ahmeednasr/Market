@@ -2,6 +2,7 @@ package com.example.market.ui.account
 
 
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -58,11 +59,15 @@ class AccountViewModel @Inject constructor(
         }
     }
 
-    fun convertCurrency(from: String, to: String,amount:Double) {
+    fun convertCurrency(from: String, to: String, amount: Double) {
         viewModelScope.launch {
-            val response = repository.convertCurrency(from, to,amount)
+            val response = repository.convertCurrency(from, to, amount)
+            Log.i("MINA", "===$response")
+
             if (response.isSuccessful) {
+                Log.i("MINA", "===$response")
                 response.body()?.let {
+                    Log.i("MINA", "===${it.result}")
                     _conversionResult.postValue(NetworkResult.Success(it.result))
                 }
             } else {

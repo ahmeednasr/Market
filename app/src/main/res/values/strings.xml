@@ -52,4 +52,5 @@
     <string name="items_number">number of Items:</string>
     <string name="login_required">Login Required</string>
     <string name="alert_msg">Please log in to continue.</string>
+    <string name="coupons">Coupons</string>
 </resources>
