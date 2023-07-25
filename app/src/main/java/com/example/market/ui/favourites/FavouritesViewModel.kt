@@ -15,6 +15,7 @@ import com.example.market.utils.Constants
 import com.example.market.utils.Constants.TITTLE
 import com.example.market.utils.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import java.math.BigDecimal
@@ -30,11 +31,17 @@ class FavouritesViewModel @Inject constructor(
     private val _products: MutableLiveData<NetworkResult<List<LineItemsItem>>> = MutableLiveData()
     val products: LiveData<NetworkResult<List<LineItemsItem>>> = _products
 
+    private val coroutineExceptionHandler= CoroutineExceptionHandler { _, throwable ->
+        _products.postValue(NetworkResult.Error("error"))
+        Log.e("TAG", ": "+throwable.message)
+    }
+
     fun getFavourites() {
         _products.value = NetworkResult.Loading()
-        viewModelScope.launch {
+        viewModelScope.launch(coroutineExceptionHandler) {
+            val favouritesId = sharedPreferences.getString(Constants.FAVOURITE_ID, "0")?.toLong()
             val draftResponse = repository.getFavourites(
-                sharedPreferences.getString(Constants.FAVOURITE_ID, "0")!!.toLong()
+                favouritesId ?: 0L
             )
             if (draftResponse.isSuccessful) {
                 draftResponse.body()?.let {
@@ -54,12 +61,12 @@ class FavouritesViewModel @Inject constructor(
     }
 
     fun deleteFavourite(product: LineItemsItem) {
-        viewModelScope.launch {
-            val favouritesId = sharedPreferences.getString(Constants.FAVOURITE_ID, "0")!!.toLong()
+        viewModelScope.launch(coroutineExceptionHandler) {
+            val favouritesId = sharedPreferences.getString(Constants.FAVOURITE_ID, "0")?.toLong()
             _favourites =
                 _favourites.filter { !it.title.equals(product.title) } as ArrayList<LineItemsItem>
             repository.modifyFavourites(
-                favouritesId,
+                favouritesId ?: 0L,
                 DraftOrderResponse(DraftOrder(lineItems = _favourites))
             )
             _products.postValue(

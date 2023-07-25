@@ -25,15 +25,19 @@ class HomeViewModel @Inject constructor(
     private val _discountCodes: MutableLiveData<NetworkResult<DiscountResponse>> = MutableLiveData()
     val discountCodes: LiveData<NetworkResult<DiscountResponse>> = _discountCodes
 
-    private val coroutineExceptionHandler= CoroutineExceptionHandler { _, throwable ->
+    private val brandsCoroutineExceptionHandler= CoroutineExceptionHandler { _, throwable ->
         _brands.postValue(NetworkResult.Error("error"))
+        Log.e("TAG", ": "+throwable.message)
+    }
+
+    private val discountCoroutineExceptionHandler= CoroutineExceptionHandler { _, throwable ->
         _discountCodes.postValue(NetworkResult.Error("error"))
         Log.e("TAG", ": "+throwable.message)
     }
 
     fun getBrands() {
         _brands.value = NetworkResult.Loading()
-        viewModelScope.launch(coroutineExceptionHandler) {
+        viewModelScope.launch(brandsCoroutineExceptionHandler) {
             val brandsResponse = repository.getBrands()
             if (brandsResponse.isSuccessful) {
                 brandsResponse.body()?.let {
@@ -47,7 +51,7 @@ class HomeViewModel @Inject constructor(
 
     fun getDiscountCodes() {
         _discountCodes.value = NetworkResult.Loading()
-        viewModelScope.launch(coroutineExceptionHandler)  {
+        viewModelScope.launch(discountCoroutineExceptionHandler)  {
             val discountResponse = repository.getDiscountCodes()
             Log.i("MYTAG", "call" + discountResponse.toString())
 
