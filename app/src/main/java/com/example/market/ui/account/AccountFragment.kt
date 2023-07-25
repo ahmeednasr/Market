@@ -106,7 +106,7 @@ class AccountFragment : Fragment() {
         } else if (currentLanguage == "ar") {
             binding.languageValue.text = resources.getString(R.string.arabic)
         }
-        binding.currencyValue.text = sharedPreferences.getString(CURRENCY_FROM_KEY, "") ?: "EGP"
+        binding.currencyValue.text = sharedPreferences.getString(CURRENCY_TO_KEY, "") ?: "EGP"
         binding.llLanguage.setOnClickListener {
             showDialog()
         }

@@ -38,11 +38,13 @@ class CategoriesFragment : Fragment() {
     private val productsAdapter by lazy {
         ProductsAdapter(object : ProductsAdapter.ProductClickListener {
             override fun onItemClicked(product: Product) {
-                findNavController().navigate(
-                    CategoriesFragmentDirections.actionCategoriesFragmentToProductDetails(
-                        product.id!!
+                product.id?.let {
+                    findNavController().navigate(
+                        CategoriesFragmentDirections.actionCategoriesFragmentToProductDetails(
+                            it
+                        )
                     )
-                )
+                }
             }
         })
     }
@@ -259,6 +261,11 @@ class CategoriesFragment : Fragment() {
                     mainCategory = SALE
                     viewModel.filterProducts(mainCategory, subCategory)
                 }
+                R.id.btn_all -> {
+                    Log.d("setOnSelectListener", "btn_all")
+                    mainCategory = ALL
+                    viewModel.filterProducts(mainCategory, subCategory)
+                }
             }
         }
     }
@@ -317,6 +324,7 @@ class CategoriesFragment : Fragment() {
         const val KID = "KID"
         const val MEN = "MEN"
         const val SALE = "SALE"
+        const val ALL = " "
         const val SHOES = "SHOES"
         const val T_SHIRTS = "T-SHIRTS"
         const val ACCESSORIES = "ACCESSORIES"
