@@ -15,9 +15,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.market.ui.MainActivity
 import com.example.market.R
+import com.example.market.data.pojo.NewUser
+import com.example.market.data.pojo.User
 import com.example.market.databinding.FragmentAuthSignInBinding
 import com.example.market.utils.Constants
 import com.example.market.utils.NetworkResult
@@ -27,10 +30,13 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class AuthSignIn : Fragment() {
@@ -122,7 +128,7 @@ class AuthSignIn : Fragment() {
     private fun signInWithGoogle(){
         val signIntent = googleSignInClient.signInIntent
         launcher.launch(signIntent)
-        getUserData()
+        binding.progressBar2.visibility = View.VISIBLE
     }
 
     private val launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){result->
@@ -149,8 +155,10 @@ class AuthSignIn : Fragment() {
         val credential = GoogleAuthProvider.getCredential(account.idToken,null)
         auth.signInWithCredential(credential).addOnCompleteListener {
             if (it.isSuccessful){
+                val client = auth.currentUser!!
                 binding.progressBar2.visibility = View.GONE
-                Toast.makeText(requireContext(),"Login Successfully", Toast.LENGTH_LONG).show()
+                checkUser(client.email!!,client)
+                Toast.makeText(requireContext(),"LogIn Successfully", Toast.LENGTH_LONG).show()
                 val intent = Intent(requireActivity(), MainActivity::class.java)
                 startActivity(intent)
                 requireActivity().finish()
@@ -188,17 +196,63 @@ class AuthSignIn : Fragment() {
             }
 
         }
-
     }
 
-    private fun getUserData(){
-        binding.progressBar2.visibility =View.VISIBLE
-        if(auth.currentUser!=null){
-            binding.progressBar2.visibility =View.GONE
-            findNavController().navigate(AuthSignInDirections.actionAuthSignInToConfirmData())
-        }else{
+    private fun createUser(client:FirebaseUser){
+        val user = User(client.displayName!!,null, client.email!!,null,true,null,null)
+        val newUser = NewUser(user)
+        viewModel.createUser(newUser)
+        getUserID()
+    }
+    private fun getUserID(){
+        val editor = sharedPreferences.edit()
+        viewModel.customer.observe(viewLifecycleOwner){response ->
+            when(response){
+                is NetworkResult.Success -> {
+                    response.data?.let {
+                        editor.putString(Constants.UserID, it.id.toString())
+                        editor.putString(Constants.FAVOURITE_ID, it.note.toString())
+                        editor.putString(Constants.CART_ID, it.multipass_identifier.toString())
+                        editor.putBoolean(Constants.IS_Logged, true)
+                        editor.apply()
+                    }
+                }
+                is NetworkResult.Error -> {
+
+                }
+                is NetworkResult.Loading -> {
+
+                }
+            }
+
+        }
+
+    }
+    private fun checkUser(email:String,client: FirebaseUser){
+        var userFound = false
+        viewModel.customers.observe(viewLifecycleOwner){response ->
+            when(response){
+                is NetworkResult.Success -> {
+                    response.data?.let {
+                        for(customer in it){
+                            if (email==customer.email){
+                                getUserID(email)
+                                userFound = true
+                            }
+                        }
+                        if(!userFound){
+                            createUser(client)
+                        }
+                    }
+                }
+                is NetworkResult.Error -> {
+
+                }
+                is NetworkResult.Loading -> {
+
+                }
+            }
 
         }
     }
-
 }

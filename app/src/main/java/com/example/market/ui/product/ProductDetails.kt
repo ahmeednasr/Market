@@ -91,6 +91,7 @@ class ProductDetails : Fragment() {
                 binding.availability.visibility = View.VISIBLE
                 for (i in product.variants!!.indices) {
                     if (itemSelected == product.variants!![i].option1) {
+                        avilable = product.variants[i].inventory_quantity!!
                         binding.availability.text =
                             getString(R.string.availability) + " " + product.variants!![i].inventory_quantity.toString()
                         binding.availability.visibility = View.VISIBLE

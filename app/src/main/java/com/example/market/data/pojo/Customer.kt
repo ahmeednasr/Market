@@ -18,9 +18,9 @@ data class NewUser(
 
 data class User(
     val first_name: String,
-    val last_name: String,
+    val last_name: String?,
     val email: String,
-    val phone: String,
+    val phone: String?,
     val verified_email: Boolean,
     val addresses: List<UserAddress>?,
     val send_email_invite: Boolean?,

@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -96,8 +97,6 @@ class AccountFragment : Fragment() {
         navigateToOrders()
         navigateToFavourites()
 
-        viewModel.getOrders()
-        viewModel.getFavourites()
 
         currentLocale = Locale.getDefault()
         currentLanguage = currentLocale.language
@@ -246,6 +245,8 @@ class AccountFragment : Fragment() {
 
     private fun updateUserUI() {
         if (auth.currentUser != null) {
+            viewModel.getOrders()
+            viewModel.getFavourites()
             binding.tvLogin.text = "Logout"
             binding.tvUsername.text = auth.currentUser!!.email
         } else {
@@ -259,12 +260,12 @@ class AccountFragment : Fragment() {
             if (auth.currentUser != null) {
                 editor.putBoolean(Constants.IS_Logged, false)
                 editor.apply()
-                Toast.makeText(requireContext(), "Logged Out", Toast.LENGTH_SHORT).show()
                 Firebase.auth.signOut()
+                findNavController().navigate(R.id.accountFragment)
+                Toast.makeText(requireContext(), "Logged Out", Toast.LENGTH_SHORT).show()
             } else {
                 startActivity(Intent(requireActivity(), AuthActivity::class.java))
             }
-            updateUserUI()
         }
     }
 

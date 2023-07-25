@@ -64,6 +64,11 @@ class ConfirmData : Fragment() {
     }
 
     private fun confirmUser(){
+
+            binding.firstNameText.setText(auth.currentUser!!.displayName)
+            binding.phoneText.setText(auth.currentUser!!.phoneNumber)
+            binding.emailText.setText(auth.currentUser!!.email)
+
         val firstName = binding.firstNameText.text.toString()
         val lastName = binding.lastNameText.text.toString()
         val phone = binding.phoneText.text.toString()
