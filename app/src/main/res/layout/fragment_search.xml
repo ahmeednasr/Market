@@ -39,6 +39,7 @@
                 android:drawableStart="@drawable/ic_search"
                 android:drawablePadding="8dp"
                 android:drawableTint="@color/black"
+                app:iconifiedByDefault="false"
                 android:ems="10"
                 android:inputType="text"
                 android:paddingHorizontal="8dp"
