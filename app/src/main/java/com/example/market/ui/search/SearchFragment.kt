@@ -74,8 +74,11 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        Log.i(
+            "TAG",   sharedPreferences.getString(Constants.CURRENCY_TO_KEY, "").toString()
+        )
         viewModel.convertCurrency(
-            sharedPreferences.getString(Constants.CURRENCY_FROM_KEY, "") ?: "EGP",
+            "EGP",
             sharedPreferences.getString(Constants.CURRENCY_TO_KEY, "") ?: "EGP",
             1.00
         )

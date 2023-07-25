@@ -35,11 +35,12 @@
     <string name="cancel">cancel</string>
     <string name="in_stock">in Stock</string>
     <string name="rm_msg">are you need delete this product</string>
-    <string name="delete" >delete</string>
+    <string name="delete">delete</string>
     <string name="home">Home</string>
     <string name="brands">Brands</string>
     <string name="addresses">Addresses</string>
     <string name="category">Category</string>
+    <string name="all">All</string>
     <string name="women">WOMEN</string>
     <string name="kid">KID</string>
     <string name="men">MEN</string>

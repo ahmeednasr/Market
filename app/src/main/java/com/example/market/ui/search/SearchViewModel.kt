@@ -11,6 +11,7 @@ import com.example.market.data.repo.Repository
 import com.example.market.utils.Constants
 import com.example.market.utils.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import java.math.BigDecimal
@@ -31,6 +32,11 @@ class SearchViewModel @Inject constructor(
     private val _conversionResult: MutableLiveData<Double> = MutableLiveData()
     val conversionResult: LiveData<Double> = _conversionResult
 
+    private val coroutineExceptionHandler= CoroutineExceptionHandler { _, throwable ->
+        _products.postValue(NetworkResult.Error("error"))
+        Log.e("TAG", ": "+throwable.message)
+    }
+
     fun convertCurrency(from: String, to: String,amount:Double) {
         viewModelScope.launch {
             val response = repository.convertCurrency(from, to,amount)
@@ -44,7 +50,7 @@ class SearchViewModel @Inject constructor(
 
     fun getProducts() {
         _products.value = NetworkResult.Loading()
-        viewModelScope.launch {
+        viewModelScope.launch(coroutineExceptionHandler) {
             val productsResponse = repository.getProducts()
             if (productsResponse.isSuccessful) {
                 productsResponse.body()?.let {
@@ -60,8 +66,9 @@ class SearchViewModel @Inject constructor(
 
     private suspend fun getFavourites(products: List<Product>) {
         if (sharedPreferences.getBoolean(Constants.IS_Logged, false)){
+            val favouritesId = sharedPreferences.getString(Constants.FAVOURITE_ID, "0")?.toLong()
             val draftResponse = repository.getFavourites(
-                sharedPreferences.getString(Constants.FAVOURITE_ID, "0")!!.toLong()
+                favouritesId ?: 0L
             )
             if (draftResponse.isSuccessful) {
                 draftResponse.body()?.let {
@@ -80,8 +87,8 @@ class SearchViewModel @Inject constructor(
     }
 
     fun addFavourite(product: Product) {
-        viewModelScope.launch {
-            val favouritesId = sharedPreferences.getString(Constants.FAVOURITE_ID, "0")!!.toLong()
+        viewModelScope.launch(coroutineExceptionHandler) {
+            val favouritesId = sharedPreferences.getString(Constants.FAVOURITE_ID, "0")?.toLong()
             Log.d("addFavourite", "product id = ${product.id}")
             val fav = LineItemsItem(
                 title = product.title,
@@ -92,19 +99,19 @@ class SearchViewModel @Inject constructor(
             )
             _favourites.add(fav)
             repository.modifyFavourites(
-                favouritesId?:0,
+                favouritesId ?: 0,
                 DraftOrderResponse(DraftOrder(lineItems = _favourites))
             )
         }
     }
 
     fun deleteFavourite(product: Product) {
-        viewModelScope.launch {
-            val favouritesId = sharedPreferences.getString(Constants.FAVOURITE_ID, "0")!!.toLong()
+        viewModelScope.launch(coroutineExceptionHandler) {
+            val favouritesId = sharedPreferences.getString(Constants.FAVOURITE_ID, "0")?.toLong()
             _favourites =
                 _favourites.filter { !it.title.equals(product.title) } as ArrayList<LineItemsItem>
             repository.modifyFavourites(
-                favouritesId?:0,
+                favouritesId ?: 0,
                 DraftOrderResponse(DraftOrder(lineItems = _favourites))
             )
         }
@@ -112,7 +119,7 @@ class SearchViewModel @Inject constructor(
 
     fun filterProductsByTittle(text: String) {
         _products.value = NetworkResult.Loading()
-        viewModelScope.launch {
+        viewModelScope.launch (coroutineExceptionHandler){
             _filterProducts = allProducts.filter {
                 it.title?.toLowerCase()?.contains(text, true) ?: false
             } as ArrayList<Product>
@@ -124,7 +131,7 @@ class SearchViewModel @Inject constructor(
         _products.value = NetworkResult.Loading()
         val lowerBound = roundToOneDecimalPlace(value) - 5.00
         val upperBound = roundToOneDecimalPlace(value) + 5.00
-        viewModelScope.launch {
+        viewModelScope.launch (coroutineExceptionHandler){
             _filterProducts =
                 allProducts.filter { product -> product.variants!![0].price!!.toFloat() in lowerBound..upperBound } as ArrayList<Product>
             _products.postValue(NetworkResult.Success(_filterProducts))

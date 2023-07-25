@@ -123,20 +123,6 @@ class AccountFragment : Fragment() {
         }
         observeSearchButton()
         navigateToOrders()
-        viewModel.conversionResult.observe(viewLifecycleOwner) { response ->
-            when (response) {
-                is NetworkResult.Success -> {
-                    response.data?.let {
-                        Log.i("MINA", "$it")
-                    }
-                }
-                is NetworkResult.Error -> {
-                }
-                is NetworkResult.Loading -> {
-
-                }
-            }
-        }
     }
 
     private fun navigateToOrders() {
@@ -221,14 +207,8 @@ class AccountFragment : Fragment() {
     private fun handleMenuItemClick(menuItem: MenuItem) {
         val selectedItem = menuItem.title
         editor.putString(CURRENCY_TO_KEY, selectedItem as String?)
+        //val currencyFrom=
         editor.apply()
-        Log.i("MINA", "===${sharedPreferences.getString(CURRENCY_TO_KEY, "").toString()}")
-
-        viewModel.convertCurrency(
-            CURRENCY_FROM_KEY,
-            sharedPreferences.getString(CURRENCY_TO_KEY, "").toString(),
-            1.0
-        )
         binding.currencyValue.text = selectedItem
         Toast.makeText(requireContext(), selectedItem, Toast.LENGTH_SHORT).show()
     }
