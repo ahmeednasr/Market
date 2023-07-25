@@ -83,7 +83,6 @@ class AccountFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         auth = Firebase.auth
         editor = sharedPreferences.edit()
 
@@ -97,9 +96,11 @@ class AccountFragment : Fragment() {
         navigateToOrders()
         navigateToFavourites()
 
+//        currentLocale = Locale.getDefault()
+//        currentLanguage = currentLocale.language
+        currentLanguage = sharedPreferences.getString(LANGUAGE_KEY, "").toString()
+        Log.i("LANGUAGE", "test 1${currentLanguage}")
 
-        currentLocale = Locale.getDefault()
-        currentLanguage = currentLocale.language
         if (currentLanguage == "en" || currentLanguage.isEmpty()) {
             binding.languageValue.text = resources.getString(R.string.english)
         } else if (currentLanguage == "ar") {
@@ -115,7 +116,7 @@ class AccountFragment : Fragment() {
             observeCurrenciesResponse()
         }
         binding.llAddress.setOnClickListener {
-            findNavController().navigate(AccountFragmentDirections.actionAccountFragmentToAddressFormFragment())
+            findNavController().navigate(AccountFragmentDirections.actionAccountFragmentToAddressesFragment())
         }
         binding.ivCart.setOnClickListener {
 
@@ -214,8 +215,8 @@ class AccountFragment : Fragment() {
     private fun showDialog() {
 
         var popUpBinding = LanguagePopupBinding.inflate(layoutInflater)
-        currentLocale = Locale.getDefault()
-        currentLanguage = currentLocale.language
+//        currentLocale = Locale.getDefault()
+//        currentLanguage = currentLocale.language
         Log.i("LANGUAGE", currentLanguage)
         if (currentLanguage == "en" || currentLanguage.isEmpty()) {
             popUpBinding.english.isChecked = true

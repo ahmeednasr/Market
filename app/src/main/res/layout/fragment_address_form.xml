@@ -7,208 +7,159 @@
     android:layout_height="match_parent"
     tools:context=".ui.address_form.AddressFormFragment">
 
-    <LinearLayout
-        android:id="@+id/linearLayout3"
-        android:layout_width="match_parent"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/textInputLayoutAddress"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal"
+        android:layout_marginEnd="8dp"
+        app:boxBackgroundColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
-            android:id="@+id/tiltleLayout"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/addressLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/address"
+            android:weightSum="1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/location_btn"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/ti_address"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="text"
+                app:layout_constraintStart_toStartOf="parent" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <ImageButton
+            android:id="@+id/location_btn"
             android:layout_width="wrap_content"
-            android:layout_height="306dp"
-            android:layout_marginStart="4dp"
-            android:orientation="vertical"
-            android:weightSum="6">
+            android:layout_height="wrap_content"
+            android:backgroundTint="#FFFFFF"
+            android:src="@drawable/ic_round_add_location_alt_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck,TouchTargetSizeCheck" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <TextView
-                android:id="@+id/address"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/address"
-                app:layout_constraintBottom_toBottomOf="@+id/textInputLayoutAddress"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/textInputLayoutAddress" />
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/zipLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="@string/zipcode"
+        android:weightSum="1"
+        app:layout_constraintEnd_toEndOf="@+id/textInputLayoutAddress"
+        app:layout_constraintStart_toStartOf="@+id/textInputLayoutAddress"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutAddress">
 
-            <TextView
-                android:id="@+id/zip_code2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/zipcode"
-                app:layout_constraintBottom_toBottomOf="@+id/it_zipcode"
-                app:layout_constraintStart_toStartOf="@+id/textView5"
-                app:layout_constraintTop_toTopOf="@+id/it_zipcode" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/it_zipcode"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="number"
+            app:layout_constraintStart_toStartOf="parent" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
-                android:id="@+id/mobile"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/phone"
-                app:layout_constraintBottom_toBottomOf="@+id/it_phone"
-                app:layout_constraintStart_toStartOf="@+id/textView5"
-                app:layout_constraintTop_toTopOf="@+id/it_phone" />
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/phoneLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="@string/phone"
+        android:weightSum="1"
+        app:layout_constraintEnd_toEndOf="@+id/textInputLayoutAddress"
+        app:layout_constraintStart_toStartOf="@+id/textInputLayoutAddress"
+        app:layout_constraintTop_toBottomOf="@+id/zipLayout">
 
-            <TextView
-                android:id="@+id/textView19"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/country"
-                app:layout_constraintBottom_toBottomOf="@+id/it_country"
-                app:layout_constraintEnd_toEndOf="@+id/zip_code"
-                app:layout_constraintStart_toStartOf="@+id/textView8"
-                app:layout_constraintTop_toTopOf="@+id/it_country" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/it_phone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="phone"
+            app:layout_constraintStart_toStartOf="parent" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
-                android:id="@+id/textView20"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/govern"
-                app:layout_constraintBottom_toBottomOf="@+id/governTextInputLayout"
-                app:layout_constraintStart_toStartOf="@+id/textView10"
-                app:layout_constraintTop_toTopOf="@+id/governTextInputLayout" />
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/countryLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:clickable="false"
+        android:hint="@string/country"
+        android:weightSum="1"
+        app:layout_constraintEnd_toEndOf="@+id/textInputLayoutAddress"
+        app:layout_constraintStart_toStartOf="@+id/textInputLayoutAddress"
+        app:layout_constraintTop_toBottomOf="@+id/phoneLayout">
 
-            <TextView
-                android:id="@+id/textView21"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/city"
-                app:layout_constraintBottom_toBottomOf="@+id/textInputLayout"
-                app:layout_constraintStart_toStartOf="@+id/textView13"
-                app:layout_constraintTop_toTopOf="@+id/textInputLayout" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/it_country"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="false"
+            android:editable="false"
+            android:inputType="none"
+            android:text="@string/egypt"
+            app:layout_constraintStart_toStartOf="parent" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/formLayout"
-            android:layout_width="344dp"
-            android:layout_height="304dp"
-            android:layout_marginEnd="16dp"
-            android:orientation="vertical">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/textInputLayoutAddress"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:boxBackgroundColor="#FFFFFF">
-
-                <EditText
-                    android:id="@+id/ti_address"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:editable="false"
-                    android:hint="@string/address"
-                    android:inputType="none"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/location_btn"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="TouchTargetSizeCheck" />
-
-                <ImageButton
-                    android:id="@+id/location_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="#FFFFFF"
-                    android:src="@drawable/ic_round_add_location_alt_24"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck,TouchTargetSizeCheck" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <EditText
-                android:id="@+id/it_zipcode"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:editable="false"
-                android:ems="10"
-                android:hint="@string/zipcode"
-                android:inputType="none"
-                android:minHeight="48dp"
-                tools:ignore="SpeakableTextPresentCheck" />
-
-            <EditText
-                android:id="@+id/it_phone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:editable="false"
-                android:ems="10"
-                android:hint="@string/phone"
-                android:inputType="none"
-                android:minHeight="48dp"
-                tools:ignore="SpeakableTextPresentCheck" />
-
-            <EditText
-                android:id="@+id/it_country"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:editable="false"
-                android:ems="10"
-                android:minHeight="48dp"
-                android:text="@string/egypt"
-                tools:ignore="SpeakableTextPresentCheck" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/governTextInputLayout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:focusableInTouchMode="true">
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/governTextInputLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:focusableInTouchMode="true"
+        app:layout_constraintEnd_toEndOf="@+id/countryLayout"
+        app:layout_constraintStart_toStartOf="@+id/countryLayout"
+        app:layout_constraintTop_toBottomOf="@+id/countryLayout">
 
 
-                <AutoCompleteTextView
-                    android:id="@+id/auto_complete_govern"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:clickable="false"
-                    android:editable="false"
-                    android:enabled="false"
-                    android:hint="@string/govern"
-                    android:inputType="none" />
+        <AutoCompleteTextView
+            android:id="@+id/auto_complete_govern"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:editable="false"
+            android:enabled="false"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
+            android:hint="@string/govern"
+            android:inputType="none" />
 
-            </com.google.android.material.textfield.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textInputLayout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:focusableInTouchMode="true">
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:focusableInTouchMode="true"
+        app:layout_constraintEnd_toEndOf="@+id/governTextInputLayout"
+        app:layout_constraintStart_toStartOf="@+id/governTextInputLayout"
+        app:layout_constraintTop_toBottomOf="@+id/governTextInputLayout">
 
-                <AutoCompleteTextView
-                    android:id="@+id/auto_complete_city"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:clickable="false"
-                    android:enabled="false"
-                    android:hint="@string/city"
-                    android:inputType="none" />
+        <AutoCompleteTextView
+            android:id="@+id/auto_complete_city"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:enabled="false"
+            android:hint="@string/city"
+            android:inputType="none" />
 
-            </com.google.android.material.textfield.TextInputLayout>
-
-        </LinearLayout>
-
-    </LinearLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/save_btn"
@@ -218,6 +169,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

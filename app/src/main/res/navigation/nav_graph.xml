@@ -97,14 +97,6 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
         <action
-            android:id="@+id/action_accountFragment_to_addressFormFragment"
-            app:destination="@id/addressFormFragment"
-            app:popUpTo="@id/accountFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
-        <action
             android:id="@+id/action_accountFragment_to_ordersFragment"
             app:destination="@id/ordersFragment"
             app:popUpTo="@id/accountFragment"
@@ -128,6 +120,9 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_accountFragment_to_addressesFragment"
+            app:destination="@id/addressesFragment" />
     </fragment>
     <fragment
         android:id="@+id/brandFragment"
@@ -219,6 +214,15 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
+    <fragment
+        android:id="@+id/addressesFragment"
+        android:name="com.example.market.ui.addresses.AddressesFragment"
+        android:label="fragment_addresses"
+        tools:layout="@layout/fragment_addresses" >
+        <action
+            android:id="@+id/action_addressesFragment_to_addressFormFragment"
+            app:destination="@id/addressFormFragment" />
     </fragment>
 
 </navigation>
