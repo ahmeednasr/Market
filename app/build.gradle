@@ -74,11 +74,6 @@ dependencies {
     implementation "com.squareup.okhttp3:logging-interceptor:$okHttp_version"
     implementation "com.squareup.okhttp3:okhttp:$okHttp_version"
 
-    //Room
-    implementation 'androidx.room:room-ktx:2.5.1'
-    implementation 'androidx.room:room-runtime:2.5.1'
-    kapt 'androidx.room:room-compiler:2.5.1'
-
     //ViewModel & livedata
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
@@ -102,9 +97,6 @@ dependencies {
     implementation 'com.google.android.libraries.places:places:3.2.0'
     implementation 'com.google.android.gms:play-services-places:17.0.0'
 
-    //for Kotlin + workManager
-    implementation "androidx.work:work-runtime-ktx:2.7.1"
-
     // hamcrest
     testImplementation "org.hamcrest:hamcrest:2.2"
     testImplementation "org.hamcrest:hamcrest-library:2.2"
@@ -127,6 +119,7 @@ dependencies {
 
     //Image Slider
     implementation 'com.github.denzcoskun:ImageSlideshow:0.1.2'
+    implementation 'com.github.smarteist:autoimageslider:1.4.0'
 
     //toggle button
     implementation 'nl.bryanderidder:themed-toggle-button-group:1.4.1'
@@ -151,4 +144,8 @@ dependencies {
     
     //shimmer
     implementation 'com.facebook.shimmer:shimmer:0.1.0@aar'
+
+    //mockk
+    testImplementation "io.mockk:mockk:1.13.5"
+    androidTestImplementation "io.mockk:mockk-android:1.13.5"
 }
