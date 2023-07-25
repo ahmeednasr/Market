@@ -84,7 +84,7 @@ interface ApiService {
         @Path("id") draftId: Long
     ): Response<DraftOrderResponse>
 
-    @GET("price_rules/1401023660351/discount_codes.json")
+    @GET("price_rules.json")
     suspend fun getDiscountCodes(
     ): Response<DiscountResponse>
 
