@@ -50,8 +50,8 @@ class AddressFormFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.locationBtn.isEnabled = false
-        binding.autoCompleteCity.isEnabled = false
+
+        viewModel.getGovernments("egypt")
 
         binding.saveBtn.setOnClickListener {
             findNavController().navigateUp()
@@ -77,10 +77,6 @@ class AddressFormFragment : Fragment() {
             binding.autoCompleteCity.text = SpannableStringBuilder(address?.city)
             binding.itPhone.inputType = InputType.TYPE_CLASS_PHONE
             binding.saveBtn.visibility = View.VISIBLE
-        }
-        binding.changeBtn.setOnClickListener {
-            binding.saveBtn.visibility = View.VISIBLE
-            enableEditing()
         }
         observeGovernmentResponse()
         observeCitiesResponse()
@@ -149,7 +145,6 @@ class AddressFormFragment : Fragment() {
     }
 
     private fun enableEditing() {
-        viewModel.getGovernments("egypt")
         binding.locationBtn.isEnabled = true
         binding.locationBtn.isClickable = true
         binding.tiAddress.inputType = InputType.TYPE_CLASS_TEXT

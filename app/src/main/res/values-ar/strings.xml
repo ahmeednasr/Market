@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Market</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">اهلا بكم</string>
     <string name="your_cart_is_empty">حقيبه التسوق فارغه!</string>
     <string name="remove">حذف</string>
@@ -27,11 +26,11 @@
     <string name="orders">الطلبات</string>
     <string name="saved_items">العناصر المحفوظه</string>
     <string name="phone">الهاتف</string>
-    <string name="zipcode">كود</string>
-    <string name="country">البلد</string>
+    <string name="zipcode">الكود البريدي</string>
+    <string name="country">الدوله</string>
     <string name="egypt">Egypt</string>
-    <string name="city">مدينه</string>
-    <string name="govern">محافظه</string>
+    <string name="city">المدينه</string>
+    <string name="govern">المحافظه</string>
     <string name="save">حفظ</string>
     <string name="availability">متوفر في المتجر:</string>
     <string name="cancel">إلغاء</string>
@@ -54,5 +53,5 @@
     <string name="items_number">عدد المشتروات:</string>
     <string name="login_required">يجب التسجيل</string>
     <string name="alert_msg">يرجى تسجيل الدخول للمتابعة.</string>
-    <string name="coupons">Coupons</string>
+    <string name="coupons">كوبونات</string>
 </resources>
