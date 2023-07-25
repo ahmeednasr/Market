@@ -4,25 +4,25 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.market.R
 import com.example.market.auth.AuthActivity
+import com.example.market.data.pojo.PriceRule
 import com.example.market.databinding.FragmentHomeBinding
 import com.example.market.utils.Constants
 import com.example.market.utils.Constants.DISCOUNT_ID
 import com.example.market.utils.NetworkResult
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -45,6 +45,38 @@ class HomeFragment : Fragment() {
             }
         })
     }
+    private val discountAdapter by lazy {
+        DiscountAdapter(object : DiscountAdapter.DiscountClickListener {
+            override fun onItemClicked(discount: PriceRule) {
+                val alertDialog: AlertDialog? = activity?.let {
+                    val builder = AlertDialog.Builder(it)
+                    builder.apply {
+                        setTitle("you get discount code")
+                        setMessage(discount.title)
+                        setPositiveButton(
+                            R.string.save,
+                            DialogInterface.OnClickListener { dialog, id ->
+                                val sharedPreferences = requireContext().getSharedPreferences(
+                                    Constants.SharedPreferences, 0
+                                )
+                                val editor = sharedPreferences.edit()
+                                editor.putString(DISCOUNT_ID, discount.title)
+                                editor.apply()
+                            })
+                        setNegativeButton(R.string.cancel,
+                            DialogInterface.OnClickListener { dialog, id ->
+                            })
+                    }
+                    builder.create()
+                }
+                alertDialog?.show()
+            }
+
+        })
+    }
+    private val layoutManager by lazy {
+        LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,10 +96,9 @@ class HomeFragment : Fragment() {
         observeBrandsResponse()
         observeDiscountResponse()
         observeCartButton()
-        binding.discountBtn.setOnClickListener {
-            viewModel.getDiscountCodes()
-        }
-
+        binding.rvDiscount.layoutManager = layoutManager
+        binding.rvDiscount.adapter = discountAdapter
+        viewModel.getDiscountCodes()
         viewModel.getBrands()
     }
 
@@ -162,33 +193,14 @@ class HomeFragment : Fragment() {
         }
     }
 
+
     private fun observeDiscountResponse() {
         viewModel.discountCodes.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is NetworkResult.Success -> {
-                    val discountCode = response.data?.discount_codes?.get(0)?.code
-                    val alertDialog: AlertDialog? = activity?.let {
-                        val builder = AlertDialog.Builder(it)
-                        builder.apply {
-                            setTitle("you get discount code")
-                            setMessage(discountCode)
-                            setPositiveButton(
-                                R.string.save,
-                                DialogInterface.OnClickListener { dialog, id ->
-                                    val sharedPreferences = requireContext().getSharedPreferences(
-                                        Constants.SharedPreferences, 0
-                                    )
-                                    val editor = sharedPreferences.edit()
-                                    editor.putString(DISCOUNT_ID, discountCode)
-                                    editor.apply()
-                                })
-                            setNegativeButton(R.string.cancel,
-                                DialogInterface.OnClickListener { dialog, id ->
-                                })
-                        }
-                        builder.create()
+                    response.data?.let {
+                        discountAdapter.submitList(it.price_rules)
                     }
-                    alertDialog?.show()
                 }
                 is NetworkResult.Error -> {
 

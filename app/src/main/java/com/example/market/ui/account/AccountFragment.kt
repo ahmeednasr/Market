@@ -207,7 +207,6 @@ class AccountFragment : Fragment() {
     private fun handleMenuItemClick(menuItem: MenuItem) {
         val selectedItem = menuItem.title
         editor.putString(CURRENCY_TO_KEY, selectedItem as String?)
-        //val currencyFrom=
         editor.apply()
         binding.currencyValue.text = selectedItem
         Toast.makeText(requireContext(), selectedItem, Toast.LENGTH_SHORT).show()
