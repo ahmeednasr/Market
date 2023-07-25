@@ -128,6 +128,8 @@ class ProductDetails : Fragment() {
             if (avilable > 0) {
                 viewModel.setInCart(product)
                 observeAddOperation()
+            } else {
+                Toast.makeText(requireContext(), "size and color not selected", Toast.LENGTH_SHORT).show()
             }
 
         }

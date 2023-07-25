@@ -7,7 +7,7 @@ object Constants {
     const val API_ACCESS_TOKEN = "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"
     const val NETWORK_TIMEOUT = 5000L
 
-    const val CURRENCY_FROM_KEY = "CURRENCY_KEY"
+    const val CURRENCY_FROM_KEY = "EGP"
     const val CURRENCY_TO_KEY = "CURRENCY_KEY"
 
     const val CURRENCY_URL = "https://api.apilayer.com/currency_data/"
