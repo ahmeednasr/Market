@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.content.res.Resources
+import android.graphics.Color
 import android.util.DisplayMetrics
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +18,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
 import com.example.market.R
 import com.example.market.auth.AuthActivity
+import com.google.android.material.snackbar.Snackbar
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -38,4 +40,18 @@ object Utils {
         val stringFormat = SimpleDateFormat("dd/MM/yyy", Locale.getDefault())
         return stringFormat.format(formattedDate)
     }
+
+    fun showErrorSnackbar(view: View, errorMessage: String) {
+        val snackbar = Snackbar.make(view, errorMessage, Snackbar.LENGTH_LONG)
+        val snackbarView = snackbar.view
+        snackbarView.setBackgroundColor(Color.RED)
+        snackbar.setTextColor(Color.WHITE)
+        snackbar.show()
+    }
+
+
+
+
+
+
 }

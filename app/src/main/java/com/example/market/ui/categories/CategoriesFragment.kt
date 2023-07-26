@@ -1,7 +1,9 @@
 package com.example.market.ui.categories
 
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.SharedPreferences
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,8 +12,10 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.market.R
@@ -20,7 +24,9 @@ import com.example.market.data.pojo.Product
 import com.example.market.databinding.FragmentCategoriesBinding
 import com.example.market.ui.home.HomeFragmentDirections
 import com.example.market.utils.Constants
+import com.example.market.utils.NetworkManager
 import com.example.market.utils.NetworkResult
+import com.example.market.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
 import nl.bryanderidder.themedtogglebuttongroup.ThemedButton
 import javax.inject.Inject
@@ -33,6 +39,9 @@ class CategoriesFragment : Fragment() {
 
     @Inject
     lateinit var sharedPreferences: SharedPreferences
+
+    @Inject
+    lateinit var networkChangeListener: NetworkManager
 
     private val viewModel: CategoriesViewModel by viewModels()
     private val productsAdapter by lazy {
@@ -70,6 +79,8 @@ class CategoriesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        registerNetworkManager()
+        observeNetworkState()
         setFabAnimation()
         hideAllFabs()
         observeCategoryFab()
@@ -80,8 +91,58 @@ class CategoriesFragment : Fragment() {
         observeButtonsGroup()
         observeCartButton()
         observeFloatingActionButton()
+    }
 
-        viewModel.getProducts()
+    private fun registerNetworkManager() {
+        val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        ContextCompat.registerReceiver(
+            requireActivity(),
+            networkChangeListener,
+            filter,
+            ContextCompat.RECEIVER_NOT_EXPORTED
+        )
+    }
+
+    override fun onPause() {
+        super.onPause()
+        activity?.let {
+            LocalBroadcastManager.getInstance(it).unregisterReceiver(networkChangeListener)
+        }
+    }
+
+    private fun observeNetworkState() {
+        NetworkManager.isNetworkAvailable.observe(viewLifecycleOwner) {
+            if (it){
+                viewModel.getProducts()
+                handleWhenThereNetwork()
+            } else {
+                handleWhenNoNetwork()
+            }
+        }
+    }
+
+    private fun handleWhenProductsResponseError() {
+        binding.apply {
+            category.visibility = View.GONE
+            rvProducts.visibility = View.GONE
+        }
+    }
+
+    private fun handleWhenNoNetwork() {
+        handleWhenProductsResponseError()
+        binding.apply {
+            ivNoConnection.visibility = View.VISIBLE
+            tvNoConnection.visibility = View.VISIBLE
+        }
+    }
+
+    private fun handleWhenThereNetwork() {
+        binding.apply {
+            category.visibility = View.VISIBLE
+            rvProducts.visibility = View.VISIBLE
+            ivNoConnection.visibility = View.GONE
+            tvNoConnection.visibility = View.GONE
+        }
     }
 
     private fun observeFavouritesButton() {
@@ -190,6 +251,8 @@ class CategoriesFragment : Fragment() {
                 }
                 is NetworkResult.Error -> {
                     stopShimmer()
+                    handleWhenProductsResponseError()
+                    Utils.showErrorSnackbar(binding.root, "Error happened")
                 }
                 is NetworkResult.Loading -> {
                     startShimmer()

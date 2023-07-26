@@ -53,4 +53,7 @@
     <string name="login_required">Login Required</string>
     <string name="alert_msg">Please log in to continue.</string>
     <string name="coupons">Coupons</string>
+
+    <string name="no_internet_msg">An internet error occurred, Please check your connection!</string>
+    <string name="no_data_msg">Not Available yet!</string>
 </resources>
