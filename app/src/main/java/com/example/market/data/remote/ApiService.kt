@@ -31,7 +31,7 @@ interface ApiService {
     @PUT("customers/{id}.json")
     suspend fun updateCustomer(
         @Path("id") customerId: Long,
-        @Body customer: Customer,
+        @Body customer: CustomerResponse,
         @Header("Content-Type") contentType: String = "application/json",
         @Header("Accept") accept: String = "application/json"
     ): Response<CustomerResponse>
@@ -75,7 +75,7 @@ interface ApiService {
     @PUT("variants/{id}.json")
     suspend fun getVariantById(
         @Path("id") id: Long,
-    ): Response<Variant>
+    ): Response<VariantResponse>
 
 
     @DELETE("draft_orders/{id}.json")

@@ -56,7 +56,6 @@ class FavouritesFragment : Fragment() {
                         )
                     }
                 }
-
                 override fun onDislikeClicked(product: LineItemsItem) {
                     showDeleteAlertDialog(product)
                 }

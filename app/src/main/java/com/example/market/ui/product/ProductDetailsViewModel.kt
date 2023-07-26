@@ -13,6 +13,7 @@ import com.example.market.utils.Constants
 import com.example.market.utils.Constants.UserID
 import com.example.market.utils.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -28,8 +29,6 @@ class ProductDetailsViewModel @Inject constructor(
     private val _product: MutableLiveData<NetworkResult<ProductResponse>> = MutableLiveData()
     val product: LiveData<NetworkResult<ProductResponse>> = _product
 
-    private val _addOperation: MutableLiveData<NetworkResult<Boolean>> = MutableLiveData()
-    val addOperation: LiveData<NetworkResult<Boolean>> = _addOperation
 
     fun getProduct(productId: Long) {
         _product.value = NetworkResult.Loading()
@@ -82,9 +81,7 @@ class ProductDetailsViewModel @Inject constructor(
                         )
                     )
                     repository.createCartDraftOrder(cart)
-                    _addOperation.postValue(NetworkResult.Success(true))
                 } else {
-                    _addOperation.postValue(NetworkResult.Error("added before"))
                 }
 
             }
@@ -140,23 +137,44 @@ class ProductDetailsViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getCart(product: Product, variantId: Long) {
-        val draftResponse = repository.getCart(
-            sharedPreferences.getString(Constants.CART_ID, "0")!!.toLong()
-        )
-        if (draftResponse.isSuccessful) {
-            draftResponse.body()?.let { it ->
-                _cart = it.draftOrder?.lineItems as ArrayList<LineItemsItem>
-                _cart.filter {
-                    it.variantId == variantId
-                }
-                for (cartItem in _cart) {
-                    if (product.id!! == cartItem.sku?.toLong()) {
-
+    fun saveToCart(product: Product, variantId: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val cartId = sharedPreferences.getString(CART_ID, "0")!!.toLong()
+            Log.i("CART", cartId.toString())
+            val draftResponse = repository.getCart(
+                cartId
+            )
+            if (draftResponse.isSuccessful) {
+                draftResponse.body()?.let { it ->
+                    _cart = it.draftOrder?.lineItems as ArrayList<LineItemsItem>
+                    Log.i("CART", _cart.toString())
+                    val exist = _cart.filter {
+                        it.variantId == variantId && it.productId == product.id
+                    }.isNotEmpty()
+                    if (!exist) {
+                        val savedItem = LineItemsItem(
+                            title = product.title,
+                            price = product.variants?.get(0)?.price,
+                            quantity = 1,
+                            sku = product.id.toString(),
+                            variantId = variantId,
+                            properties = listOf(
+                                Property("productImage", product.image?.src),
+                                Property(
+                                    "maxQuantity",
+                                    "${product.variants?.get(0)?.inventory_quantity}"
+                                )
+                            )
+                        )
+                        _cart.add(savedItem)
+                        Log.i("CART", _cart.toString())
+                        repository.modifyCart(
+                            cartId ?: 0,
+                            DraftOrderResponse(DraftOrder(lineItems = _cart))
+                        )
                     }
                 }
             }
         }
     }
-
 }

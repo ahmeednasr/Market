@@ -137,10 +137,6 @@ class ProductDetails : Fragment() {
         )
         binding.ratingBar.rating = randomRounded.toFloat()
         checkFavorite(product)
-
-        var userId = sharedPreferences.getString(UserID, "")
-        Log.i("USERID", userId.toString())
-        viewModel.setInCart(product)
         reviewAdaptor.submitList(reviewsList)
         setupReviewRecyclerView()
         binding.reviewCard.setOnClickListener {
@@ -153,9 +149,9 @@ class ProductDetails : Fragment() {
             }
         }
         binding.addToChartButton.setOnClickListener {
-            if (quantity > 0) {
-                //viewModel.g(product)
-                observeAddOperation()
+            Log.i("CART", "$quantity $variantId")
+            if (quantity > 0 && variantId > 0) {
+                viewModel.saveToCart(product, variantId)
             } else {
                 Toast.makeText(requireContext(), "size and color not selected", Toast.LENGTH_SHORT)
                     .show()
@@ -221,28 +217,6 @@ class ProductDetails : Fragment() {
         val alertDialog: AlertDialog = builder.create()
         alertDialog.setCancelable(false)
         alertDialog.show()
-    }
-
-    private fun observeAddOperation() {
-        viewModel.addOperation.observe(viewLifecycleOwner) { response ->
-            when (response) {
-                is NetworkResult.Success -> {
-                    if (response.data == true) {
-                        Toast.makeText(requireContext(), "added", Toast.LENGTH_SHORT).show()
-                    }
-                }
-                is NetworkResult.Error -> {
-                    Toast.makeText(
-                        requireContext(),
-                        response.message,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-                is NetworkResult.Loading -> {
-
-                }
-            }
-        }
     }
 
     private fun setupReviewRecyclerView() {

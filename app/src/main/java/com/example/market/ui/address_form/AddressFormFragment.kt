@@ -1,26 +1,20 @@
 package com.example.market.ui.address_form
 
-import android.os.Build
 import android.os.Bundle
-import android.text.Editable
 import android.text.InputType
 import android.text.SpannableStringBuilder
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.market.R
 import com.example.market.data.pojo.*
 import com.example.market.databinding.FragmentAddressFormBinding
-import com.example.market.databinding.FragmentCartBinding
 import com.example.market.utils.Constants
 import com.example.market.utils.Constants.ADDRESS_KEY
 import com.example.market.utils.Constants.MAP
@@ -29,11 +23,14 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class AddressFormFragment : Fragment() {
-
     private var _binding: FragmentAddressFormBinding? = null
     private val binding get() = _binding!!
     private val viewModel: AddressViewModel by viewModels()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -160,4 +157,8 @@ class AddressFormFragment : Fragment() {
         _binding = null
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+    }
 }

@@ -47,4 +47,5 @@ interface Repository {
 
     suspend fun addAddressToUser(userId: Long,address: CustomerResponse):Response<CustomerResponse>
 
+    suspend fun getVariant(@Path("id") id: Long): Response<VariantResponse>
 }
