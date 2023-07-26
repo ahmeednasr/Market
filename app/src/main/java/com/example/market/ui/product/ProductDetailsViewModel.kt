@@ -28,13 +28,16 @@ class ProductDetailsViewModel @Inject constructor(
 
     private val _product: MutableLiveData<NetworkResult<ProductResponse>> = MutableLiveData()
     val product: LiveData<NetworkResult<ProductResponse>> = _product
-
+    private val _conversionResult: MutableLiveData<Double> = MutableLiveData()
+    val conversionResult: LiveData<Double> = _conversionResult
 
     fun getProduct(productId: Long) {
         _product.value = NetworkResult.Loading()
         viewModelScope.launch {
             val productsResponse = repository.getSingleProduct(productId)
             if (productsResponse.isSuccessful) {
+                val currencyTo = sharedPreferences.getString(Constants.CURRENCY_TO_KEY, "")
+                convertCurrency("EGP", currencyTo!!, 1.0)
                 productsResponse.body()?.let {
                     it.product?.let { product ->
                         getFavourites(product)
@@ -46,49 +49,6 @@ class ProductDetailsViewModel @Inject constructor(
             }
         }
     }
-
-    fun setInCart(product: Product) {
-        viewModelScope.launch {
-            val cartList = repository.getDraftOrders().body()
-            val userId = sharedPreferences.getString(UserID, "0")?.toLong()
-            if (userId != null) {
-                val filtered = cartList?.draft_orders?.filter {
-                    it.customer?.id == userId && it.tags == "cart"
-                }
-                var list =
-                    filtered?.filter { it.line_items?.get(0)?.variant_id == product.variants?.get(0)?.id }
-                Log.i("FILTERD", list.toString())
-                if (list?.isEmpty() == true) {
-                    val cart = DraftOrderResponse(
-                        DraftOrder(
-                            lineItems = mutableListOf(
-                                LineItemsItem(
-                                    title = product.title,
-                                    price = product.variants?.get(0)?.price,
-                                    variantId = product.variants?.get(0)?.id,
-                                    quantity = 1,
-                                    productId = product.id,
-                                    properties = listOf(
-                                        Property(
-                                            "productImage",
-                                            product.images?.get(0)?.src
-                                        )
-                                    )
-                                )
-                            ),
-                            customer = Customer(id = userId),
-                            tags = CART_ID
-                        )
-                    )
-                    repository.createCartDraftOrder(cart)
-                } else {
-                }
-
-            }
-
-        }
-    }
-
 
     private suspend fun getFavourites(product: Product) {
         val draftResponse = repository.getFavourites(
@@ -173,6 +133,17 @@ class ProductDetailsViewModel @Inject constructor(
                             DraftOrderResponse(DraftOrder(lineItems = _cart))
                         )
                     }
+                }
+            }
+        }
+    }
+
+    fun convertCurrency(from: String, to: String, q: Double) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val response = repository.convertCurrency(from, to, q)
+            if (response.isSuccessful) {
+                response.body()?.result?.let {
+                    _conversionResult.postValue(it)
                 }
             }
         }

@@ -34,8 +34,7 @@
             android:textColor="#8F8F8F"
             android:textSize="11dp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@+id/current_price"
-            app:layout_constraintStart_toStartOf="@+id/current_price"
+            app:layout_constraintStart_toStartOf="@+id/currency"
             app:layout_constraintTop_toBottomOf="@+id/current_price" />
 
         <ImageView

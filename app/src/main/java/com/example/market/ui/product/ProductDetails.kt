@@ -23,6 +23,7 @@ import com.example.market.databinding.FragmentProductDetailsBinding
 import com.example.market.utils.Constants
 import com.example.market.utils.Constants.UserID
 import com.example.market.utils.NetworkResult
+import com.example.market.utils.Utils.roundOffDecimal
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlin.math.roundToInt
@@ -131,10 +132,17 @@ class ProductDetails : Fragment() {
         }
         setColorList(colorList)
         setSizeList(sizeList, product)
-        binding.priceText.text = product.variants!![0].price + " " + sharedPreferences.getString(
-            Constants.CURRENCY_FROM_KEY,
-            "EGP"
-        )
+        viewModel.conversionResult.observe(viewLifecycleOwner) {
+            Log.i("STRING", "${product.variants!![0].price}")
+            val currency =
+                product.variants[0].price?.toDouble()?.times(it)
+                    ?.let { it1 -> roundOffDecimal(it1).toString() } + " " + sharedPreferences.getString(
+                    Constants.CURRENCY_TO_KEY,
+                    ""
+                )
+            binding.priceText.text = currency
+        }
+
         binding.ratingBar.rating = randomRounded.toFloat()
         checkFavorite(product)
         reviewAdaptor.submitList(reviewsList)
