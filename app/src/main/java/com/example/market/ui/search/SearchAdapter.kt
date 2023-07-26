@@ -56,11 +56,9 @@ class SearchAdapter(
     class MyViewHolder(val binding: ItemSearchProductBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(product: Product, clickListener: ProductClickListener, exchangeRate: Double?, currency: String,) {
+        fun bind(product: Product, clickListener: ProductClickListener, exchangeRate: Double?, currency: String) {
             binding.apply {
                 tvProductName.text = product.title
-                Log.d("bind", "exchangeRate "+ exchangeRate.toString())
-                Log.d("bind", "currency " + currency)
                 val price = product.variants?.get(0)?.price?.toDouble()?.times(exchangeRate ?: 1.0)
                 tvProductPrice.text = "$currency ${roundOffDecimal(price?:0.0)}"
 

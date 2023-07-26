@@ -1,17 +1,24 @@
 package com.example.market.ui.orders
 
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.market.databinding.FragmentOrdersBinding
+import com.example.market.utils.NetworkManager
 import com.example.market.utils.NetworkResult
+import com.example.market.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class OrdersFragment : Fragment() {
@@ -21,6 +28,9 @@ class OrdersFragment : Fragment() {
 
     private val viewModel: OrdersViewModel by viewModels()
     private val ordersAdapter by lazy { OrdersAdapter() }
+
+    @Inject
+    lateinit var networkChangeListener: NetworkManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,16 +44,66 @@ class OrdersFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        registerNetworkManager()
+        observeNetworkState()
         observeBackButton()
         setupOrdersRecyclerView()
         observeOrdersResponse()
-
-        viewModel.getOrders()
     }
 
     private fun observeBackButton() {
         binding.ivBackArrow.setOnClickListener {
             findNavController().popBackStack()
+        }
+    }
+
+    private fun registerNetworkManager() {
+        val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        ContextCompat.registerReceiver(
+            requireActivity(),
+            networkChangeListener,
+            filter,
+            ContextCompat.RECEIVER_NOT_EXPORTED
+        )
+    }
+
+    override fun onPause() {
+        super.onPause()
+        activity?.let {
+            LocalBroadcastManager.getInstance(it).unregisterReceiver(networkChangeListener)
+        }
+    }
+
+    private fun observeNetworkState() {
+        NetworkManager.isNetworkAvailable.observe(viewLifecycleOwner) {
+            if (it){
+                viewModel.getOrders()
+                handleWhenThereNetwork()
+            } else {
+                handleWhenNoNetwork()
+            }
+        }
+    }
+
+    private fun handleWhenOrdersResponseError() {
+        binding.apply {
+            rvOrders.visibility = View.GONE
+        }
+    }
+
+    private fun handleWhenNoNetwork() {
+        handleWhenOrdersResponseError()
+        binding.apply {
+            ivNoConnection.visibility = View.VISIBLE
+            tvNoConnection.visibility = View.VISIBLE
+        }
+    }
+
+    private fun handleWhenThereNetwork() {
+        binding.apply {
+            rvOrders.visibility = View.VISIBLE
+            ivNoConnection.visibility = View.GONE
+            tvNoConnection.visibility = View.GONE
         }
     }
 
@@ -64,6 +124,7 @@ class OrdersFragment : Fragment() {
                 }
                 is NetworkResult.Error -> {
                     stopShimmer()
+                    Utils.showErrorSnackbar(binding.root, "Error happened")
                 }
                 is NetworkResult.Loading -> {
                     startShimmer()
