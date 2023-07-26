@@ -24,6 +24,7 @@ class AuthViewModel @Inject constructor(
     private var _customers: MutableLiveData<NetworkResult<List<Customer>>> = MutableLiveData()
     var customers: LiveData<NetworkResult<List<Customer>>> = _customers
 
+
     private val fav = DraftOrderResponse(
         DraftOrder(
             lineItems = mutableListOf(

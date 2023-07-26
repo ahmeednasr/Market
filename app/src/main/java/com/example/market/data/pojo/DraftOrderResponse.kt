@@ -46,7 +46,7 @@ data class DraftOrder(
     @Expose val shippingAddress: ShippingAddress? = null,
 
     @field:SerializedName("email")
-    @Expose val email: String? = null,
+    @Expose var email: String? = null,
 
     @field:SerializedName("subtotal_price")
     @Expose val subtotalPrice: String? = null,

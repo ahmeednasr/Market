@@ -18,8 +18,7 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.market.R
-import com.example.market.data.pojo.StatesItem
-import com.example.market.data.pojo.UserAddress
+import com.example.market.data.pojo.*
 import com.example.market.databinding.FragmentAddressFormBinding
 import com.example.market.databinding.FragmentCartBinding
 import com.example.market.utils.Constants
@@ -30,14 +29,11 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class AddressFormFragment : Fragment() {
+
     private var _binding: FragmentAddressFormBinding? = null
     private val binding get() = _binding!!
     private val viewModel: AddressViewModel by viewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,7 +50,8 @@ class AddressFormFragment : Fragment() {
         viewModel.getGovernments("egypt")
 
         binding.saveBtn.setOnClickListener {
-            findNavController().navigateUp()
+            createAddresses()
+            findNavController().popBackStack()
         }
 
         binding.locationBtn.setOnClickListener {
@@ -144,23 +141,23 @@ class AddressFormFragment : Fragment() {
         }
     }
 
-    private fun enableEditing() {
-        binding.locationBtn.isEnabled = true
-        binding.locationBtn.isClickable = true
-        binding.tiAddress.inputType = InputType.TYPE_CLASS_TEXT
-        binding.tiAddress.isEnabled = true
-        binding.itZipcode.inputType = InputType.TYPE_CLASS_NUMBER
-        binding.itZipcode.isEnabled = true
-        binding.itPhone.inputType = InputType.TYPE_CLASS_PHONE
+    private fun createAddresses(){
+        val city = binding.autoCompleteCity.text.toString()
+        val country = binding.itCountry.text.toString()
+        val province = binding.autoCompleteGovern.text.toString().split(" ")[0]
+        val zip = binding.itZipcode.text.toString()
+        val address1 = binding.tiAddress.text.toString()
+        val phone = binding.itPhone.text.toString()
+        val address = CustomerAddress(country = country, province = province, city = city, phone = phone, zip = zip, address1 = address1)
+
+        val update = CustomerResponse(Customer(addresses = listOf(address)))
+        viewModel.modifyCustomerAddress(update)
     }
+
 
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-
-    }
 }

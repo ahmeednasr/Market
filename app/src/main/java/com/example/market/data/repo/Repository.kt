@@ -21,6 +21,7 @@ interface Repository {
 
     suspend fun createUser(user: NewUser): Response<CustomerResponse>
     suspend fun getAllCustomers(): Response<CustomersResponse>
+    suspend fun getCustomer(customerID : Long): Response<CustomerResponse>
     suspend fun createFavouriteDraftOrder(favouriteDraftOrder: DraftOrderResponse): Response<DraftOrderResponse>
     suspend fun createCartDraftOrder(cartDraftOrder: DraftOrderResponse): Response<DraftOrderResponse>
     suspend fun modifyFavourites(
@@ -44,5 +45,6 @@ interface Repository {
 
     suspend fun getCart(@Path("cartId") cartId: Long): Response<DraftOrderResponse>
 
-    suspend fun updateCustomer(customerId: Long, customer: Customer): Response<CustomerResponse>
+    suspend fun addAddressToUser(userId: Long,address: CustomerResponse):Response<CustomerResponse>
+
 }
