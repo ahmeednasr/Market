@@ -6,12 +6,13 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.market.data.pojo.Address
+import com.example.market.data.pojo.CustomerAddress
 import com.example.market.databinding.ItemAddressBinding
 
 class AddressesAdaptor(
     private val clickListener : AddressClickListener
     ) :
-    ListAdapter<Address,AddressesAdaptor.MyViewHolder>(
+    ListAdapter<CustomerAddress,AddressesAdaptor.MyViewHolder>(
         DailyDiffCallback()
     ) {
 
@@ -24,7 +25,7 @@ class AddressesAdaptor(
     }
 
     class MyViewHolder(private val binding: ItemAddressBinding) : RecyclerView.ViewHolder(binding.root){
-        fun bind(address: Address, clickListener: AddressClickListener) {
+        fun bind(address: CustomerAddress, clickListener: AddressClickListener) {
             binding.apply {
                 tvPhone.text = address.phone
                 tvGovernment.text = address.province
@@ -51,17 +52,17 @@ class AddressesAdaptor(
     }
 
     interface AddressClickListener {
-        fun onSelectedClicked(address: Address)
-        fun onItemDeSelected(address: Address)
-        fun onItemDeleted(address: Address)
+        fun onSelectedClicked(address: CustomerAddress)
+        fun onItemDeSelected(address: CustomerAddress)
+        fun onItemDeleted(address: CustomerAddress)
     }
 
-    class DailyDiffCallback : DiffUtil.ItemCallback<Address>() {
-        override fun areItemsTheSame(oldItem: Address, newItem: Address): Boolean {
+    class DailyDiffCallback : DiffUtil.ItemCallback<CustomerAddress>() {
+        override fun areItemsTheSame(oldItem: CustomerAddress, newItem: CustomerAddress): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: Address, newItem: Address): Boolean {
+        override fun areContentsTheSame(oldItem: CustomerAddress, newItem: CustomerAddress): Boolean {
             return oldItem == newItem
         }
     }

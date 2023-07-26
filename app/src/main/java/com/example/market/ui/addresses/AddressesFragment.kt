@@ -1,18 +1,27 @@
 package com.example.market.ui.addresses
 
+import android.graphics.drawable.GradientDrawable.Orientation
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.market.R
 import com.example.market.data.pojo.Address
+import com.example.market.data.pojo.CustomerAddress
 import com.example.market.databinding.FragmentAccountBinding
 import com.example.market.databinding.FragmentAddressesBinding
 import com.example.market.ui.address_form.AddressViewModel
+import com.example.market.utils.NetworkResult
+import com.example.market.utils.Utils
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class AddressesFragment : Fragment() {
 
     private var _binding: FragmentAddressesBinding? = null
@@ -21,18 +30,14 @@ class AddressesFragment : Fragment() {
     private val viewModel: AddressViewModel by viewModels()
     private val addressesAdaptor by lazy {
         AddressesAdaptor(object : AddressesAdaptor.AddressClickListener{
-            override fun onSelectedClicked(address: Address) {
-
+            override fun onSelectedClicked(address: CustomerAddress) {
             }
 
-            override fun onItemDeSelected(address: Address) {
-
+            override fun onItemDeSelected(address: CustomerAddress) {
             }
 
-            override fun onItemDeleted(address: Address) {
-
+            override fun onItemDeleted(address: CustomerAddress) {
             }
-
         })
     }
 
@@ -49,10 +54,37 @@ class AddressesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.btnAdd.setOnClickListener {
             findNavController().navigate(R.id.action_addressesFragment_to_addressFormFragment)
+        }
 
+        viewModel.getCustomerAddresses()
+        getAddressesList()
+        binding.rvAddresses.apply {
+            adapter = addressesAdaptor
+            layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.VERTICAL,false)
         }
     }
 
+    private fun getAddressesList(){
+        viewModel.address.observe(viewLifecycleOwner){response ->
+            when(response){
+                is NetworkResult.Success -> {
+                    response.data?.let {
+                        if (it.isEmpty()) {
+
+                        } else {
+                            addressesAdaptor.submitList(it)
+                        }
+                    }
+                }
+                is NetworkResult.Error -> {
+                    Utils.showErrorSnackbar(binding.root, "Error happened")
+                }
+                is NetworkResult.Loading -> {
+                    Toast.makeText(requireContext(),"Loading Data",Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+    }
 
 
     override fun onDestroyView() {

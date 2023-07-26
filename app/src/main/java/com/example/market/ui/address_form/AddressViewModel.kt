@@ -1,13 +1,17 @@
 package com.example.market.ui.address_form
 
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.market.data.pojo.Address
 import com.example.market.data.pojo.CitiesPojo
+import com.example.market.data.pojo.CustomerAddress
 import com.example.market.data.pojo.GovernmentPojo
 import com.example.market.data.repo.Repository
+import com.example.market.utils.Constants
 import com.example.market.utils.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -16,6 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AddressViewModel @Inject constructor(
     private val repository: Repository,
+    private val sharedPreferences: SharedPreferences
 ) : ViewModel() {
 
     private val _governmentsResult: MutableLiveData<NetworkResult<GovernmentPojo?>> =
@@ -24,6 +29,9 @@ class AddressViewModel @Inject constructor(
     private val _citiesResult: MutableLiveData<NetworkResult<CitiesPojo?>> =
         MutableLiveData(NetworkResult.Loading())
     val citiesResult: LiveData<NetworkResult<CitiesPojo?>> = _citiesResult
+    private val _addresses: MutableLiveData<NetworkResult<List<CustomerAddress>>> =
+        MutableLiveData(NetworkResult.Loading())
+    val address: LiveData<NetworkResult<List<CustomerAddress>>> = _addresses
 
     fun getGovernments(country: String) {
         viewModelScope.launch {
@@ -56,6 +64,17 @@ class AddressViewModel @Inject constructor(
     }
 
     fun getCustomerAddresses() {
+        viewModelScope.launch {
+            val id = sharedPreferences.getString(Constants.UserID,"0")?.toLong()
+            val response = repository.getCustomer(id?:0)
+            if(response.isSuccessful){
+                response.body()?.let {
+                    _addresses.postValue(NetworkResult.Success(it.customer.addresses!!))
+                }
+            } else {
+                _addresses.postValue(NetworkResult.Error("Error"))
+            }
+        }
 
     }
 }
