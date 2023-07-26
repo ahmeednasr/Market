@@ -1,14 +1,164 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout3"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.payment.PaymentFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:id="@+id/paymentMethodTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/payment_method"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</FrameLayout>
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="@+id/paymentMethodTitle"
+        app:layout_constraintTop_toBottomOf="@+id/paymentMethodTitle">
+
+        <RadioButton
+            android:id="@+id/cash_on_delivery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/purple_700"
+            android:text="@string/cash_on_delivery" />
+
+        <RadioButton
+            android:id="@+id/online_payment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/purple_700"
+            android:checked="true"
+            android:text="@string/online_payment" />
+    </RadioGroup>
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout2"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:hint="@string/coupon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/radioGroup"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup">
+
+        <com.google.android.material.textfield.TextInputEditText
+
+            android:id="@+id/coupon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/coupon" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/subTotalTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/subtotal"
+        app:layout_constraintStart_toStartOf="@+id/textInputLayout2"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout2" />
+
+    <TextView
+        android:id="@+id/subTotalValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        app:layout_constraintBottom_toBottomOf="@+id/subTotalTitle"
+        app:layout_constraintEnd_toEndOf="@+id/textInputLayout2"
+        app:layout_constraintTop_toTopOf="@+id/subTotalTitle" />
+
+    <TextView
+        android:id="@+id/TaxTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/tax"
+        app:layout_constraintStart_toStartOf="@+id/subTotalTitle"
+        app:layout_constraintTop_toBottomOf="@+id/subTotalTitle" />
+
+    <TextView
+        android:id="@+id/TaxValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        app:layout_constraintBottom_toBottomOf="@+id/TaxTitle"
+        app:layout_constraintEnd_toEndOf="@+id/textInputLayout2"
+        app:layout_constraintTop_toTopOf="@+id/TaxTitle" />
+
+    <TextView
+        android:id="@+id/discountTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/discount"
+        app:layout_constraintStart_toStartOf="@+id/TaxTitle"
+        app:layout_constraintTop_toBottomOf="@+id/TaxTitle" />
+
+    <TextView
+        android:id="@+id/discountValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        app:layout_constraintBottom_toBottomOf="@+id/discountTitle"
+        app:layout_constraintEnd_toEndOf="@+id/textInputLayout2"
+        app:layout_constraintTop_toTopOf="@+id/discountTitle" />
+
+    <TextView
+        android:id="@+id/ShippingFeeTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/shipping_fee"
+        app:layout_constraintStart_toStartOf="@+id/discountTitle"
+        app:layout_constraintTop_toBottomOf="@+id/discountTitle" />
+
+    <TextView
+        android:id="@+id/ShippingFeeValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        app:layout_constraintBottom_toBottomOf="@+id/ShippingFeeTitle"
+        app:layout_constraintEnd_toEndOf="@+id/discountValue"
+        app:layout_constraintTop_toTopOf="@+id/ShippingFeeTitle" />
+
+    <TextView
+        android:id="@+id/totalTitle"
+        android:layout_width="56dp"
+        android:layout_height="19dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/total"
+        app:layout_constraintStart_toStartOf="@+id/ShippingFeeTitle"
+        app:layout_constraintTop_toBottomOf="@+id/ShippingFeeTitle" />
+
+    <TextView
+        android:id="@+id/totalValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        app:layout_constraintBottom_toBottomOf="@+id/totalTitle"
+        app:layout_constraintEnd_toEndOf="@+id/ShippingFeeValue"
+        app:layout_constraintTop_toTopOf="@+id/totalTitle" />
+
+    <Button
+        android:id="@+id/next_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/next"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/totalValue"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintStart_toStartOf="@+id/totalTitle"
+        app:layout_constraintTop_toBottomOf="@+id/totalValue" />
+</androidx.constraintlayout.widget.ConstraintLayout>

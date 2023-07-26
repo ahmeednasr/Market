@@ -18,6 +18,7 @@ import com.example.market.R
 import com.example.market.data.pojo.LineItemsItem
 import com.example.market.data.pojo.Product
 import com.example.market.databinding.FragmentCartBinding
+import com.example.market.ui.home.HomeFragmentDirections
 import com.example.market.utils.Constants
 import com.example.market.utils.Constants.CURRENCY_FROM_KEY
 import com.example.market.utils.Constants.SharedPreferences
@@ -45,9 +46,6 @@ class CartFragment : Fragment(), CartClickListener {
         )
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -68,14 +66,16 @@ class CartFragment : Fragment(), CartClickListener {
         viewModel.conversionResult.observe(viewLifecycleOwner) {
             cartAdapter.exchangeRate = it
         }
-
-
+        binding.totalCurrancy.text = currency
         viewModel.convertCurrency("EGP", currency, 1.00)
         viewModel.subtotal.observe(viewLifecycleOwner) { subTotal ->
             binding.subTotalPrice.text = String.format("%.1f", subTotal.toDouble())
         }
         binding.ivBackArrow.setOnClickListener {
             findNavController().popBackStack()
+        }
+        binding.checkoutBtn.setOnClickListener {
+            findNavController().navigate(CartFragmentDirections.actionCartFragmentToPaymentFragment())
         }
     }
 
@@ -89,7 +89,21 @@ class CartFragment : Fragment(), CartClickListener {
             when (response) {
                 is NetworkResult.Success -> {
                     response.data?.let {
-                        cartAdapter.submitList(it)
+                        if (it.isEmpty()) {
+                            binding.emptyCart.visibility = View.VISIBLE
+                            binding.emptyCardTxt.visibility = View.VISIBLE
+                            binding.cartTitle.visibility = View.INVISIBLE
+                            binding.subtotalTv.visibility = View.INVISIBLE
+                            binding.totalCurrancy.visibility = View.INVISIBLE
+                            binding.subTotalPrice.visibility = View.INVISIBLE
+
+                            cartAdapter.submitList(it)
+                        } else {
+                            binding.emptyCart.visibility = View.GONE
+                            binding.emptyCardTxt.visibility = View.GONE
+                            cartAdapter.submitList(it)
+                        }
+
                     }
                 }
                 is NetworkResult.Error -> {
