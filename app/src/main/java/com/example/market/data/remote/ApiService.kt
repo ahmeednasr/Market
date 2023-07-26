@@ -28,6 +28,14 @@ interface ApiService {
         @Header("Accept") accept: String = "application/json", @Body customer: NewUser
     ): Response<CustomerResponse>
 
+    @POST("customers/{id}.json")
+    suspend fun updateCustomer(
+        @Path("id") customerId: Long,
+        @Body address: CustomerAddress,
+        @Header("Content-Type") contentType: String = "application/json",
+        @Header("Accept") accept: String = "application/json"
+    ): Response<CustomerResponse>
+
     @GET("customers/{id}/orders.json")
     suspend fun getCustomerOrders(@Path("id") userId: Long): Response<OrderResponse>
 
