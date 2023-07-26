@@ -28,6 +28,8 @@ class CartViewModel @Inject constructor(
     private var _cart: MutableLiveData<NetworkResult<List<LineItemsItem>>> = MutableLiveData()
     val cart: LiveData<NetworkResult<List<LineItemsItem>>> = _cart
 
+    private var _response: MutableLiveData<NetworkResult<DraftOrderResponse>> = MutableLiveData()
+    val response: LiveData<NetworkResult<DraftOrderResponse>> = _response
     private var _cartList = ArrayList<LineItemsItem>()
 
     private val _conversionResult: MutableLiveData<Double> = MutableLiveData()
@@ -40,12 +42,15 @@ class CartViewModel @Inject constructor(
 
     fun getCartItems() {
         _cart.postValue(NetworkResult.Loading())
+        _response.postValue(NetworkResult.Loading())
+
         viewModelScope.launch(Dispatchers.IO) {
             val cartID: Long = sharedPreferences.getString(CART_ID, "0")!!.toLong()
             try {
                 val cartList = repository.getCart(cartID)
                 if (cartList.isSuccessful) {
                     cartList.body()?.let {
+                        _response.postValue(NetworkResult.Success(it))
                         _cartList = it.draftOrder?.lineItems as ArrayList<LineItemsItem>
                         val filterd = _cartList.filter { item ->
                             !item.title.equals(TITTLE)
@@ -76,7 +81,6 @@ class CartViewModel @Inject constructor(
                     cartId,
                     DraftOrderResponse(DraftOrder(lineItems = _cartList))
                 )
-                // _subtotal.postValue(subtotalValue - listItem.price!!.toDouble())
 
                 _cart.postValue(NetworkResult.Success(
                     _cartList.filter { item ->

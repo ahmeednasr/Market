@@ -28,7 +28,7 @@ class AuthViewModel @Inject constructor(
     private val fav = DraftOrderResponse(
         DraftOrder(
             lineItems = mutableListOf(
-                LineItemsItem(title = TITTLE, price = "100.00", quantity = 1, sku = "1")
+                LineItemsItem(title = TITTLE, price = "0.0", quantity = 1, sku = "1")
             )
         )
     )
