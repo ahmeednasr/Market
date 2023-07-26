@@ -120,7 +120,6 @@ class ProductDetails : Fragment() {
         imgSlider.setImageList(imageList)
         binding.titleText.text = product.title
         binding.brandText.text = product.vendor
-
         binding.descriptionText.text = product.body_html
         val sizeList = ArrayList<String>()
         for (i in product.options!![0].values.indices) {
@@ -157,6 +156,7 @@ class ProductDetails : Fragment() {
                 Toast.makeText(requireContext(), "size and color not selected", Toast.LENGTH_SHORT)
                     .show()
             }
+
         }
     }
 

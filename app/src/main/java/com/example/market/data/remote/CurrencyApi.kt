@@ -8,8 +8,8 @@ import retrofit2.http.Query
 interface CurrencyApi {
     @GET("convert")
     suspend fun convertCurrency(
-        @Query("to") from: String,
-        @Query("from") to: String,
+        @Query("from") from: String,
+        @Query("to") to: String,
         @Query("amount") amount: String,
     ): Response<ConvertedCurrency>
 }
