@@ -72,23 +72,23 @@ data class Customer(
 )
 
 data class CustomerAddress(
-    val id: Long,
-    val customer_id: Long,
-    val first_name: String,
-    val last_name: String,
-    val company: String?,
-    val address1: String,
-    val address2: String?,
-    val city: String,
-    val province: String,
-    val country: String,
-    val zip: String,
-    val phone: String,
-    val name: String,
-    val province_code: String,
-    val country_code: String,
-    val country_name: String,
-    val default: Boolean
+    val id: Long? = null,
+    val customer_id: Long?= null,
+    val first_name: String?= null,
+    val last_name: String?= null,
+    val company: String?= null,
+    val address1: String?= null,
+    val address2: String?= null,
+    val city: String?= null,
+    val province: String?= null,
+    val country: String?= null,
+    val zip: String?= null,
+    val phone: String?= null,
+    val name: String?= null,
+    val province_code: String?= null,
+    val country_code: String?= null,
+    val country_name: String?= null,
+    val default: Boolean? = false
 )
 
 data class EmailMarketingConsent(
@@ -103,3 +103,4 @@ data class SmsMarketingConsent(
     val consent_updated_at: String?,
     val consent_collected_from: String
 )
+//data class CustomerId(id:Long)

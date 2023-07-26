@@ -1,7 +1,9 @@
 package com.example.market.ui.search
 
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.SharedPreferences
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -10,14 +12,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.market.R
 import com.example.market.auth.AuthActivity
+import com.example.market.data.pojo.LineItemsItem
 import com.example.market.data.pojo.Product
 import com.example.market.databinding.FragmentSearchBinding
 import com.example.market.utils.Constants
+import com.example.market.utils.NetworkManager
 import com.example.market.utils.NetworkResult
 import com.google.android.material.slider.Slider
 import dagger.hilt.android.AndroidEntryPoint
@@ -34,6 +40,9 @@ class SearchFragment : Fragment() {
 
     @Inject
     lateinit var sharedPreferences: SharedPreferences
+
+    @Inject
+    lateinit var networkChangeListener: NetworkManager
 
     private lateinit var currency: String
 
@@ -54,7 +63,7 @@ class SearchFragment : Fragment() {
                 override fun onFavouriteClicked(product: Product) {
                     if (sharedPreferences.getBoolean(Constants.IS_Logged, false)) {
                         if (product.isFavourite) {
-                            viewModel.deleteFavourite(product)
+                            showDeleteAlertDialog(product)
                         } else {
                             viewModel.addFavourite(product)
                         }
@@ -79,26 +88,31 @@ class SearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         currency = sharedPreferences.getString(Constants.CURRENCY_TO_KEY, "") ?: "EGP"
-        Log.i("TAG", currency)
-        viewModel.convertCurrency(
-            "EGP",
-            currency,
-            1.00
-        )
 
+        registerNetworkManager()
+        observeNetworkState()
         observeBackButton()
         setupSliderView()
         setupProductsRecyclerView()
         observeProductsResponse()
         observeSearchText()
         observeSliderChange()
+        observeConversionResult()
+    }
 
+    private fun observeConversionResult() {
         viewModel.conversionResult.observe(viewLifecycleOwner){
             searchAdapter.exchangeRate = it
-            binding.tvMax.text = "${(300*it).roundToInt()} ${currency}"
+            initSliderValues(it)
         }
+    }
 
-        viewModel.getProducts()
+    private fun initSliderValues(exchangeRate: Double) {
+        binding.apply {
+            tvMax.text = "${(300*exchangeRate).roundToInt()} ${currency}"
+            tvMin.text = "${(0*exchangeRate).roundToInt()} ${currency}"
+            tvSlider.text = "${(0*exchangeRate).roundToInt()} ${currency}"
+        }
     }
 
     private fun observeBackButton() {
@@ -136,6 +150,73 @@ class SearchFragment : Fragment() {
                 }
             }
         })
+    }
+
+    private fun registerNetworkManager() {
+        val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        ContextCompat.registerReceiver(
+            requireActivity(),
+            networkChangeListener,
+            filter,
+            ContextCompat.RECEIVER_NOT_EXPORTED
+        )
+    }
+
+    override fun onPause() {
+        super.onPause()
+        activity?.let {
+            LocalBroadcastManager.getInstance(it).unregisterReceiver(networkChangeListener)
+        }
+    }
+
+    private fun observeNetworkState() {
+        NetworkManager.isNetworkAvailable.observe(viewLifecycleOwner) {
+            if (it){
+                viewModel.convertCurrency(
+                    "EGP",
+                    currency,
+                    1.00
+                )
+                viewModel.getProducts()
+                handleWhenThereNetwork()
+            } else {
+                handleWhenNoNetwork()
+            }
+        }
+    }
+
+    private fun handleWhenProductsResponseError() {
+        binding.apply {
+            rvProducts.visibility = View.GONE
+            etSearch.visibility = View.GONE
+            continuousSlider.visibility = View.GONE
+            tvMax.visibility = View.GONE
+            tvMin.visibility = View.GONE
+            tvSlider.visibility = View.GONE
+            tvFilter.visibility = View.GONE
+        }
+    }
+
+    private fun handleWhenNoNetwork() {
+        handleWhenProductsResponseError()
+        binding.apply {
+            ivNoConnection.visibility = View.VISIBLE
+            tvNoConnection.visibility = View.VISIBLE
+        }
+    }
+
+    private fun handleWhenThereNetwork() {
+        binding.apply {
+            continuousSlider.visibility = View.VISIBLE
+            tvMax.visibility = View.VISIBLE
+            tvMin.visibility = View.VISIBLE
+            tvSlider.visibility = View.VISIBLE
+            tvFilter.visibility = View.VISIBLE
+            rvProducts.visibility = View.VISIBLE
+            rvProducts.visibility = View.VISIBLE
+            ivNoConnection.visibility = View.GONE
+            tvNoConnection.visibility = View.GONE
+        }
     }
 
     private fun handleNoDataState() {
@@ -185,6 +266,23 @@ class SearchFragment : Fragment() {
             layoutManager =
                 GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
         }
+    }
+
+    private fun showDeleteAlertDialog(product: Product) {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle(resources.getString(R.string.wraning))
+        builder.setMessage(resources.getString(R.string.wraning_remove))
+        builder.setIcon(android.R.drawable.ic_dialog_info)
+        builder.setPositiveButton(resources.getString(R.string.OK)) { _, _ ->
+            viewModel.deleteFavourite(product)
+        }
+        builder.setNegativeButton(resources.getString(R.string.cancel)) { dialogInterface, _ ->
+            dialogInterface.dismiss()
+        }
+
+        val alertDialog: AlertDialog = builder.create()
+        alertDialog.setCancelable(false)
+        alertDialog.show()
     }
 
     private fun showAlertDialog() {

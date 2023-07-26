@@ -28,6 +28,14 @@ interface ApiService {
         @Header("Accept") accept: String = "application/json", @Body customer: NewUser
     ): Response<CustomerResponse>
 
+    @PUT("customers/{id}.json")
+    suspend fun updateCustomer(
+        @Path("id") customerId: Long,
+        @Body customer: CustomerResponse,
+        @Header("Content-Type") contentType: String = "application/json",
+        @Header("Accept") accept: String = "application/json"
+    ): Response<CustomerResponse>
+
     @GET("customers/{id}/orders.json")
     suspend fun getCustomerOrders(@Path("id") userId: Long): Response<OrderResponse>
 
@@ -36,6 +44,9 @@ interface ApiService {
 
     @GET("customers.json")
     suspend fun getAllCustomers(): Response<CustomersResponse>
+
+    @GET("customers/{id}.json")
+    suspend fun getSingleCustomer(@Path("id") customerID: Long): Response<CustomerResponse>
 
     @POST("draft_orders.json")
     suspend fun createFavouriteDraftOrder(
@@ -64,7 +75,7 @@ interface ApiService {
     @PUT("variants/{id}.json")
     suspend fun getVariantById(
         @Path("id") id: Long,
-    ): Response<Variant>
+    ): Response<VariantResponse>
 
 
     @DELETE("draft_orders/{id}.json")
@@ -87,5 +98,14 @@ interface ApiService {
     @GET("price_rules.json")
     suspend fun getDiscountCodes(
     ): Response<DiscountResponse>
+
+    @PUT("draft_orders/{cartId}.json")
+    suspend fun modifyCart(
+        @Path("cartId") cartId: Long,
+        @Body modifiedList: DraftOrderResponse
+    )
+
+    @GET("draft_orders/{cartId}.json")
+    suspend fun getCart(@Path("cartId") cartId: Long): Response<DraftOrderResponse>
 
 }

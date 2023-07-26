@@ -26,6 +26,18 @@
         android:background="#FFFFFF"
         android:visibility="visible">
 
+        <TextView
+            android:id="@+id/real_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="985.58"
+            android:textColor="#8F8F8F"
+            android:textSize="11dp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/current_price"
+            app:layout_constraintStart_toStartOf="@+id/current_price"
+            app:layout_constraintTop_toBottomOf="@+id/current_price" />
+
         <ImageView
             android:id="@+id/product_icon"
             android:layout_width="100dp"
@@ -153,15 +165,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
+            android:layout_marginBottom="4dp"
             android:text="1"
             app:layout_constraintBottom_toBottomOf="@+id/linearLayout"
-            app:layout_constraintEnd_toStartOf="@+id/linearLayout"
-            app:layout_constraintTop_toTopOf="@+id/linearLayout" />
+            app:layout_constraintEnd_toStartOf="@+id/linearLayout" />
 
         <TextView
             android:id="@+id/textView15"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="2dp"
             android:text="@string/in_stock"
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="@+id/stockNumber"

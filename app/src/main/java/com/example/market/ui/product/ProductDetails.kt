@@ -31,27 +31,32 @@ import kotlin.random.Random
 @AndroidEntryPoint
 class ProductDetails : Fragment() {
 
-    private var _binding : FragmentProductDetailsBinding? = null
+    private var _binding: FragmentProductDetailsBinding? = null
     private val binding get() = _binding!!
-    var avilable: Int = 0
+    var variantId: Long = 0
+    var quantity: Int = 0
 
     @Inject
     lateinit var sharedPreferences: SharedPreferences
-    private val viewModel : ProductDetailsViewModel by viewModels()
+    private val viewModel: ProductDetailsViewModel by viewModels()
     private val reviewAdaptor by lazy { ReviewAdaptor() }
-    var reviewsList = listOf<UserReview>(UserReview("John Doe","Good product with high quality."),
-        UserReview("Mahmoud Ism","As expected to be."),UserReview("Mo Ali",
-            "The product is good but the delivery was bit slow."))
+    var reviewsList = listOf<UserReview>(
+        UserReview("John Doe", "Good product with high quality."),
+        UserReview("Mahmoud Ism", "As expected to be."), UserReview(
+            "Mo Ali",
+            "The product is good but the delivery was bit slow."
+        )
+    )
     private var reviewShow = true
 
-    private val args : ProductDetailsArgs by navArgs()
+    private val args: ProductDetailsArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        _binding = FragmentProductDetailsBinding.inflate(inflater,container,false)
+        _binding = FragmentProductDetailsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -90,8 +95,9 @@ class ProductDetails : Fragment() {
                 itemSelected = adapterView.getItemAtPosition(i).toString()
                 binding.availability.visibility = View.VISIBLE
                 for (i in product.variants!!.indices) {
-                    if (itemSelected == product.variants!![i].option1) {
-                        avilable = product.variants[i].inventory_quantity!!
+                    if (itemSelected == product.variants[i].option1) {
+                        variantId = product.variants[i].id!!
+                        quantity = product.variants[i].inventory_quantity!!
                         binding.availability.text =
                             getString(R.string.availability) + " " + product.variants!![i].inventory_quantity.toString()
                         binding.availability.visibility = View.VISIBLE
@@ -104,7 +110,7 @@ class ProductDetails : Fragment() {
         val random = Random
         val randomDouble = random.nextDouble() * 4 + 1
         val randomRounded = (randomDouble * 2).roundToInt() / 2.0
-        avilable = 0
+        quantity = 0
         binding.availability.visibility = View.GONE
         val imageList = ArrayList<SlideModel>()
         val imgSlider = binding.imageSlider
@@ -131,27 +137,24 @@ class ProductDetails : Fragment() {
         )
         binding.ratingBar.rating = randomRounded.toFloat()
         checkFavorite(product)
-
-        var userId = sharedPreferences.getString(UserID, "")
-        Log.i("USERID", userId.toString())
-        viewModel.setInCart(product)
         reviewAdaptor.submitList(reviewsList)
         setupReviewRecyclerView()
         binding.reviewCard.setOnClickListener {
-            if(reviewShow){
+            if (reviewShow) {
                 binding.revRV.visibility = View.VISIBLE
                 reviewShow = false
-            }else{
+            } else {
                 binding.revRV.visibility = View.GONE
                 reviewShow = true
             }
         }
         binding.addToChartButton.setOnClickListener {
-            if (avilable > 0) {
-                viewModel.setInCart(product)
-                observeAddOperation()
+            Log.i("CART", "$quantity $variantId")
+            if (quantity > 0 && variantId > 0) {
+                viewModel.saveToCart(product, variantId)
             } else {
-                Toast.makeText(requireContext(), "size and color not selected", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "size and color not selected", Toast.LENGTH_SHORT)
+                    .show()
             }
 
         }
@@ -214,28 +217,6 @@ class ProductDetails : Fragment() {
         val alertDialog: AlertDialog = builder.create()
         alertDialog.setCancelable(false)
         alertDialog.show()
-    }
-
-    private fun observeAddOperation() {
-        viewModel.addOperation.observe(viewLifecycleOwner) { response ->
-            when (response) {
-                is NetworkResult.Success -> {
-                    if (response.data == true) {
-                        Toast.makeText(requireContext(), "added", Toast.LENGTH_SHORT).show()
-                    }
-                }
-                is NetworkResult.Error -> {
-                    Toast.makeText(
-                        requireContext(),
-                        response.message,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-                is NetworkResult.Loading -> {
-
-                }
-            }
-        }
     }
 
     private fun setupReviewRecyclerView() {

@@ -118,9 +118,8 @@ class AccountFragment : Fragment() {
         binding.llAddress.setOnClickListener {
             findNavController().navigate(AccountFragmentDirections.actionAccountFragmentToAddressesFragment())
         }
-        binding.ivCart.setOnClickListener {
 
-        }
+        navigateToCart()
         observeSearchButton()
         navigateToOrders()
     }
@@ -139,6 +138,16 @@ class AccountFragment : Fragment() {
         binding.llOrders.setOnClickListener {
             if (sharedPreferences.getBoolean(Constants.IS_Logged, false)) {
                 findNavController().navigate(AccountFragmentDirections.actionAccountFragmentToFavouritesFragment())
+            } else {
+                showAlertDialog()
+            }
+        }
+    }
+
+    private fun navigateToCart() {
+        binding.ivCart.setOnClickListener {
+            if (sharedPreferences.getBoolean(Constants.IS_Logged, false)) {
+                findNavController().navigate(AccountFragmentDirections.actionAccountFragmentToCartFragment())
             } else {
                 showAlertDialog()
             }
@@ -246,12 +255,14 @@ class AccountFragment : Fragment() {
 
     private fun updateUserUI() {
         if (auth.currentUser != null) {
-            viewModel.getOrders()
-            viewModel.getFavourites()
-            binding.tvLogin.text = "Logout"
-            binding.tvUsername.text = auth.currentUser!!.email
+            if (auth.currentUser!!.isEmailVerified) {
+                viewModel.getOrders()
+                viewModel.getFavourites()
+                binding.tvLogin.text = resources.getString(R.string.logout)
+                binding.tvUsername.text = auth.currentUser!!.email
+            }
         } else {
-            binding.tvLogin.text = "Login"
+            binding.tvLogin.text = resources.getString(R.string.login)
             binding.tvUsername.text = ""
         }
     }

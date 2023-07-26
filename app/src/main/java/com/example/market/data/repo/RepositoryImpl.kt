@@ -47,6 +47,10 @@ class RepositoryImpl(
         return apiService.getAllCustomers()
     }
 
+    override suspend fun getCustomer(customerID: Long): Response<CustomerResponse> {
+        return apiService.getSingleCustomer(customerID)
+    }
+
     override suspend fun createFavouriteDraftOrder(favouriteDraftOrder: DraftOrderResponse): Response<DraftOrderResponse> {
         return apiService.createFavouriteDraftOrder(favouriteDraftOrder = favouriteDraftOrder)
     }
@@ -85,7 +89,28 @@ class RepositoryImpl(
     override suspend fun deleteCartByID(id: Long): Response<DraftOrderResponse> {
         return apiService.deleteCartByID(id)
     }
+
     override suspend fun getCustomerOrders(userId: Long): Response<OrderResponse> {
         return apiService.getCustomerOrders(userId)
     }
+
+    override suspend fun modifyCart(cartId: Long, modifiedList: DraftOrderResponse) {
+        apiService.modifyCart(cartId, modifiedList)
+    }
+
+    override suspend fun getCart(cartId: Long): Response<DraftOrderResponse> {
+        return apiService.getCart(cartId)
+    }
+
+    override suspend fun addAddressToUser(
+        userId: Long,
+        address: CustomerResponse
+    ): Response<CustomerResponse> {
+        return apiService.updateCustomer(userId,address)
+    }
+
+    override suspend fun getVariant(id: Long): Response<VariantResponse> {
+        TODO("Not yet implemented")
+    }
+
 }

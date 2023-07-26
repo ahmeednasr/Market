@@ -2,7 +2,9 @@ package com.example.market.ui.home
 
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.SharedPreferences
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +13,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.core.content.ContextCompat.RECEIVER_NOT_EXPORTED
+import androidx.core.content.ContextCompat.registerReceiver
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.market.R
 import com.example.market.auth.AuthActivity
@@ -19,7 +23,9 @@ import com.example.market.data.pojo.PriceRule
 import com.example.market.databinding.FragmentHomeBinding
 import com.example.market.utils.Constants
 import com.example.market.utils.Constants.DISCOUNT_ID
+import com.example.market.utils.NetworkManager
 import com.example.market.utils.NetworkResult
+import com.example.market.utils.Utils
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType
 import com.smarteist.autoimageslider.SliderAnimations
 import dagger.hilt.android.AndroidEntryPoint
@@ -34,6 +40,9 @@ class HomeFragment : Fragment() {
 
     @Inject
     lateinit var sharedPreferences: SharedPreferences
+
+    @Inject
+    lateinit var networkChangeListener: NetworkManager
 
     private val viewModel: HomeViewModel by viewModels()
     private val brandsAdapter by lazy {
@@ -77,9 +86,6 @@ class HomeFragment : Fragment() {
 
         })
     }
-    private val layoutManager by lazy {
-        LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -93,20 +99,73 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        registerNetworkManager()
+        observeNetworkState()
         observeFavouritesButton()
         observeSearchButton()
         setupBrandsRecyclerView()
         observeBrandsResponse()
         observeDiscountResponse()
         observeCartButton()
+        initSlider()
+    }
 
-        binding.rvDiscount.setSliderAdapter(discountAdapter)
-        binding.rvDiscount.setIndicatorAnimation(IndicatorAnimationType.WORM)
-        binding.rvDiscount.setSliderTransformAnimation(SliderAnimations.DEPTHTRANSFORMATION)
-        binding.rvDiscount.startAutoCycle()
+    private fun registerNetworkManager() {
+        val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        registerReceiver(requireActivity(), networkChangeListener, filter, RECEIVER_NOT_EXPORTED)
+    }
 
-        viewModel.getDiscountCodes()
-        viewModel.getBrands()
+    override fun onPause() {
+        super.onPause()
+        activity?.let {
+            LocalBroadcastManager.getInstance(it).unregisterReceiver(networkChangeListener)
+        }
+    }
+
+    private fun observeNetworkState() {
+        NetworkManager.isNetworkAvailable.observe(viewLifecycleOwner) {
+            if (it){
+                viewModel.getDiscountCodes()
+                viewModel.getBrands()
+                handleWhenThereNetwork()
+            } else {
+                handleWhenNoNetwork()
+            }
+        }
+    }
+
+    private fun handleWhenBrandResponseError() {
+        binding.apply {
+            cvBrands.visibility = View.GONE
+            tvBrand.visibility = View.GONE
+        }
+    }
+
+    private fun handleWhenCouponResponseError() {
+        binding.apply {
+            tvDiscount.visibility = View.GONE
+            rvDiscount.visibility = View.GONE
+        }
+    }
+
+    private fun handleWhenNoNetwork() {
+        handleWhenBrandResponseError()
+        handleWhenCouponResponseError()
+        binding.apply {
+            ivNoConnection.visibility = View.VISIBLE
+            tvNoConnection.visibility = View.VISIBLE
+        }
+    }
+
+    private fun handleWhenThereNetwork() {
+        binding.apply {
+            cvBrands.visibility = View.VISIBLE
+            tvBrand.visibility = View.VISIBLE
+            tvDiscount.visibility = View.VISIBLE
+            rvDiscount.visibility = View.VISIBLE
+            ivNoConnection.visibility = View.GONE
+            tvNoConnection.visibility = View.GONE
+        }
     }
 
     private fun observeSearchButton() {
@@ -132,6 +191,15 @@ class HomeFragment : Fragment() {
             } else {
                 showAlertDialog()
             }
+        }
+    }
+
+    private fun initSlider() {
+        binding.apply {
+            rvDiscount.setSliderAdapter(discountAdapter)
+            rvDiscount.setIndicatorAnimation(IndicatorAnimationType.WORM)
+            rvDiscount.setSliderTransformAnimation(SliderAnimations.DEPTHTRANSFORMATION)
+            rvDiscount.startAutoCycle()
         }
     }
 
@@ -166,6 +234,8 @@ class HomeFragment : Fragment() {
                 }
                 is NetworkResult.Error -> {
                     stopShimmer()
+                    handleWhenBrandResponseError()
+                    Utils.showErrorSnackbar(binding.root, "Error happened")
                 }
                 is NetworkResult.Loading -> {
                     startShimmer()
@@ -210,7 +280,9 @@ class HomeFragment : Fragment() {
                     }
                 }
                 is NetworkResult.Error -> {
-
+                    stopShimmer()
+                    handleWhenCouponResponseError()
+                    Utils.showErrorSnackbar(binding.root, "Error happened")
                 }
                 is NetworkResult.Loading -> {
 

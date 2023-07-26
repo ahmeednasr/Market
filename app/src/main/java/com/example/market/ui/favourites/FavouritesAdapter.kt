@@ -9,20 +9,29 @@ import com.bumptech.glide.Glide
 import com.example.market.data.pojo.LineItemsItem
 import com.example.market.data.pojo.Product
 import com.example.market.databinding.ItemFavouriteProductBinding
+import java.math.RoundingMode
+import java.text.DecimalFormat
 
 class FavouritesAdapter(
+    private val currency: String,
     private val clickListener: ProductClickListener
 ) :
     ListAdapter<LineItemsItem, FavouritesAdapter.MyViewHolder>(
         DailyDiffCallback()
     ) {
 
+    var exchangeRate: Double? = null
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         return MyViewHolder.from(parent)
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.bind(getItem(position), clickListener)
+        holder.bind(getItem(position), clickListener, exchangeRate, currency)
     }
 
     interface ProductClickListener {
@@ -33,9 +42,11 @@ class FavouritesAdapter(
     class MyViewHolder(private val binding: ItemFavouriteProductBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(product: LineItemsItem, clickListener: ProductClickListener) {
+        fun bind(product: LineItemsItem, clickListener: ProductClickListener, exchangeRate: Double?, currency: String) {
             binding.apply {
                 tvProductName.text = product.title
+                val price = product.price?.toDouble()?.times(exchangeRate ?: 1.0)
+                tvProductPrice.text = "$currency ${roundOffDecimal(price?:0.0)}"
 
                 Glide
                     .with(binding.root)
@@ -50,6 +61,12 @@ class FavouritesAdapter(
                     clickListener.onItemClicked(product)
                 }
             }
+        }
+
+        private fun roundOffDecimal(number: Double): Double {
+            val df = DecimalFormat("#.##")
+            df.roundingMode = RoundingMode.CEILING
+            return df.format(number).toDouble()
         }
 
         companion object {

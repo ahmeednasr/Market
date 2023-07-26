@@ -23,6 +23,7 @@
     <string name="currency">العمله</string>
     <string name="language">اللغه</string>
     <string name="login">تسجيل الدخول</string>
+    <string name="logout">تسجيل خروج</string>
     <string name="orders">الطلبات</string>
     <string name="saved_items">العناصر المحفوظه</string>
     <string name="phone">الهاتف</string>
@@ -54,4 +55,12 @@
     <string name="login_required">يجب التسجيل</string>
     <string name="alert_msg">يرجى تسجيل الدخول للمتابعة.</string>
     <string name="coupons">كوبونات</string>
+
+    <string name="no_internet_msg">حدث مشكلة في الاتصال, يرجى التحقق من اتصالك بالانترنت!</string>
+    <string name="no_data_msg">غير متوفر حاليا!</string>
+
+
+    <string name="wraning">أنتبه</string>
+    <string name="wraning_remove"> هل تريد الحذف ؟</string>
+    <string name="order_total">الاجمالي:</string>
 </resources>
