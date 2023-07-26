@@ -47,6 +47,10 @@ class RepositoryImpl(
         return apiService.getAllCustomers()
     }
 
+    override suspend fun getCustomer(customerID: Long): Response<CustomerResponse> {
+        return apiService.getSingleCustomer(customerID)
+    }
+
     override suspend fun createFavouriteDraftOrder(favouriteDraftOrder: DraftOrderResponse): Response<DraftOrderResponse> {
         return apiService.createFavouriteDraftOrder(favouriteDraftOrder = favouriteDraftOrder)
     }
@@ -98,8 +102,11 @@ class RepositoryImpl(
         return apiService.getCart(cartId)
     }
 
-    override suspend fun getVariant(id: Long): Response<VariantResponse> {
-        return apiService.getVariantById(id)
+    override suspend fun addAddressToUser(
+        userId: Long,
+        address: CustomerResponse
+    ): Response<CustomerResponse> {
+        return apiService.updateCustomer(userId,address)
     }
 
 }

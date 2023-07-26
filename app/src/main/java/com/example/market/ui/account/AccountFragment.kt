@@ -255,10 +255,12 @@ class AccountFragment : Fragment() {
 
     private fun updateUserUI() {
         if (auth.currentUser != null) {
-            viewModel.getOrders()
-            viewModel.getFavourites()
-            binding.tvLogin.text = "Logout"
-            binding.tvUsername.text = auth.currentUser!!.email
+            if(auth.currentUser!!.isEmailVerified){
+                viewModel.getOrders()
+                viewModel.getFavourites()
+                binding.tvLogin.text = "Logout"
+                binding.tvUsername.text = auth.currentUser!!.email
+            }
         } else {
             binding.tvLogin.text = "Login"
             binding.tvUsername.text = ""

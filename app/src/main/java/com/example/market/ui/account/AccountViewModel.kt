@@ -77,26 +77,26 @@ class AccountViewModel @Inject constructor(
     }
 
     fun getFavourites() {
-        _products.value = NetworkResult.Loading()
-        viewModelScope.launch {
-            val draftResponse = repository.getFavourites(
-                sharedPreferences.getString(Constants.FAVOURITE_ID, "0")!!.toLong()
-            )
-            if (draftResponse.isSuccessful) {
-                draftResponse.body()?.let {
-                    _favourites = it.draftOrder?.lineItems as ArrayList<LineItemsItem>
-                    _products.postValue(
-                        NetworkResult.Success(
-                            _favourites.filter { product ->
-                                !product.title.equals(Constants.TITTLE)
-                            }
-                        )
-                    )
-                }
-            } else {
-                _products.postValue(NetworkResult.Error("error"))
-            }
-        }
+//        _products.value = NetworkResult.Loading()
+//        viewModelScope.launch {
+//            val draftResponse = repository.getFavourites(
+//                sharedPreferences.getString(Constants.FAVOURITE_ID, "0")?.toLong() ?: 0L
+//            )
+//            if (draftResponse.isSuccessful) {
+//                draftResponse.body()?.let {
+//                    _favourites = it.draftOrder?.lineItems as ArrayList<LineItemsItem>
+//                    _products.postValue(
+//                        NetworkResult.Success(
+//                            _favourites.filter { product ->
+//                                !product.title.equals(Constants.TITTLE)
+//                            }
+//                        )
+//                    )
+//                }
+//            } else {
+//                _products.postValue(NetworkResult.Error("error"))
+//            }
+//        }
     }
 
     fun getOrders() {
