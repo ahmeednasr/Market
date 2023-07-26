@@ -20,6 +20,7 @@ interface Repository {
 
     suspend fun createUser(user: NewUser): Response<CustomerResponse>
     suspend fun getAllCustomers(): Response<CustomersResponse>
+    suspend fun getCustomer(customerID : Long): Response<CustomerResponse>
     suspend fun createFavouriteDraftOrder(favouriteDraftOrder: DraftOrderResponse): Response<DraftOrderResponse>
     suspend fun createCartDraftOrder(cartDraftOrder: DraftOrderResponse): Response<DraftOrderResponse>
     suspend fun modifyFavourites(

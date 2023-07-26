@@ -47,6 +47,10 @@ class RepositoryImpl(
         return apiService.getAllCustomers()
     }
 
+    override suspend fun getCustomer(customerID: Long): Response<CustomerResponse> {
+        return apiService.getSingleCustomer(customerID)
+    }
+
     override suspend fun createFavouriteDraftOrder(favouriteDraftOrder: DraftOrderResponse): Response<DraftOrderResponse> {
         return apiService.createFavouriteDraftOrder(favouriteDraftOrder = favouriteDraftOrder)
     }

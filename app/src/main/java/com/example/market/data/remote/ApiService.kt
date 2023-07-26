@@ -37,6 +37,9 @@ interface ApiService {
     @GET("customers.json")
     suspend fun getAllCustomers(): Response<CustomersResponse>
 
+    @GET("customers/{id}.json")
+    suspend fun getSingleCustomer(@Path("id") customerID: Long): Response<CustomerResponse>
+
     @POST("draft_orders.json")
     suspend fun createFavouriteDraftOrder(
         @Header("Content-Type") contentType: String = "application/json",

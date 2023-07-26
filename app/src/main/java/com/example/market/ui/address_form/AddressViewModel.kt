@@ -54,4 +54,8 @@ class AddressViewModel @Inject constructor(
             }
         }
     }
+
+    fun getCustomerAddresses() {
+
+    }
 }

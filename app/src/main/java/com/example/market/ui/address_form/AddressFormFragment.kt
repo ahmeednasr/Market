@@ -30,14 +30,11 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class AddressFormFragment : Fragment() {
+
     private var _binding: FragmentAddressFormBinding? = null
     private val binding get() = _binding!!
     private val viewModel: AddressViewModel by viewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
