@@ -60,7 +60,6 @@ class CartViewModel @Inject constructor(
                     }
                 }
 
-                Log.i("FILTERED", cartList.toString())
             } catch (e: Exception) {
                 Log.i("DRAFT", "errrrrrrrrrrorr>>>>>" + e.toString())
             }
@@ -77,8 +76,8 @@ class CartViewModel @Inject constructor(
                     cartId,
                     DraftOrderResponse(DraftOrder(lineItems = _cartList))
                 )
-                setTotal(_cartList)
-                _subtotal.postValue(subtotalValue - listItem.price!!.toDouble())
+                // _subtotal.postValue(subtotalValue - listItem.price!!.toDouble())
+
                 _cart.postValue(NetworkResult.Success(
                     _cartList.filter { item ->
                         !item.title.equals(TITTLE)
@@ -100,34 +99,37 @@ class CartViewModel @Inject constructor(
             }
         }
     }
+
     private fun setTotal(filterList: ArrayList<LineItemsItem>) {
         subtotalValue = 0.0
     }
 
     fun removeQuantityFromCart(lineItemsItem: LineItemsItem) {
-        var index = _cartList.indexOf(lineItemsItem)
-        val q = _cartList[index].quantity
-        if (q != null) {
-            _cartList[index].quantity = q - 1
-        }
+
         viewModelScope.launch(Dispatchers.IO) {
+            var index = _cartList.indexOf(lineItemsItem)
+            val q = _cartList[index].quantity
+            if (q != null) {
+                _cartList[index].quantity = q - 1
+            }
             val cartId = sharedPreferences.getString(CART_ID, "0")!!.toLong()
             repository.modifyCart(
                 cartId,
                 DraftOrderResponse(DraftOrder(lineItems = _cartList))
             )
-            //_cart.postValue(NetworkResult.Success(_cartList))
         }
     }
 
     fun addNewQuantityToCart(lineItemsItem: LineItemsItem) {
-        var index = _cartList.indexOf(lineItemsItem)
-        val q = _cartList[index].quantity
-        if (q != null) {
-            _cartList[index].quantity = q + 1
-        }
+
         viewModelScope.launch(Dispatchers.IO) {
+            var index = _cartList.indexOf(lineItemsItem)
+            val q = _cartList[index].quantity
+            if (q != null) {
+                _cartList[index].quantity = q + 1
+            }
             val cartId = sharedPreferences.getString(CART_ID, "0")!!.toLong()
+
             repository.modifyCart(
                 cartId,
                 DraftOrderResponse(DraftOrder(lineItems = _cartList))

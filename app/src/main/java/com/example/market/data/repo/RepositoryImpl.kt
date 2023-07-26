@@ -109,4 +109,8 @@ class RepositoryImpl(
         return apiService.updateCustomer(userId,address)
     }
 
+    override suspend fun getVariant(id: Long): Response<VariantResponse> {
+        TODO("Not yet implemented")
+    }
+
 }
