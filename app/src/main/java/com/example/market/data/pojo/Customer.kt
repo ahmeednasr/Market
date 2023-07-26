@@ -103,3 +103,4 @@ data class SmsMarketingConsent(
     val consent_updated_at: String?,
     val consent_collected_from: String
 )
+//data class CustomerId(id:Long)

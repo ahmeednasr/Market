@@ -8,8 +8,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.market.R
@@ -21,6 +23,7 @@ import com.example.market.utils.Constants.CURRENCY_FROM_KEY
 import com.example.market.utils.Constants.SharedPreferences
 import com.example.market.utils.Constants.UserID
 import com.example.market.utils.NetworkResult
+import com.example.market.utils.Utils
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -29,12 +32,19 @@ import javax.inject.Inject
 class CartFragment : Fragment(), CartClickListener {
     private var _binding: FragmentCartBinding? = null
     private val binding get() = _binding!!
-    lateinit var adapter: CartAdapter
     val viewModel: CartViewModel by viewModels()
     private lateinit var currency: String
 
     @Inject
     lateinit var sharedPreferences: SharedPreferences
+    private val cartAdapter by lazy {
+        CartAdapter(
+            sharedPreferences.getString(Constants.CURRENCY_TO_KEY, "") ?: "EGP",
+            this,
+            requireContext()
+        )
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -51,50 +61,21 @@ class CartFragment : Fragment(), CartClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.getCartItems()
-        viewModel.convertCurrency()
-        val to = sharedPreferences.getString(Constants.CURRENCY_TO_KEY, "") ?: "EGP"
-        adapter = CartAdapter(requireContext(), this, to, 51.3)
-        binding.CartRecuclerView.adapter = adapter
-        viewModel.conversionResult.observe(viewLifecycleOwner) { response ->
-            when (response) {
-                is NetworkResult.Success -> {
-                    response.data?.let {
-                        val sharedPreferences = requireContext().getSharedPreferences(
-                            Constants.SharedPreferences,
-                            Context.MODE_PRIVATE
-                        )
+        currency = sharedPreferences.getString(Constants.CURRENCY_TO_KEY, "") ?: "EGP"
+        setupCartRecyclerView()
+        observeCartResponse()
 
-                    }
-                }
-                is NetworkResult.Error -> {
-                    Log.i("LOLOLO", "is ${response.message}")
-                }
-                is NetworkResult.Loading -> {
-                    Log.i("LOLOLO", "${response}")
-                }
-            }
+        viewModel.conversionResult.observe(viewLifecycleOwner) {
+            cartAdapter.exchangeRate = it
+        }
+
+
+        viewModel.convertCurrency("EGP", currency, 1.00)
+        viewModel.subtotal.observe(viewLifecycleOwner) { subTotal ->
+            binding.subTotalPrice.text = String.format("%.1f", subTotal.toDouble())
         }
         binding.ivBackArrow.setOnClickListener {
             findNavController().popBackStack()
-        }
-
-        binding.CartRecuclerView.layoutManager =
-            LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-        viewModel.cart.observe(viewLifecycleOwner) { response ->
-            when (response) {
-                is NetworkResult.Success -> {
-                    response.data?.let {
-                        Log.i("LOLOLO", "$it")
-                        adapter.setCartList(it)
-                    }
-                }
-                is NetworkResult.Error -> {
-                    Log.i("LOLOLO", "is ${response.message}")
-                }
-                is NetworkResult.Loading -> {
-                    Log.i("LOLOLO", "${response}")
-                }
-            }
         }
     }
 
@@ -103,12 +84,40 @@ class CartFragment : Fragment(), CartClickListener {
         _binding = null
     }
 
-    override fun addProduct(product: Product, variantId: Long) {
-
+    private fun observeCartResponse() {
+        viewModel.cart.observe(viewLifecycleOwner) { response ->
+            when (response) {
+                is NetworkResult.Success -> {
+                    response.data?.let {
+                        cartAdapter.submitList(it)
+                    }
+                }
+                is NetworkResult.Error -> {
+                }
+                is NetworkResult.Loading -> {
+                }
+            }
+        }
     }
 
-    override fun deleteProduct(product: Product, variantId: Long) {
+    private fun setupCartRecyclerView() {
+        binding.CartRecuclerView.apply {
+            adapter = cartAdapter
+            layoutManager =
+                LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+        }
     }
+
+    override fun addProduct(lineItemsItem: LineItemsItem, max: Int, current: Int) {
+        if (current < max) {
+            viewModel.addNewQuantityToCart(lineItemsItem)
+        }
+    }
+
+    override fun deleteProduct(lineItemsItem: LineItemsItem) {
+        viewModel.removeQuantityFromCart(lineItemsItem)
+    }
+
 
     override fun removeCartItem(lineItemsItem: LineItemsItem) {
         viewModel.deleteCartItem(lineItemsItem)

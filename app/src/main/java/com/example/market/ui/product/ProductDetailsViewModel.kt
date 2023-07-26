@@ -158,7 +158,13 @@ class ProductDetailsViewModel @Inject constructor(
                             quantity = 1,
                             sku = product.id.toString(),
                             variantId = variantId,
-                            properties = listOf(Property("productImage", product.image?.src))
+                            properties = listOf(
+                                Property("productImage", product.image?.src),
+                                Property(
+                                    "maxQuantity",
+                                    "${product.variants?.get(0)?.inventory_quantity}"
+                                )
+                            )
                         )
                         _cart.add(savedItem)
                         Log.i("CART", _cart.toString())

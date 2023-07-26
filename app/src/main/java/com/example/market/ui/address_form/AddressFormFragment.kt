@@ -144,16 +144,6 @@ class AddressFormFragment : Fragment() {
         }
     }
 
-    private fun enableEditing() {
-        binding.locationBtn.isEnabled = true
-        binding.locationBtn.isClickable = true
-        binding.tiAddress.inputType = InputType.TYPE_CLASS_TEXT
-        binding.tiAddress.isEnabled = true
-        binding.itZipcode.inputType = InputType.TYPE_CLASS_NUMBER
-        binding.itZipcode.isEnabled = true
-        binding.itPhone.inputType = InputType.TYPE_CLASS_PHONE
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         _binding = null

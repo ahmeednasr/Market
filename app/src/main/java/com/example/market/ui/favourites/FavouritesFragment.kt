@@ -52,7 +52,6 @@ class FavouritesFragment : Fragment() {
                         )
                     }
                 }
-
                 override fun onDislikeClicked(product: LineItemsItem) {
                     viewModel.deleteFavourite(product)
                 }

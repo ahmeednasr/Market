@@ -34,14 +34,14 @@ class FavouritesViewModel @Inject constructor(
     private val _conversionResult: MutableLiveData<Double> = MutableLiveData()
     val conversionResult: LiveData<Double> = _conversionResult
 
-    private val coroutineExceptionHandler= CoroutineExceptionHandler { _, throwable ->
+    private val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
         _products.postValue(NetworkResult.Error("error"))
-        Log.e("TAG", ": "+throwable.message)
+        Log.e("TAG", ": " + throwable.message)
     }
 
-    fun convertCurrency(from: String, to: String,amount:Double) {
+    fun convertCurrency(from: String, to: String, amount: Double) {
         viewModelScope.launch {
-            val response = repository.convertCurrency(from, to,amount)
+            val response = repository.convertCurrency(from, to, amount)
             if (response.isSuccessful) {
                 response.body()?.result?.let {
                     _conversionResult.postValue(it)
