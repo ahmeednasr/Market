@@ -80,7 +80,7 @@ class AccountViewModel @Inject constructor(
         _products.value = NetworkResult.Loading()
         viewModelScope.launch {
             val draftResponse = repository.getFavourites(
-                sharedPreferences.getString(Constants.FAVOURITE_ID, "0")!!.toLong()
+                sharedPreferences.getString(Constants.FAVOURITE_ID, "0")?.toLong() ?: 0L
             )
             if (draftResponse.isSuccessful) {
                 draftResponse.body()?.let {

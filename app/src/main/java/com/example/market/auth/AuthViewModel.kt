@@ -24,13 +24,14 @@ class AuthViewModel @Inject constructor(
     private var _customers: MutableLiveData<NetworkResult<List<Customer>>> = MutableLiveData()
     var customers: LiveData<NetworkResult<List<Customer>>> = _customers
 
-    val fav = DraftOrderResponse(DraftOrder(lineItems = mutableListOf(
+    var fav = DraftOrderResponse(DraftOrder(lineItems = mutableListOf(
         LineItemsItem(title = TITTLE, price = "100.00", quantity = 1, sku = "1"))
     )
     )
 
     fun createUser(user: NewUser) {
         _customer.value = NetworkResult.Loading()
+            fav.draftOrder?.email = user.customer.email
         viewModelScope.launch {
             val favResponse = async { repository.createFavouriteDraftOrder(fav) }
             val cartResponse = async { repository.createCartDraftOrder(fav) }
