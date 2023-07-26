@@ -118,9 +118,8 @@ class AccountFragment : Fragment() {
         binding.llAddress.setOnClickListener {
             findNavController().navigate(AccountFragmentDirections.actionAccountFragmentToAddressesFragment())
         }
-        binding.ivCart.setOnClickListener {
 
-        }
+        navigateToCart()
         observeSearchButton()
         navigateToOrders()
     }
@@ -139,6 +138,16 @@ class AccountFragment : Fragment() {
         binding.llOrders.setOnClickListener {
             if (sharedPreferences.getBoolean(Constants.IS_Logged, false)) {
                 findNavController().navigate(AccountFragmentDirections.actionAccountFragmentToFavouritesFragment())
+            } else {
+                showAlertDialog()
+            }
+        }
+    }
+
+    private fun navigateToCart() {
+        binding.ivCart.setOnClickListener {
+            if (sharedPreferences.getBoolean(Constants.IS_Logged, false)) {
+                findNavController().navigate(AccountFragmentDirections.actionAccountFragmentToCartFragment())
             } else {
                 showAlertDialog()
             }
