@@ -38,7 +38,8 @@ class CartAdapter(
         val current = cartList[position]
 
         binding.productName.text = current.name
-        binding.currentPrice.text = (current.price!!.toDouble() * convertedAmount).toString()
+        binding.currentPrice.text =
+            String.format("%.1f", current.price!!.toDouble() * convertedAmount)
         binding.currency.text = currentCurrency
         Glide.with(ctx).load(current.properties?.get(0)?.value)
             .apply(RequestOptions().override(300, 250))
@@ -50,7 +51,6 @@ class CartAdapter(
                 .setTitle(ctx.resources.getString(R.string.app_name))
                 .setMessage(ctx.resources.getString(R.string.rm_msg))
                 .setNeutralButton(ctx.resources.getString(R.string.cancel)) { dialog, which ->
-                    // Respond to neutral button press
                 }
                 .setNegativeButton(ctx.resources.getString(R.string.delete)) { dialog, which ->
                     // Respond to positive button press

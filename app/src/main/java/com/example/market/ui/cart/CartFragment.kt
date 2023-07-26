@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.market.R
@@ -31,6 +32,7 @@ class CartFragment : Fragment(), CartClickListener {
     lateinit var adapter: CartAdapter
     val viewModel: CartViewModel by viewModels()
     private lateinit var currency: String
+
     @Inject
     lateinit var sharedPreferences: SharedPreferences
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,7 +52,7 @@ class CartFragment : Fragment(), CartClickListener {
         super.onViewCreated(view, savedInstanceState)
         viewModel.getCartItems()
         viewModel.convertCurrency()
-        val to =  sharedPreferences.getString(Constants.CURRENCY_TO_KEY, "") ?: "EGP"
+        val to = sharedPreferences.getString(Constants.CURRENCY_TO_KEY, "") ?: "EGP"
         adapter = CartAdapter(requireContext(), this, to, 51.3)
         binding.CartRecuclerView.adapter = adapter
         viewModel.conversionResult.observe(viewLifecycleOwner) { response ->
@@ -72,6 +74,9 @@ class CartFragment : Fragment(), CartClickListener {
                 }
             }
         }
+        binding.ivBackArrow.setOnClickListener {
+            findNavController().popBackStack()
+        }
 
         binding.CartRecuclerView.layoutManager =
             LinearLayoutManager(context, RecyclerView.VERTICAL, false)
@@ -80,7 +85,7 @@ class CartFragment : Fragment(), CartClickListener {
                 is NetworkResult.Success -> {
                     response.data?.let {
                         Log.i("LOLOLO", "$it")
-                        adapter.setCartList(it?.draftOrder?.lineItems as List<LineItemsItem>)
+                        adapter.setCartList(it)
                     }
                 }
                 is NetworkResult.Error -> {

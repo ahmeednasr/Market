@@ -11,6 +11,7 @@ import com.example.market.data.repo.Repository
 import com.example.market.utils.Constants
 import com.example.market.utils.Constants.CART_ID
 import com.example.market.utils.Constants.CURRENCY_FROM_KEY
+import com.example.market.utils.Constants.TITTLE
 import com.example.market.utils.Constants.UserID
 import com.example.market.utils.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,21 +24,30 @@ class CartViewModel @Inject constructor(
     private val repository: Repository,
     private val sharedPreferences: SharedPreferences
 ) : ViewModel() {
-    private val _cart: MutableLiveData<NetworkResult<DraftOrderResponse>> = MutableLiveData()
-    val cart: LiveData<NetworkResult<DraftOrderResponse>> = _cart
-    private var cartID: Long = sharedPreferences.getString(CART_ID, "0")!!.toLong()
+    private var _cart: MutableLiveData<NetworkResult<List<LineItemsItem>>> = MutableLiveData()
+    val cart: LiveData<NetworkResult<List<LineItemsItem>>> = _cart
     private var _cartList = ArrayList<LineItemsItem>()
     private val _conversionResult: MutableLiveData<NetworkResult<Double?>> =
         MutableLiveData(NetworkResult.Loading())
     val conversionResult: LiveData<NetworkResult<Double?>> = _conversionResult
 
     fun getCartItems() {
-        viewModelScope.launch {
+
+        _cart.value = NetworkResult.Loading()
+        viewModelScope.launch(Dispatchers.IO) {
+            val cartID: Long = sharedPreferences.getString(CART_ID, "0")!!.toLong()
+
             try {
-                val cartList = repository.getCart(cartID).body()
-                _cartList = cartList?.draftOrder?.lineItems as ArrayList<LineItemsItem>
+                val cartList = repository.getCart(cartID)
+                if (cartList.isSuccessful) {
+                    cartList.body()?.let {
+                        _cartList = it.draftOrder?.lineItems as ArrayList<LineItemsItem>
+                        _cart.postValue(NetworkResult.Success(_cartList.filter { item ->
+                            !item.title.equals(TITTLE)
+                        }))
+                    }
+                }
                 Log.i("FILTERED", cartList.toString())
-                _cart.postValue(NetworkResult.Success(cartList))
             } catch (e: Exception) {
                 Log.i("DRAFT", "errrrrrrrrrrorr>>>>>" + e.toString())
             }
