@@ -102,4 +102,11 @@ class RepositoryImpl(
         return apiService.getCart(cartId)
     }
 
+    override suspend fun addAddressToUser(
+        userId: Long,
+        address: CustomerResponse
+    ): Response<CustomerResponse> {
+        return apiService.updateCustomer(userId,address)
+    }
+
 }

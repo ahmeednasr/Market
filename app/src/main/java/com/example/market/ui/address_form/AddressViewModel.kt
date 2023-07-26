@@ -6,10 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.market.data.pojo.Address
-import com.example.market.data.pojo.CitiesPojo
-import com.example.market.data.pojo.CustomerAddress
-import com.example.market.data.pojo.GovernmentPojo
+import com.example.market.data.pojo.*
 import com.example.market.data.repo.Repository
 import com.example.market.utils.Constants
 import com.example.market.utils.NetworkResult
@@ -32,6 +29,9 @@ class AddressViewModel @Inject constructor(
     private val _addresses: MutableLiveData<NetworkResult<List<CustomerAddress>>> =
         MutableLiveData(NetworkResult.Loading())
     val address: LiveData<NetworkResult<List<CustomerAddress>>> = _addresses
+    private val _customer: MutableLiveData<NetworkResult<CustomerResponse>> =
+        MutableLiveData(NetworkResult.Loading())
+    val costumer: LiveData<NetworkResult<CustomerResponse>> = _customer
 
     fun getGovernments(country: String) {
         viewModelScope.launch {
@@ -69,12 +69,22 @@ class AddressViewModel @Inject constructor(
             val response = repository.getCustomer(id?:0)
             if(response.isSuccessful){
                 response.body()?.let {
+                    _customer.postValue(NetworkResult.Success(it))
                     _addresses.postValue(NetworkResult.Success(it.customer.addresses!!))
                 }
             } else {
                 _addresses.postValue(NetworkResult.Error("Error"))
+                _customer.postValue(NetworkResult.Error("Error"))
             }
         }
 
     }
+
+    fun modifyCustomerAddress(address: CustomerResponse){
+        viewModelScope.launch {
+            val id = sharedPreferences.getString(Constants.UserID,"0")?.toLong()
+            repository.addAddressToUser(id?:0,address)
+        }
+    }
+
 }

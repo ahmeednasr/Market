@@ -13,7 +13,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.market.R
 import com.example.market.data.pojo.Address
+import com.example.market.data.pojo.Customer
 import com.example.market.data.pojo.CustomerAddress
+import com.example.market.data.pojo.CustomerResponse
 import com.example.market.databinding.FragmentAccountBinding
 import com.example.market.databinding.FragmentAddressesBinding
 import com.example.market.ui.address_form.AddressViewModel
@@ -37,6 +39,7 @@ class AddressesFragment : Fragment() {
             }
 
             override fun onItemDeleted(address: CustomerAddress) {
+
             }
         })
     }
@@ -52,8 +55,13 @@ class AddressesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
         binding.btnAdd.setOnClickListener {
             findNavController().navigate(R.id.action_addressesFragment_to_addressFormFragment)
+        }
+        binding.ivBackArrow.setOnClickListener {
+            findNavController().popBackStack()
         }
 
         viewModel.getCustomerAddresses()
@@ -65,15 +73,11 @@ class AddressesFragment : Fragment() {
     }
 
     private fun getAddressesList(){
-        viewModel.address.observe(viewLifecycleOwner){response ->
+        viewModel.costumer.observe(viewLifecycleOwner){response ->
             when(response){
                 is NetworkResult.Success -> {
                     response.data?.let {
-                        if (it.isEmpty()) {
-
-                        } else {
-                            addressesAdaptor.submitList(it)
-                        }
+                        addressesAdaptor.submitList(it.customer.addresses)
                     }
                 }
                 is NetworkResult.Error -> {
@@ -85,6 +89,26 @@ class AddressesFragment : Fragment() {
             }
         }
     }
+
+    private fun updateAddressesList(address: CustomerAddress){
+        viewModel.address.observe(viewLifecycleOwner){response ->
+            when(response){
+                is NetworkResult.Success -> {
+                    response.data?.let {
+
+                    }
+                }
+                is NetworkResult.Error -> {
+                    Utils.showErrorSnackbar(binding.root, "Error happened")
+                }
+                is NetworkResult.Loading -> {
+                    Toast.makeText(requireContext(),"Loading Data",Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+
+    }
+
 
 
     override fun onDestroyView() {

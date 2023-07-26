@@ -31,7 +31,6 @@ class AuthViewModel @Inject constructor(
 
     fun createUser(user: NewUser) {
         _customer.value = NetworkResult.Loading()
-            fav.draftOrder?.email = user.customer.email
         viewModelScope.launch {
             val favResponse = async { repository.createFavouriteDraftOrder(fav) }
             val cartResponse = async { repository.createCartDraftOrder(fav) }

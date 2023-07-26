@@ -43,4 +43,6 @@ interface Repository {
     )
 
     suspend fun getCart(@Path("cartId") cartId: Long): Response<DraftOrderResponse>
+
+    suspend fun addAddressToUser(userId: Long,address: CustomerResponse):Response<CustomerResponse>
 }
