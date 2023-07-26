@@ -82,7 +82,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar_home_fragment" />
 
-
         <TextView
             android:id="@+id/tv_brand"
             android:layout_width="wrap_content"

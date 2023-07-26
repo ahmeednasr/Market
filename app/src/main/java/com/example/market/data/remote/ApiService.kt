@@ -31,6 +31,14 @@ interface ApiService {
     @POST("customers/{id}.json")
     suspend fun updateCustomer(
         @Path("id") customerId: Long,
+        @Body customer: Customer,
+        @Header("Content-Type") contentType: String = "application/json",
+        @Header("Accept") accept: String = "application/json"
+    ): Response<CustomerResponse>
+
+    @POST("customers/{id}.json")
+    suspend fun updateCustomerAddress(
+        @Path("id") customerId: Long,
         @Body address: CustomerAddress,
         @Header("Content-Type") contentType: String = "application/json",
         @Header("Accept") accept: String = "application/json"
