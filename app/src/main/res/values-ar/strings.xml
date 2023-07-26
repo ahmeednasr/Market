@@ -54,4 +54,7 @@
     <string name="login_required">يجب التسجيل</string>
     <string name="alert_msg">يرجى تسجيل الدخول للمتابعة.</string>
     <string name="coupons">كوبونات</string>
+
+    <string name="no_internet_msg">حدث مشكلة في الاتصال, يرجى التحقق من اتصالك بالانترنت!</string>
+    <string name="no_data_msg">غير متوفر حاليا!</string>
 </resources>
