@@ -1,5 +1,6 @@
 package com.example.market.ui.favourites
 
+import android.content.Intent
 import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.net.ConnectivityManager
@@ -9,11 +10,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.market.R
+import com.example.market.auth.AuthActivity
 import com.example.market.data.pojo.LineItemsItem
 import com.example.market.databinding.FragmentFavouritesBinding
 import com.example.market.ui.account.AccountFragmentDirections
@@ -54,7 +58,7 @@ class FavouritesFragment : Fragment() {
                 }
 
                 override fun onDislikeClicked(product: LineItemsItem) {
-                    viewModel.deleteFavourite(product)
+                    showDeleteAlertDialog(product)
                 }
             })
     }
@@ -205,6 +209,23 @@ class FavouritesFragment : Fragment() {
             layoutManager =
                 GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
         }
+    }
+
+    private fun showDeleteAlertDialog(product: LineItemsItem) {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle(resources.getString(R.string.wraning))
+        builder.setMessage(resources.getString(R.string.wraning_remove))
+        builder.setIcon(android.R.drawable.ic_dialog_info)
+        builder.setPositiveButton(resources.getString(R.string.OK)) { _, _ ->
+            viewModel.deleteFavourite(product)
+        }
+        builder.setNegativeButton(resources.getString(R.string.cancel)) { dialogInterface, _ ->
+            dialogInterface.dismiss()
+        }
+
+        val alertDialog: AlertDialog = builder.create()
+        alertDialog.setCancelable(false)
+        alertDialog.show()
     }
 
     override fun onDestroyView() {
