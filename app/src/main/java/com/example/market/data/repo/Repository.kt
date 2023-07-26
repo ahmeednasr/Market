@@ -3,7 +3,6 @@ package com.example.market.data.repo
 import com.example.market.data.pojo.*
 import retrofit2.Response
 import retrofit2.http.Body
-import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface Repository {
@@ -42,4 +41,5 @@ interface Repository {
     )
 
     suspend fun getCart(@Path("cartId") cartId: Long): Response<DraftOrderResponse>
+    suspend fun getVariant(@Path("id") id: Long): Response<VariantResponse>
 }

@@ -6,13 +6,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.market.data.pojo.BrandResponse
-import com.example.market.data.pojo.CartResponse
+import com.example.market.data.pojo.*
 import com.example.market.data.repo.Repository
 import com.example.market.utils.Constants
+import com.example.market.utils.Constants.CART_ID
+import com.example.market.utils.Constants.CURRENCY_FROM_KEY
 import com.example.market.utils.Constants.UserID
 import com.example.market.utils.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,33 +23,71 @@ class CartViewModel @Inject constructor(
     private val repository: Repository,
     private val sharedPreferences: SharedPreferences
 ) : ViewModel() {
-    private val _cart: MutableLiveData<NetworkResult<CartResponse>> = MutableLiveData()
-    val cart: LiveData<NetworkResult<CartResponse>> = _cart
-    private var userID: Long = sharedPreferences.getString(UserID, "0")!!.toLong()
+    private val _cart: MutableLiveData<NetworkResult<DraftOrderResponse>> = MutableLiveData()
+    val cart: LiveData<NetworkResult<DraftOrderResponse>> = _cart
+    private var cartID: Long = sharedPreferences.getString(CART_ID, "0")!!.toLong()
+    private var _cartList = ArrayList<LineItemsItem>()
+    private val _conversionResult: MutableLiveData<NetworkResult<Double?>> =
+        MutableLiveData(NetworkResult.Loading())
+    val conversionResult: LiveData<NetworkResult<Double?>> = _conversionResult
+
     fun getCartItems() {
         viewModelScope.launch {
             try {
-                val cartList = repository.getDraftOrders().body()
+                val cartList = repository.getCart(cartID).body()
+                _cartList = cartList?.draftOrder?.lineItems as ArrayList<LineItemsItem>
                 Log.i("FILTERED", cartList.toString())
-
-                val filtered = cartList?.draft_orders?.filter {
-                    it.customer?.id == userID && it.tags == "cart"
-                }
-                Log.i("FILTERED", "issss>>>>>" + filtered)
-                _cart.postValue(NetworkResult.Success(CartResponse(filtered!!)))
+                _cart.postValue(NetworkResult.Success(cartList))
             } catch (e: Exception) {
                 Log.i("DRAFT", "errrrrrrrrrrorr>>>>>" + e.toString())
             }
         }
     }
 
-    fun deleteCartItem(cartId: Long) {
-        viewModelScope.launch {
+    fun deleteCartItem(listItem: LineItemsItem) {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
-                repository.deleteCartByID(cartId)
-                getCartItems()
+                val cartId = sharedPreferences.getString(CART_ID, "0")!!.toLong()
+                Log.i("CART", cartId.toString())
+                val draftResponse = repository.getCart(
+                    cartId
+                )
+                if (draftResponse.isSuccessful) {
+                    draftResponse.body()?.let {
+
+                        Log.i("CART", it.toString())
+                        val fetchedList = it.draftOrder?.lineItems as MutableList
+                        fetchedList.remove(listItem)
+                        repository.modifyCart(
+                            cartId ?: 0,
+                            DraftOrderResponse(DraftOrder(lineItems = fetchedList))
+                        )
+                        getCartItems()
+                    }
+                }
             } catch (e: Exception) {
                 Log.i("DRAFT", "errrrrrrrrrrorr>>>>>" + e.toString())
+            }
+        }
+    }
+
+    fun convertCurrency() {
+        val to = sharedPreferences.getString(CURRENCY_FROM_KEY, "").toString()
+        Log.i("DRAFT", "errrrrrrrrrrorr>>>>> " + to)
+
+        viewModelScope.launch {
+            val response = repository.convertCurrency("EGP", to, 1.0)
+            Log.i("DRAFT", "errrrrrrrrrrorr>>>>> " + response)
+            if (response.isSuccessful) {
+                response.body()?.let {
+                    Log.i("DRAFT", "errrrrrrrrrrorr>>>>> " + it.result)
+
+                    _conversionResult.postValue(NetworkResult.Success(it.result))
+                }
+            } else {
+                Log.i("DRAFT", "errrrrrrrrrrorr>>>>> " + response)
+
+                _conversionResult.postValue(NetworkResult.Error("error"))
             }
         }
     }

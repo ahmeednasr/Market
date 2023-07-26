@@ -98,4 +98,8 @@ class RepositoryImpl(
         return apiService.getCart(cartId)
     }
 
+    override suspend fun getVariant(id: Long): Response<VariantResponse> {
+        return apiService.getVariantById(id)
+    }
+
 }

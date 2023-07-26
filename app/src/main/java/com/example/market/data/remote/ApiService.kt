@@ -64,7 +64,7 @@ interface ApiService {
     @PUT("variants/{id}.json")
     suspend fun getVariantById(
         @Path("id") id: Long,
-    ): Response<Variant>
+    ): Response<VariantResponse>
 
 
     @DELETE("draft_orders/{id}.json")

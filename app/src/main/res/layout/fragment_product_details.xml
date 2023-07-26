@@ -12,8 +12,8 @@
         android:layout_height="match_parent"
         android:layout_margin="16dp"
         android:orientation="vertical"
-        android:weightSum="4"
         android:scrollIndicators="none"
+        android:weightSum="4"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -38,7 +38,7 @@
                     app:iss_auto_cycle="true"
                     app:iss_delay="1000"
                     app:iss_period="1000"
-                    app:iss_text_align="CENTER"/>
+                    app:iss_text_align="CENTER" />
 
                 <TextView
                     android:id="@+id/titleText"
@@ -61,7 +61,7 @@
                         android:layout_gravity="center"
                         android:layout_margin="8dp"
                         android:layout_weight="0.1"
-                        android:text="Brand:"/>
+                        android:text="Brand:" />
 
                     <TextView
                         android:id="@+id/brandText"
@@ -97,7 +97,7 @@
                         android:layout_margin="16dp"
                         android:layout_weight="0.75"
                         android:text="Rating:"
-                        android:textSize="16sp"/>
+                        android:textSize="16sp" />
 
                     <RatingBar
                         android:id="@+id/ratingBar"
@@ -114,8 +114,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="-Description-"
-                    android:textStyle="bold"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/descriptionText"
@@ -140,7 +140,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="-Select Your Options-"
-                    android:textSize="14sp"/>
+                    android:textSize="14sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -149,6 +149,7 @@
                     android:orientation="horizontal">
 
                     <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/secondLayout"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -165,6 +166,7 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/firstLayout"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -187,10 +189,10 @@
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/reviewCard"
-                    android:elevation="32dp"
-                    android:layout_margin="16dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:elevation="32dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -201,16 +203,16 @@
                             android:id="@+id/textView12"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Reviews"
                             android:layout_margin="16dp"
-                            android:textStyle="bold"
-                            android:textSize="14sp"/>
+                            android:text="Reviews"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/revRV"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:visibility="gone"/>
+                            android:visibility="gone" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
