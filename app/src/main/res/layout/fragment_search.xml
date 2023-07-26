@@ -104,7 +104,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="8dp"
-                tools:text="25EGP"
+                tools:text="0 EGP"
                 android:textSize="18sp"/>
         </LinearLayout>
 
@@ -117,12 +117,22 @@
             android:weightSum="10"
             android:layout_weight="1">
 
+            <TextView
+                android:id="@+id/tv_min"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:layout_marginHorizontal="8dp"
+                android:layout_gravity="center_vertical"
+                tools:text="0 EGP"
+                android:textSize="14sp"/>
+
             <com.google.android.material.slider.Slider
                 android:id="@+id/continuousSlider"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="8"
+                android:layout_weight="6"
+                android:layout_gravity="center_vertical"
                 android:valueFrom="0.0"
                 android:valueTo="300.0"
                 app:labelBehavior="withinBounds" />
@@ -133,13 +143,12 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:layout_marginHorizontal="8dp"
-                android:layout_gravity="center"
+                android:layout_gravity="center_vertical"
                 tools:text="300 EGP"
                 android:textSize="14sp"/>
 
         </LinearLayout>
     </LinearLayout>
-
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_products"
@@ -184,6 +193,39 @@
         app:layout_constraintEnd_toEndOf="@+id/iv_no_data"
         app:layout_constraintStart_toStartOf="@+id/iv_no_data"
         app:layout_constraintTop_toBottomOf="@+id/iv_no_data" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/iv_no_connection"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        app:cardCornerRadius="150dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_search_fragment">
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_wifi_off"/>
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/tv_no_connection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:paddingHorizontal="32dp"
+        android:text="@string/no_internet_msg"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:textStyle="italic"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_no_connection" />
 
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/shimmer_view_container"

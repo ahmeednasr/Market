@@ -57,4 +57,8 @@
 
     <string name="no_internet_msg">حدث مشكلة في الاتصال, يرجى التحقق من اتصالك بالانترنت!</string>
     <string name="no_data_msg">غير متوفر حاليا!</string>
+
+
+    <string name="wraning">أنتبه</string>
+    <string name="wraning_remove"> هل تريد الحذف ؟</string>
 </resources>
