@@ -21,6 +21,7 @@ import com.example.market.R
 import com.example.market.auth.AuthActivity
 import com.example.market.data.pojo.Product
 import com.example.market.databinding.FragmentProductDetailsBinding
+import com.example.market.ui.home.HomeFragmentDirections
 import com.example.market.utils.Constants
 import com.example.market.utils.Constants.UserID
 import com.example.market.utils.NetworkResult
@@ -72,10 +73,19 @@ class ProductDetails : Fragment() {
             findNavController().popBackStack()
         }
         binding.ivFavourite.setOnClickListener {
-            findNavController().navigate(ProductDetailsDirections.actionProductDetailsToFavouritesFragment())
+            if (sharedPreferences.getBoolean(Constants.IS_Logged, false)) {
+                findNavController().navigate(ProductDetailsDirections.actionProductDetailsToFavouritesFragment())
+            } else {
+                showAlertDialog()
+            }
         }
+
         binding.ivCart.setOnClickListener {
-            findNavController().navigate(ProductDetailsDirections.actionProductDetailsToCartFragment())
+            if (sharedPreferences.getBoolean(Constants.IS_Logged, false)) {
+                findNavController().navigate(ProductDetailsDirections.actionProductDetailsToCartFragment())
+            } else {
+                showAlertDialog()
+            }
         }
         binding.ivSearch.setOnClickListener {
             findNavController().navigate(ProductDetailsDirections.actionProductDetailsToSearchFragment())
@@ -170,15 +180,20 @@ class ProductDetails : Fragment() {
                 reviewShow = true
             }
         }
+
         binding.addToChartButton.setOnClickListener {
             Log.i("CART", "$quantity $variantId")
-            if (quantity > 0 && variantId > 0) {
-                viewModel.saveToCart(product, variantId)
-            } else {
-                Toast.makeText(requireContext(), "size and color not selected", Toast.LENGTH_SHORT)
-                    .show()
-            }
 
+            if (sharedPreferences.getBoolean(Constants.IS_Logged, false)) {
+                if (quantity > 0 && variantId > 0) {
+                    viewModel.saveToCart(product, variantId)
+                } else {
+                    Toast.makeText(requireContext(), "size and color not selected", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            } else {
+                showAlertDialog()
+            }
         }
     }
 
