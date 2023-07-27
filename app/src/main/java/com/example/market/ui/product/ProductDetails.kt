@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.denzcoskun.imageslider.models.SlideModel
@@ -65,6 +66,19 @@ class ProductDetails : Fragment() {
 
         viewModel.getProduct(args.productId)
         observeProductResponse()
+
+        binding.backBtn.setOnClickListener {
+            findNavController().popBackStack()
+        }
+        binding.ivFavourite.setOnClickListener {
+            findNavController().navigate(ProductDetailsDirections.actionProductDetailsToFavouritesFragment())
+        }
+        binding.ivCart.setOnClickListener {
+            findNavController().navigate(ProductDetailsDirections.actionProductDetailsToCartFragment())
+        }
+        binding.ivSearch.setOnClickListener {
+            findNavController().navigate(ProductDetailsDirections.actionProductDetailsToSearchFragment())
+        }
     }
 
     override fun onDestroy() {
