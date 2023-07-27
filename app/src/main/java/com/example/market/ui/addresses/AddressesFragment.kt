@@ -33,13 +33,15 @@ class AddressesFragment : Fragment() {
     private val addressesAdaptor by lazy {
         AddressesAdaptor(object : AddressesAdaptor.AddressClickListener{
             override fun onSelectedClicked(address: CustomerAddress) {
+                viewModel.setDefaultAddress(address)
+                getAddressesList()
             }
 
             override fun onItemDeSelected(address: CustomerAddress) {
             }
 
             override fun onItemDeleted(address: CustomerAddress) {
-
+                viewModel.deleteAddress(address)
             }
         })
     }
@@ -84,32 +86,11 @@ class AddressesFragment : Fragment() {
                     Utils.showErrorSnackbar(binding.root, "Error happened")
                 }
                 is NetworkResult.Loading -> {
-                    Toast.makeText(requireContext(),"Loading Data",Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(),"Loading Data",Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
-
-    private fun updateAddressesList(address: CustomerAddress){
-        viewModel.address.observe(viewLifecycleOwner){response ->
-            when(response){
-                is NetworkResult.Success -> {
-                    response.data?.let {
-
-                    }
-                }
-                is NetworkResult.Error -> {
-                    Utils.showErrorSnackbar(binding.root, "Error happened")
-                }
-                is NetworkResult.Loading -> {
-                    Toast.makeText(requireContext(),"Loading Data",Toast.LENGTH_LONG).show()
-                }
-            }
-        }
-
-    }
-
-
 
     override fun onDestroyView() {
         super.onDestroyView()

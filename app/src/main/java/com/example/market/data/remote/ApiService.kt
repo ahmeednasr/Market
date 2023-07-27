@@ -108,4 +108,10 @@ interface ApiService {
     @GET("draft_orders/{cartId}.json")
     suspend fun getCart(@Path("cartId") cartId: Long): Response<DraftOrderResponse>
 
+    @DELETE("customers/{userID}/addresses/{address_id}.json")
+    suspend fun deleteAddress(@Path("userID") userId: Long,@Path("address_id") addressId : Long)
+
+    @PUT("customers/{userID}/addresses/{address_id}/default.json")
+    suspend fun setDefault(@Path("userID") userId: Long,@Path("address_id") addressId : Long)
+
 }

@@ -45,4 +45,6 @@ interface Repository {
     suspend fun getCart(@Path("cartId") cartId: Long): Response<DraftOrderResponse>
 
     suspend fun addAddressToUser(userId: Long,address: CustomerResponse):Response<CustomerResponse>
+    suspend fun deleteAddress(userId: Long,addressId: Long)
+    suspend fun setDefault(userId: Long,addressId: Long)
 }

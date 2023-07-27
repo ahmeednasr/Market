@@ -109,4 +109,12 @@ class RepositoryImpl(
         return apiService.updateCustomer(userId,address)
     }
 
+    override suspend fun deleteAddress(userId: Long, addressId: Long) {
+        apiService.deleteAddress(userId,addressId)
+    }
+
+    override suspend fun setDefault(userId: Long, addressId: Long) {
+        apiService.setDefault(userId,addressId)
+    }
+
 }

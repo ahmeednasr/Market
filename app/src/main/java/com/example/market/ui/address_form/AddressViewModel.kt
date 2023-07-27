@@ -32,6 +32,7 @@ class AddressViewModel @Inject constructor(
     private val _customer: MutableLiveData<NetworkResult<CustomerResponse>> =
         MutableLiveData(NetworkResult.Loading())
     val costumer: LiveData<NetworkResult<CustomerResponse>> = _customer
+    private var addressList = ArrayList<CustomerAddress>()
 
     fun getGovernments(country: String) {
         viewModelScope.launch {
@@ -69,8 +70,10 @@ class AddressViewModel @Inject constructor(
             val response = repository.getCustomer(id?:0)
             if(response.isSuccessful){
                 response.body()?.let {
+                    addressList = it.customer.addresses as ArrayList<CustomerAddress>
                     _customer.postValue(NetworkResult.Success(it))
                     _addresses.postValue(NetworkResult.Success(it.customer.addresses!!))
+
                 }
             } else {
                 _addresses.postValue(NetworkResult.Error("Error"))
@@ -83,7 +86,28 @@ class AddressViewModel @Inject constructor(
     fun modifyCustomerAddress(address: CustomerResponse){
         viewModelScope.launch {
             val id = sharedPreferences.getString(Constants.UserID,"0")?.toLong()
-            repository.addAddressToUser(id?:0,address)
+            val response = repository.addAddressToUser(id?:0,address)
+            if(response.isSuccessful){
+                response.body()?.let {
+                    _addresses.postValue(NetworkResult.Success(it.customer.addresses!!))
+                }
+            }
+        }
+    }
+
+    fun deleteAddress(address: CustomerAddress){
+        viewModelScope.launch {
+            val id = sharedPreferences.getString(Constants.UserID,"0")?.toLong()
+            repository.deleteAddress(id?:0,address.id?:0)
+            getCustomerAddresses()
+        }
+    }
+
+    fun setDefaultAddress(address: CustomerAddress){
+        viewModelScope.launch {
+            val id = sharedPreferences.getString(Constants.UserID,"0")?.toLong()
+            repository.setDefault(id?:0,address.id?:0)
+            getCustomerAddresses()
         }
     }
 
