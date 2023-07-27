@@ -46,10 +46,8 @@ class CartAdapter(
             currency: String,
             ctx: Context
         ) {
-            binding.realPrice.text = current.price
             binding.productName.text = current.name
-            val price =
-                current.quantity?.times(current.price?.toDouble()?.times(exchangeRate ?: 1.0)!!)
+            val price = current.price?.toDouble()?.times(exchangeRate ?: 1.0)
             binding.currentPrice.text = "${roundOffDecimal(price ?: 0.0)}"
             binding.currency.text = currency
             Glide.with(ctx).load(current.properties?.get(0)?.value)
@@ -77,14 +75,11 @@ class CartAdapter(
                 if (currentQuantity!! < max!!.toInt()) {
 
                     currentQuantity += 1
-
-                    binding.currentPrice.text =
-                        "${roundOffDecimal(price?.times(currentQuantity) ?: 0.0)}"
                     binding.itemCount.text = currentQuantity.toString()
                     onClick.addProduct(current, max.toInt(), currentQuantity)
 
                 } else {
-                    Toast.makeText(ctx, "cant add", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(ctx, "cant add more", Toast.LENGTH_SHORT).show()
                 }
 
             }
@@ -92,8 +87,6 @@ class CartAdapter(
                 var currentQuantity = current.quantity
                 if (currentQuantity!! > 1) {
                     currentQuantity -= 1
-                    binding.currentPrice.text = "${roundOffDecimal((currentQuantity * price!!))}"
-
                     binding.itemCount.text = currentQuantity.toString()
                     onClick.deleteProduct(current)
                 } else {

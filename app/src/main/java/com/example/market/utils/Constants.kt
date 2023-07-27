@@ -30,4 +30,6 @@ object Constants {
     const val DISCOUNT_ID = "DISCOUNT_ID"
     const val TITTLE = "shoes"
     const val IS_Logged = "login"
+    const val Exchange_Value = "Exchange_Value"
+
 }

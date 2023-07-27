@@ -25,6 +25,7 @@ import com.example.market.utils.Constants.SharedPreferences
 import com.example.market.utils.Constants.UserID
 import com.example.market.utils.NetworkResult
 import com.example.market.utils.Utils
+import com.example.market.utils.Utils.roundOffDecimal
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -35,6 +36,7 @@ class CartFragment : Fragment(), CartClickListener {
     private val binding get() = _binding!!
     val viewModel: CartViewModel by viewModels()
     private lateinit var currency: String
+    var currentPrice: Double = 0.0
 
     @Inject
     lateinit var sharedPreferences: SharedPreferences
@@ -62,14 +64,22 @@ class CartFragment : Fragment(), CartClickListener {
         currency = sharedPreferences.getString(Constants.CURRENCY_TO_KEY, "") ?: "EGP"
         setupCartRecyclerView()
         observeCartResponse()
+        viewModel.convertCurrency("EGP", currency, 1.00)
 
         viewModel.conversionResult.observe(viewLifecycleOwner) {
             cartAdapter.exchangeRate = it
+
+        }
+        viewModel.response.observe(viewLifecycleOwner) {
+            when(it){
+                is NetworkResult.Success->binding.subTotalPrice.text=it.data?.draftOrder?.totalPrice
+                else -> {}
+            }
+
         }
         binding.totalCurrancy.text = currency
-        viewModel.convertCurrency("EGP", currency, 1.00)
         viewModel.subtotal.observe(viewLifecycleOwner) { subTotal ->
-            binding.subTotalPrice.text = String.format("%.1f", subTotal.toDouble())
+
         }
         binding.ivBackArrow.setOnClickListener {
             findNavController().popBackStack()
@@ -124,6 +134,7 @@ class CartFragment : Fragment(), CartClickListener {
 
     override fun addProduct(lineItemsItem: LineItemsItem, max: Int, current: Int) {
         if (current < max) {
+
             viewModel.addNewQuantityToCart(lineItemsItem)
         }
     }
