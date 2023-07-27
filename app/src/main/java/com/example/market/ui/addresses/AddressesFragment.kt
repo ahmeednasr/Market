@@ -38,6 +38,7 @@ class AddressesFragment : Fragment() {
             }
 
             override fun onItemDeSelected(address: CustomerAddress) {
+                Toast.makeText(requireContext(),"Default Location Has Been Changed",Toast.LENGTH_SHORT).show()
             }
 
             override fun onItemDeleted(address: CustomerAddress) {
