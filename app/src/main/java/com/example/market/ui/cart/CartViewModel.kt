@@ -133,11 +133,14 @@ class CartViewModel @Inject constructor(
                 _cartList[index].quantity = q + 1
             }
             val cartId = sharedPreferences.getString(CART_ID, "0")!!.toLong()
+            Log.d("LIST", _cartList.size.toString())
+            Log.d("LIST", _cartList.toString())
 
             repository.modifyCart(
                 cartId,
                 DraftOrderResponse(DraftOrder(lineItems = _cartList))
             )
+
         }
     }
 }

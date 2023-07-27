@@ -130,7 +130,11 @@ class ProductDetailsViewModel @Inject constructor(
                         Log.i("CART", _cart.toString())
                         repository.modifyCart(
                             cartId ?: 0,
-                            DraftOrderResponse(DraftOrder(lineItems = _cart))
+                            DraftOrderResponse(
+                                DraftOrder(
+                                    lineItems = _cart,
+                                )
+                            )
                         )
                     }
                 }
