@@ -167,4 +167,249 @@ class RepositoryImplTest {
                 currency.currencies[0].currency
             )
         }
+
+    @Test
+    fun `createUser should return success state when API response is successful`() =
+        runBlocking {
+            // Mock the API response
+            val user = NewUser(User(email = "mf502308@gmail.com"))
+            val userRes = CustomerResponse(Customer(email = "mf502308@gmail.com"))
+
+            `when`(apiService.postCustomer(customer = user)).thenReturn(Response.success(userRes))
+
+            // Invoke the function under test
+            val result = repoImpl.createUser(user)
+
+            assertEquals(result.body()?.customer, userRes.customer)
+            assertEquals(
+                result.body()?.customer?.email,
+                user.customer.email
+            )
+        }
+
+    @Test
+    fun `getAllCustomers should return success state when API response is successful`() =
+        runBlocking {
+            // Mock the API response
+            val customer = CustomersResponse(listOf(Customer(id = 1, email = "mf502308@gmail.com")))
+
+            `when`(apiService.getAllCustomers()).thenReturn(Response.success(customer))
+
+            // Invoke the function under test
+            val result = repoImpl.getAllCustomers()
+
+            assertEquals(result.body(), customer)
+            assertEquals(
+                result.body()?.customers?.get(0)?.id,
+                customer.customers[0].id
+            )
+            assertEquals(
+                result.body()?.customers?.get(0)?.email,
+                customer.customers[0].email
+            )
+        }
+
+    @Test
+    fun `getCustomer should return success state when API response is successful`() =
+        runBlocking {
+            // Mock the API response
+            val customer = CustomerResponse(Customer(id = 1, email = "mf502308@gmail.com"))
+
+            `when`(apiService.getSingleCustomer(1)).thenReturn(Response.success(customer))
+
+            // Invoke the function under test
+            val result = repoImpl.getCustomer(1)
+
+            assertEquals(result.body(), customer)
+            assertEquals(
+                result.body()?.customer?.id,
+                customer.customer.id
+            )
+            assertEquals(
+                result.body()?.customer?.email,
+                customer.customer.email
+            )
+        }
+
+    @Test
+    fun `getFavourites should return success state when API response is successful`() =
+        runBlocking {
+            // Mock the API response
+            val favorites = DraftOrderResponse(
+                DraftOrder(
+                    lineItems = listOf(
+                        LineItemsItem(
+                            title = "shoes",
+                            quantity = 1,
+                            price = "100.00"
+                        )
+                    )
+                )
+            )
+
+            `when`(apiService.getFavourites(1)).thenReturn(Response.success(favorites))
+
+            // Invoke the function under test
+            val result = repoImpl.getFavourites(1)
+
+            assertEquals(result.body(), favorites)
+            assertEquals(
+                result.body()?.draftOrder?.lineItems,
+                favorites.draftOrder?.lineItems
+            )
+            assertEquals(
+                result.body()?.draftOrder?.lineItems?.get(0)?.title,
+                favorites.draftOrder?.lineItems?.get(0)?.title
+            )
+        }
+
+    @Test
+    fun `getGovernment should return success state when API response is successful`() =
+        runBlocking {
+            // Mock the API response
+            val government = GovernmentPojo(
+                data = Data(
+                    states = listOf(
+                        StatesItem(
+                            name = "Cairo"
+                        )
+                    )
+                )
+            )
+
+            `when`(governmentAPI.getGovernment(Country("Cairo")))
+                .thenReturn(Response.success(government))
+
+            // Invoke the function under test
+            val result = repoImpl.getGovernment("Cairo")
+
+            assertEquals(result.body(), government)
+            assertEquals(
+                result.body()?.data?.states?.get(0)?.name,
+                government.data?.states?.get(0)?.name
+            )
+        }
+
+    @Test
+    fun `getCities should return success state when API response is successful`() =
+        runBlocking {
+            // Mock the API response
+            val city = CitiesPojo(
+                data = listOf(
+                    "Cairo"
+                )
+            )
+
+            `when`(governmentAPI.getCities(requestBody = CitiesRequest("Cairo", "")))
+                .thenReturn(Response.success(city))
+
+            // Invoke the function under test
+            val result = repoImpl.getCities("Cairo", "")
+
+            assertEquals(result.body(), city)
+            assertEquals(
+                result.body()?.data?.get(0),
+                city.data?.get(0)
+            )
+        }
+
+    @Test
+    fun `getDiscountCodes should return success state when API response is successful`() =
+        runBlocking {
+            // Mock the API response
+            val discountRes = DiscountResponse(
+                price_rules = listOf(
+                    PriceRule(id = 1)
+                )
+            )
+
+            `when`(apiService.getDiscountCodes()).thenReturn(Response.success(discountRes))
+
+            // Invoke the function under test
+            val result = repoImpl.getDiscountCodes()
+
+            assertEquals(result.body(), discountRes)
+            assertEquals(
+                result.body()?.price_rules?.get(0)?.id,
+                discountRes.price_rules?.get(0)?.id
+            )
+        }
+
+    @Test
+    fun `getCustomerOrders should return success state when API response is successful`() =
+        runBlocking {
+            // Mock the API response
+            val orderRes = OrderResponse(
+                orders = listOf(
+                    Order(
+                        id = 1
+                    )
+                )
+            )
+
+            `when`(apiService.getCustomerOrders(1)).thenReturn(Response.success(orderRes))
+
+            // Invoke the function under test
+            val result = repoImpl.getCustomerOrders(1)
+
+            assertEquals(result.body(), orderRes)
+            assertEquals(
+                result.body()?.orders?.get(0)?.id,
+                orderRes.orders?.get(0)?.id
+            )
+        }
+
+    @Test
+    fun `getSingleOrder should return success state when API response is successful`() =
+        runBlocking {
+            // Mock the API response
+            val orderRes = OrderResponse(
+                order = Order(
+                    id = 1
+                )
+            )
+
+            `when`(apiService.getSingleOrder(1)).thenReturn(Response.success(orderRes))
+
+            // Invoke the function under test
+            val result = repoImpl.getSingleOrder(1)
+
+            assertEquals(result.body(), orderRes)
+            assertEquals(
+                result.body()?.order?.id,
+                orderRes.order?.id
+            )
+        }
+
+    @Test
+    fun `getCart should return success state when API response is successful`() =
+        runBlocking {
+            // Mock the API response
+            val cart = DraftOrderResponse(
+                DraftOrder(
+                    lineItems = listOf(
+                        LineItemsItem(
+                            title = "shoes",
+                            quantity = 1,
+                            price = "100.00"
+                        )
+                    )
+                )
+            )
+
+            `when`(apiService.getCart(1)).thenReturn(Response.success(cart))
+
+            // Invoke the function under test
+            val result = repoImpl.getCart(1)
+
+            assertEquals(result.body(), cart)
+            assertEquals(
+                result.body()?.draftOrder?.lineItems,
+                cart.draftOrder?.lineItems
+            )
+            assertEquals(
+                result.body()?.draftOrder?.lineItems?.get(0)?.title,
+                cart.draftOrder?.lineItems?.get(0)?.title
+            )
+        }
 }
