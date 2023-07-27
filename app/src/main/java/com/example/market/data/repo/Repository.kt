@@ -28,7 +28,6 @@ interface Repository {
     suspend fun createFavouriteDraftOrder(favouriteDraftOrder: DraftOrderResponse): Response<DraftOrderResponse>
     suspend fun createCartDraftOrder(cartDraftOrder: DraftOrderResponse): Response<DraftOrderResponse>
     suspend fun modifyFavourites(favouriteId: Long, modifiedList: DraftOrderResponse)
-    suspend fun getSingleOrder(orderId: Long): Response<OrderResponse>
     suspend fun deleteAddress(userId: Long,addressId: Long)
     suspend fun setDefault(userId: Long,addressId: Long)
 }
