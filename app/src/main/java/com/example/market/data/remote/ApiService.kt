@@ -108,4 +108,6 @@ interface ApiService {
     @GET("draft_orders/{cartId}.json")
     suspend fun getCart(@Path("cartId") cartId: Long): Response<DraftOrderResponse>
 
+    @GET("orders/{id}.json")
+    suspend fun getSingleOrder(@Path("id") orderId: Long): Response<OrderResponse>
 }

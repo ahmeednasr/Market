@@ -113,4 +113,8 @@ class RepositoryImpl(
         TODO("Not yet implemented")
     }
 
+    override suspend fun getSingleOrder(orderId: Long): Response<OrderResponse> {
+        return apiService.getSingleOrder(orderId)
+    }
+
 }
