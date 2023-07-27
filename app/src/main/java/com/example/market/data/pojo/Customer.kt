@@ -53,9 +53,9 @@ data class Customer(
     val state: String? = null,
     val total_spent: String? = null,
     val last_order_id: Long? = null,
-    val note: String? = null,
+    var note: String? = null,
     val verified_email: Boolean? = null,
-    val multipass_identifier: String? = null,
+    var multipass_identifier: String? = null,
     val tax_exempt: Boolean? = null,
     val tags: String? = null,
     val last_order_name: String? = null,
@@ -103,3 +103,4 @@ data class SmsMarketingConsent(
     val consent_updated_at: String?,
     val consent_collected_from: String
 )
+//data class CustomerId(id:Long)

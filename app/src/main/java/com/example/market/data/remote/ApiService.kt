@@ -75,7 +75,7 @@ interface ApiService {
     @PUT("variants/{id}.json")
     suspend fun getVariantById(
         @Path("id") id: Long,
-    ): Response<Variant>
+    ): Response<VariantResponse>
 
 
     @DELETE("draft_orders/{id}.json")
@@ -108,6 +108,8 @@ interface ApiService {
     @GET("draft_orders/{cartId}.json")
     suspend fun getCart(@Path("cartId") cartId: Long): Response<DraftOrderResponse>
 
+    @GET("orders/{id}.json")
+    suspend fun getSingleOrder(@Path("id") orderId: Long): Response<OrderResponse>
     @DELETE("customers/{userID}/addresses/{address_id}.json")
     suspend fun deleteAddress(@Path("userID") userId: Long,@Path("address_id") addressId : Long)
 

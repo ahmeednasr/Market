@@ -45,16 +45,41 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.appcompat.widget.Toolbar>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/CartRecuclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/checkout_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cart_title"
+        tools:itemCount="2"
+        tools:listitem="@layout/item_cart" />
+
+    <ImageView
+        android:id="@+id/empty_cart"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/empty_cart"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/CartRecuclerView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_favourites_fragment3" />
+
     <TextView
         android:id="@+id/empty_card_txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:text="@string/your_cart_is_empty"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@+id/empty_cart"
+        app:layout_constraintStart_toStartOf="@+id/empty_cart"
+        app:layout_constraintTop_toBottomOf="@+id/empty_cart" />
 
     <TextView
         android:id="@+id/connection"
@@ -68,7 +93,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/subtotal_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -83,16 +108,16 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="@string/currancy"
-        app:layout_constraintBottom_toBottomOf="@+id/textView3"
-        app:layout_constraintStart_toEndOf="@+id/textView3"
-        app:layout_constraintTop_toTopOf="@+id/textView3" />
+        app:layout_constraintBottom_toBottomOf="@+id/subtotal_tv"
+        app:layout_constraintStart_toEndOf="@+id/subtotal_tv"
+        app:layout_constraintTop_toTopOf="@+id/subtotal_tv" />
 
     <TextView
         android:id="@+id/subTotalPrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
-        android:text="5996.00"
+        android:text="0.0"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/total_currancy"
@@ -106,22 +131,8 @@
         android:layout_marginTop="16dp"
         android:text="@string/cart"
         android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="@+id/textView3"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/CartRecuclerView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/checkout_btn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cart_title"
-        tools:itemCount="2"
-        tools:listitem="@layout/item_cart" />
+        app:layout_constraintStart_toStartOf="@+id/subtotal_tv"
+        app:layout_constraintTop_toBottomOf="@+id/subtotal_tv" />
 
     <Button
         android:id="@+id/checkout_btn"

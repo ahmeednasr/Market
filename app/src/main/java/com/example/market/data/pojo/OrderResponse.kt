@@ -5,7 +5,8 @@ import com.google.gson.annotations.SerializedName
 
 
 data class OrderResponse (
-    val orders: List<Order>? = null
+    val orders: List<Order>? = null,
+    val order: Order? = null
 )
 
 data class Order (
