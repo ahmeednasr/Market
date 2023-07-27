@@ -8,15 +8,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.market.data.pojo.*
 import com.example.market.data.repo.Repository
-import com.example.market.utils.Constants
 import com.example.market.utils.Constants.CART_ID
-import com.example.market.utils.Constants.CURRENCY_FROM_KEY
+import com.example.market.utils.Constants.Exchange_Value
 import com.example.market.utils.Constants.TITTLE
-import com.example.market.utils.Constants.UserID
 import com.example.market.utils.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -46,13 +43,9 @@ class CartViewModel @Inject constructor(
                 val cartList = repository.getCart(cartID)
                 if (cartList.isSuccessful) {
                     cartList.body()?.let {
-                        val exchange = it.draftOrder?.totalPrice!!.toDouble()
-                        editor.putFloat(Constants.Exchange_Value, exchange.toFloat())
-                        editor.apply()
-                        Log.i("SUBTOTAL", it.draftOrder.subtotalPrice!!)
+                        Log.i("SUBTOTAL", it.draftOrder?.subtotalPrice!!)
                         _subtotal.postValue(it.draftOrder.subtotalPrice.toDouble())
                         _cartList = it.draftOrder.lineItems as ArrayList<LineItemsItem>
-
 
                         val filterd = _cartList.filter { item ->
                             !item.title.equals(TITTLE)
@@ -104,9 +97,13 @@ class CartViewModel @Inject constructor(
 
         viewModelScope.launch(Dispatchers.IO) {
             var index = _cartList.indexOf(lineItemsItem)
+            Log.d("INDEX", "size ${_cartList.size}")
+            Log.d("INDEX", "size $index")
             val q = _cartList[index].quantity
             if (q != null) {
+                Log.d("INDEX", "q1= ${_cartList[index].quantity}")
                 _cartList[index].quantity = q - 1
+                Log.d("INDEX", "q2= ${_cartList[index].quantity}")
             }
             val cartId = sharedPreferences.getString(CART_ID, "0")!!.toLong()
             repository.modifyCart(
@@ -119,7 +116,9 @@ class CartViewModel @Inject constructor(
     fun addNewQuantityToCart(lineItemsItem: LineItemsItem) {
 
         viewModelScope.launch(Dispatchers.IO) {
-            var index = _cartList.indexOf(lineItemsItem)
+            var index =
+                _cartList.indexOfFirst { (it.variantId == lineItemsItem.variantId) && ((it.productId == lineItemsItem.productId)) }
+//            var index = _cartList.indexOf(lineItemsItem)
             val q = _cartList[index].quantity
             if (q != null) {
                 _cartList[index].quantity = q + 1
@@ -131,8 +130,6 @@ class CartViewModel @Inject constructor(
                 cartId,
                 DraftOrderResponse(DraftOrder(lineItems = _cartList))
             )
-
-
         }
     }
 }

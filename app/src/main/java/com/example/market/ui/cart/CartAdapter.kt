@@ -94,7 +94,7 @@ class CartAdapter(
                 binding.addItem.isEnabled = false
                 addHandler.postDelayed({
                     binding.addItem.isEnabled = true
-                }, 600)
+                }, 650)
 
             }
             binding.rmItem.setOnClickListener {
@@ -122,7 +122,7 @@ class CartAdapter(
                 binding.rmItem.isEnabled = false
                 decremHandler.postDelayed({
                     binding.rmItem.isEnabled = true
-                }, 600)
+                }, 650)
             }
         }
 

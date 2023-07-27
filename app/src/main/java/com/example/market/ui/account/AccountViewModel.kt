@@ -13,6 +13,7 @@ import com.example.market.data.pojo.OrderResponse
 
 import com.example.market.data.repo.Repository
 import com.example.market.utils.Constants
+import com.example.market.utils.Constants.Exchange_Value
 import com.example.market.utils.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -23,6 +24,7 @@ class AccountViewModel @Inject constructor(
     private val repository: Repository,
     private val sharedPreferences: SharedPreferences
 ) : ViewModel() {
+    private var editor: SharedPreferences.Editor = sharedPreferences.edit()
 
     init {
         getCurrencies()
@@ -41,10 +43,6 @@ class AccountViewModel @Inject constructor(
         MutableLiveData(NetworkResult.Loading())
     val currencies: LiveData<NetworkResult<Currencies>> = _currencies
 
-    private val _conversionResult: MutableLiveData<NetworkResult<Double?>> =
-        MutableLiveData(NetworkResult.Loading())
-    val conversionResult: LiveData<NetworkResult<Double?>> = _conversionResult
-
     private fun getCurrencies() {
         viewModelScope.launch {
             val productsResponse = repository.getCurrencies()
@@ -61,16 +59,11 @@ class AccountViewModel @Inject constructor(
     fun convertCurrency(from: String, to: String, amount: Double) {
         viewModelScope.launch {
             val response = repository.convertCurrency(from, to, amount)
-            Log.i("MINA", "===$response")
-
             if (response.isSuccessful) {
-                Log.i("MINA", "===$response")
                 response.body()?.let {
-                    Log.i("MINA", "===${it.result}")
-                    _conversionResult.postValue(NetworkResult.Success(it.result))
+                    editor.putFloat(Exchange_Value, it.result!!.toFloat())
+                    editor.apply()
                 }
-            } else {
-                _conversionResult.postValue(NetworkResult.Error("error"))
             }
         }
     }

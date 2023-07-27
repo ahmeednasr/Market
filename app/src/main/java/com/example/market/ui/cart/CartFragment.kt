@@ -1,6 +1,5 @@
 package com.example.market.ui.cart
 
-import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
@@ -8,26 +7,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.market.R
 import com.example.market.data.pojo.LineItemsItem
-import com.example.market.data.pojo.Product
 import com.example.market.databinding.FragmentCartBinding
-import com.example.market.ui.home.HomeFragmentDirections
 import com.example.market.utils.Constants
-import com.example.market.utils.Constants.CURRENCY_FROM_KEY
 import com.example.market.utils.Constants.Exchange_Value
-import com.example.market.utils.Constants.SharedPreferences
-import com.example.market.utils.Constants.UserID
 import com.example.market.utils.NetworkResult
-import com.example.market.utils.Utils
 import com.example.market.utils.Utils.roundOffDecimal
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -38,7 +27,6 @@ class CartFragment : Fragment(), CartClickListener {
     val viewModel: CartViewModel by viewModels()
     private lateinit var currency: String
     var cartPrice: Double = 0.0
-    var exchangeResult: Double = 0.0
 
 
     @Inject
@@ -50,7 +38,6 @@ class CartFragment : Fragment(), CartClickListener {
             requireContext()
         )
     }
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -65,21 +52,18 @@ class CartFragment : Fragment(), CartClickListener {
         super.onViewCreated(view, savedInstanceState)
         viewModel.getCartItems()
         currency = sharedPreferences.getString(Constants.CURRENCY_TO_KEY, "") ?: "EGP"
-        viewModel.convertCurrency("EGP", currency, 1.00)
+        // viewModel.convertCurrency("EGP", currency, 1.00)
         setupCartRecyclerView()
         observeCartResponse()
+        Log.d("NEWNEW", sharedPreferences.getFloat(Exchange_Value, 1.0f).toString())
 
+        cartAdapter.exchangeRate = (sharedPreferences.getFloat(Exchange_Value, 1.0f).toDouble())
 
         viewModel.subtotal.observe(viewLifecycleOwner) { sub ->
-            viewModel.conversionResult.observe(viewLifecycleOwner) {
-                cartAdapter.exchangeRate = it
-                exchangeResult = it
-                cartPrice = sub * exchangeResult
-                Log.d("MYTEST", "in observe:${cartPrice}")
-                binding.subTotalPrice.text = roundOffDecimal(cartPrice).toString()
-            }
-
-
+            Log.d("NEWNEW", sharedPreferences.getFloat(Exchange_Value, 1.0f).toString())
+            cartPrice = sub * (sharedPreferences.getFloat(Exchange_Value, 1.0f).toDouble())
+            Log.d("NEWNEW", "cartPrice:$cartPrice")
+            binding.subTotalPrice.text = roundOffDecimal(cartPrice).toString()
         }
         binding.totalCurrancy.text = currency
         binding.ivBackArrow.setOnClickListener {
@@ -132,11 +116,9 @@ class CartFragment : Fragment(), CartClickListener {
         current: Int,
         currentPrice: Double
     ) {
-        Log.d("MYTEST", "in addProduct:${cartPrice}")
         if (current <= max) {
-            Log.d("MYTEST", "check in addProduct before:${cartPrice}")
             cartPrice += currentPrice
-            Log.d("MYTEST", "check in addProduct after:${cartPrice}")
+            Log.d("NEWNEW", "cartPrice:$cartPrice")
             binding.subTotalPrice.text =
                 roundOffDecimal(cartPrice).toString()
             viewModel.addNewQuantityToCart(lineItemsItem)
@@ -144,9 +126,9 @@ class CartFragment : Fragment(), CartClickListener {
     }
 
     override fun deleteProduct(lineItemsItem: LineItemsItem, currentPrice: Double) {
-        Log.d("MYTEST", "check in deleteProduct before:${cartPrice}")
         cartPrice -= currentPrice
-        Log.d("MYTEST", "check in deleteProduct after:${cartPrice}")
+        Log.d("NEWNEW", "cartPrice:$cartPrice")
+
         binding.subTotalPrice.text = roundOffDecimal(cartPrice).toString()
         viewModel.removeQuantityFromCart(lineItemsItem)
     }

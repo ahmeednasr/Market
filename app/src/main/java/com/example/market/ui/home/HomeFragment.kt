@@ -88,7 +88,6 @@ class HomeFragment : Fragment() {
                     }
                     alertDialog?.show()
                 }
-
             })
     }
 

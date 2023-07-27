@@ -31,9 +31,9 @@ object Constants {
     const val TITTLE = "shoes"
     const val IS_Logged = "login"
     const val Exchange_Value = "Exchange_Value"
+
     const val Final_Result_Exchange = "Final_Result_Exchange"
     const val ONLINE_PAYMENT = "ONLINE_PAYMENT"
     const val CASH_ON_DELIVERY = "CASH_ON_DELIVERY"
-
-
+    const val MAX_CASH_ON_DELIVERY = 1000.0
 }
