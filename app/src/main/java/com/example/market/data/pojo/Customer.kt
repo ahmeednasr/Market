@@ -17,17 +17,17 @@ data class NewUser(
 )
 
 data class User(
-    val first_name: String,
-    val last_name: String?,
-    val email: String,
-    val phone: String?,
-    val verified_email: Boolean,
-    val addresses: List<UserAddress>?,
-    val send_email_invite: Boolean?,
+    val first_name: String? = null,
+    val last_name: String? = null,
+    val email: String? = null,
+    val phone: String? = null,
+    val verified_email: Boolean? = null,
+    val addresses: List<UserAddress>? = null,
+    val send_email_invite: Boolean? = null,
     @SerializedName("note")
-    var favouriteId: String? = "",
+    var favouriteId: String? = null,
     @SerializedName("multipass_identifier")
-    var cartId: String? = ""
+    var cartId: String? = null
 )
 
 data class UserAddress(
