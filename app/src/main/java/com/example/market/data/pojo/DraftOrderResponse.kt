@@ -217,7 +217,7 @@ data class LineItemsItem(
     @Expose val grams: Int? = null,
 
     @field:SerializedName("variant_title")
-    @Expose val variantTitle: String? = null
+    @Expose val variantTitle: String? = null,
 )
 
 data class TaxLinesItem(

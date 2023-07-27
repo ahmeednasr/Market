@@ -24,9 +24,13 @@ class AuthViewModel @Inject constructor(
     private var _customers: MutableLiveData<NetworkResult<List<Customer>>> = MutableLiveData()
     var customers: LiveData<NetworkResult<List<Customer>>> = _customers
 
-    var fav = DraftOrderResponse(DraftOrder(lineItems = mutableListOf(
-        LineItemsItem(title = TITTLE, price = "100.00", quantity = 1, sku = "1"))
-    )
+
+    private val fav = DraftOrderResponse(
+        DraftOrder(
+            lineItems = mutableListOf(
+                LineItemsItem(title = TITTLE, price = "100.00", quantity = 1, sku = "1")
+            )
+        )
     )
 
     fun createUser(user: NewUser) {

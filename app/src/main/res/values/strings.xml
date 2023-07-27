@@ -56,4 +56,7 @@
 
     <string name="no_internet_msg">An internet error occurred, Please check your connection!</string>
     <string name="no_data_msg">Not Available yet!</string>
+
+    <string name="wraning">Warning</string>
+    <string name="wraning_remove">Are you sure you want to delete this item ?</string>
 </resources>
