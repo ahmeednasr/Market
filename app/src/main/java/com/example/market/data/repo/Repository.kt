@@ -2,10 +2,6 @@ package com.example.market.data.repo
 
 import com.example.market.data.pojo.*
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.Path
 
 interface Repository {
     suspend fun getBrands(): Response<BrandResponse>
@@ -32,4 +28,6 @@ interface Repository {
     suspend fun createFavouriteDraftOrder(favouriteDraftOrder: DraftOrderResponse): Response<DraftOrderResponse>
     suspend fun createCartDraftOrder(cartDraftOrder: DraftOrderResponse): Response<DraftOrderResponse>
     suspend fun modifyFavourites(favouriteId: Long, modifiedList: DraftOrderResponse)
+    suspend fun deleteAddress(userId: Long,addressId: Long)
+    suspend fun setDefault(userId: Long,addressId: Long)
 }

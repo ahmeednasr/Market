@@ -105,6 +105,10 @@ class AccountFragment : Fragment() {
         navigateToOrders()
         navigateToFavourites()
         observeNetworkState()
+        navigateToAddress()
+        navigateToCart()
+        observeSearchButton()
+        navigateToOrders()
 
 //        currentLocale = Locale.getDefault()
 //        currentLanguage = currentLocale.language
@@ -125,13 +129,7 @@ class AccountFragment : Fragment() {
         binding.llCurrency.setOnClickListener {
             observeCurrenciesResponse()
         }
-        binding.llAddress.setOnClickListener {
-            findNavController().navigate(AccountFragmentDirections.actionAccountFragmentToAddressesFragment())
-        }
 
-        navigateToCart()
-        observeSearchButton()
-        navigateToOrders()
     }
 
     private fun registerNetworkManager() {
@@ -173,7 +171,7 @@ class AccountFragment : Fragment() {
     }
 
     private fun navigateToFavourites() {
-        binding.llOrders.setOnClickListener {
+        binding.llSavedItems.setOnClickListener {
             if (sharedPreferences.getBoolean(Constants.IS_Logged, false)) {
                 findNavController().navigate(AccountFragmentDirections.actionAccountFragmentToFavouritesFragment())
             } else {
@@ -186,6 +184,16 @@ class AccountFragment : Fragment() {
         binding.ivCart.setOnClickListener {
             if (sharedPreferences.getBoolean(Constants.IS_Logged, false)) {
                 findNavController().navigate(AccountFragmentDirections.actionAccountFragmentToCartFragment())
+            } else {
+                showAlertDialog()
+            }
+        }
+    }
+
+    private fun navigateToAddress() {
+        binding.llAddress.setOnClickListener {
+            if (sharedPreferences.getBoolean(Constants.IS_Logged, false)) {
+                findNavController().navigate(AccountFragmentDirections.actionAccountFragmentToAddressesFragment())
             } else {
                 showAlertDialog()
             }
@@ -367,6 +375,8 @@ class AccountFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
         }
     }
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()

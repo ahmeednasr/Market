@@ -30,14 +30,19 @@ class AddressesAdaptor(
                 tvPhone.text = address.phone
                 tvGovernment.text = address.province
                 tvAddressStreet.text = address.address1
-                if(rbAddress.isChecked){
-                    clickListener.onSelectedClicked(address)
-                }else{
-                    clickListener.onItemDeSelected(address)
+
+                rbAddress.setOnCheckedChangeListener { buttonView, isChecked ->
+                    if(isChecked){
+                        clickListener.onSelectedClicked(address)
+                    }else{
+                        clickListener.onItemDeSelected(address)
+                    }
                 }
+
                 ivDelete.setOnClickListener {
                     clickListener.onItemDeleted(address)
                 }
+                rbAddress.isChecked = address.default == true
             }
         }
 

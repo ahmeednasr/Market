@@ -22,6 +22,8 @@ import com.example.market.auth.AuthActivity
 import com.example.market.data.pojo.LineItemsItem
 import com.example.market.data.pojo.Product
 import com.example.market.databinding.FragmentSearchBinding
+import com.example.market.ui.account.AccountFragmentDirections
+import com.example.market.ui.product.ProductDetailsDirections
 import com.example.market.utils.Constants
 import com.example.market.utils.NetworkManager
 import com.example.market.utils.NetworkResult
@@ -99,6 +101,7 @@ class SearchFragment : Fragment() {
         observeSearchText()
         observeSliderChange()
         observeConversionResult()
+        observeNavigation()
     }
 
     private fun observeConversionResult() {
@@ -269,6 +272,24 @@ class SearchFragment : Fragment() {
             adapter = searchAdapter
             layoutManager =
                 GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
+        }
+    }
+
+    private fun observeNavigation(){
+        binding.ivFavourite.setOnClickListener {
+            if (sharedPreferences.getBoolean(Constants.IS_Logged, false)) {
+                findNavController().navigate(SearchFragmentDirections.actionSearchFragmentToFavouritesFragment())
+            } else {
+                showAlertDialog()
+            }
+        }
+
+        binding.ivCart.setOnClickListener {
+            if (sharedPreferences.getBoolean(Constants.IS_Logged, false)) {
+                findNavController().navigate(SearchFragmentDirections.actionSearchFragmentToCartFragment())
+            } else {
+                showAlertDialog()
+            }
         }
     }
 
