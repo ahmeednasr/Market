@@ -22,6 +22,17 @@ class MainActivity : AppCompatActivity() {
 
         val navController = Navigation.findNavController(this, R.id.nav_host_fragment)
         setupWithNavController(binding.navigationBar, navController, false)
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (destination.id == R.id.homeFragment
+                || destination.id == R.id.categoriesFragment
+                || destination.id == R.id.accountFragment
+            ) {
+                binding.navigationBar.visibility = View.VISIBLE
+            } else {
+                binding.navigationBar.visibility = View.GONE
+            }
+        }
     }
 
 }

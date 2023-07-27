@@ -5,11 +5,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.market.data.pojo.LineItemsItem
 import com.example.market.data.pojo.Order
 import com.example.market.databinding.ItemOrderBinding
+import com.example.market.ui.favourites.FavouritesAdapter
 import com.example.market.utils.Utils
 
-class OrdersAdapter : ListAdapter<Order, OrdersAdapter.MyViewHolder>(
+class OrdersAdapter(
+    private val clickListener: OrderClickListener
+) : ListAdapter<Order, OrdersAdapter.MyViewHolder>(
         DailyDiffCallback()
     ) {
 
@@ -18,18 +22,28 @@ class OrdersAdapter : ListAdapter<Order, OrdersAdapter.MyViewHolder>(
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), clickListener)
+    }
+
+    interface OrderClickListener {
+        fun onItemClicked(orderId: Long)
     }
 
     class MyViewHolder(private val binding: ItemOrderBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(order: Order) {
+        fun bind(order: Order, clickListener: OrderClickListener) {
             binding.apply {
                 tvOrderNumber.text = order.order_number.toString()
                 tvOrderPrice.text = order.current_total_price.toString()
                 tvProductsNumber.text = order.line_items?.size.toString()
                 tvDate.text = Utils.formatDate(order.created_at.toString())
+
+                cvLayout.setOnClickListener {
+                    order.id?.let {
+                        clickListener.onItemClicked(it)
+                    }
+                }
             }
         }
 

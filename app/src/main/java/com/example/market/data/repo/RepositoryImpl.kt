@@ -113,4 +113,16 @@ class RepositoryImpl(
         TODO("Not yet implemented")
     }
 
+    override suspend fun getSingleOrder(orderId: Long): Response<OrderResponse> {
+        return apiService.getSingleOrder(orderId)
+    }
+
+    override suspend fun deleteAddress(userId: Long, addressId: Long) {
+        apiService.deleteAddress(userId,addressId)
+    }
+
+    override suspend fun setDefault(userId: Long, addressId: Long) {
+        apiService.setDefault(userId,addressId)
+    }
+
 }
