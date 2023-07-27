@@ -26,7 +26,6 @@ class AccountViewModel @Inject constructor(
 
     init {
         getCurrencies()
-        //convertCurrency("EGP", "USD")
     }
 
     private var _favourites = ArrayList<LineItemsItem>()
@@ -113,6 +112,4 @@ class AccountViewModel @Inject constructor(
             }
         }
     }
-
-
 }

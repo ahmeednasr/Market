@@ -21,4 +21,6 @@
     <color name="background">#dddddd</color>
     <color name="bg">#EFEEED</color>
     <color name="status">#95000000</color>
+    <color name="green">#32CD32</color>
+    <color name="red">#FF0000</color>
 </resources>

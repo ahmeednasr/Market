@@ -160,6 +160,7 @@ class ProductDetails : Fragment() {
             Log.i("CART", "$quantity $variantId")
             if (quantity > 0 && variantId > 0) {
                 viewModel.saveToCart(product, variantId)
+                Toast.makeText(requireContext(), "added", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(requireContext(), "size and color not selected", Toast.LENGTH_SHORT)
                     .show()

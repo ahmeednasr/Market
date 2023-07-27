@@ -11,9 +11,11 @@
         android:id="@+id/paymentMethodTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:textSize="20dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:text="@string/payment_method"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -30,6 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:buttonTint="@color/purple_700"
+            android:checked="true"
             android:text="@string/cash_on_delivery" />
 
         <RadioButton
@@ -37,9 +40,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:buttonTint="@color/purple_700"
-            android:checked="true"
+            android:checked="false"
             android:text="@string/online_payment" />
     </RadioGroup>
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout2"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -57,8 +61,7 @@
 
             android:id="@+id/coupon"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/coupon" />
+            android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
@@ -161,4 +164,37 @@
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="@+id/totalTitle"
         app:layout_constraintTop_toBottomOf="@+id/totalValue" />
+
+    <TextView
+        android:id="@+id/currancyTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/currency_title"
+        app:layout_constraintStart_toStartOf="@+id/totalTitle"
+        app:layout_constraintTop_toBottomOf="@+id/totalTitle" />
+
+    <TextView
+        android:id="@+id/currency_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/currancy"
+        app:layout_constraintBottom_toBottomOf="@+id/currancyTitle"
+        app:layout_constraintEnd_toEndOf="@+id/totalValue"
+        app:layout_constraintTop_toTopOf="@+id/currancyTitle" />
+
+    <com.paypal.checkout.paymentbutton.PaymentButtonContainer
+        android:id="@+id/payment_button_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/totalValue"
+        app:layout_constraintStart_toStartOf="@+id/totalTitle"
+        app:paypal_button_color="blue"
+        app:paypal_button_enabled="true"
+        app:paypal_button_label="pay"
+        app:paypal_button_shape="rounded"
+        app:paypal_button_size="medium" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

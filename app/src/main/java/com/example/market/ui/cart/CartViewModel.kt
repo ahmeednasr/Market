@@ -23,13 +23,13 @@ import javax.inject.Inject
 @HiltViewModel
 class CartViewModel @Inject constructor(
     private val repository: Repository,
-    private val sharedPreferences: SharedPreferences
+    private val sharedPreferences: SharedPreferences,
 ) : ViewModel() {
+    private var editor: SharedPreferences.Editor = sharedPreferences.edit()
+
     private var _cart: MutableLiveData<NetworkResult<List<LineItemsItem>>> = MutableLiveData()
     val cart: LiveData<NetworkResult<List<LineItemsItem>>> = _cart
 
-    private var _response: MutableLiveData<NetworkResult<DraftOrderResponse>> = MutableLiveData()
-    val response: LiveData<NetworkResult<DraftOrderResponse>> = _response
     private var _cartList = ArrayList<LineItemsItem>()
 
     private val _conversionResult: MutableLiveData<Double> = MutableLiveData()
@@ -38,30 +38,26 @@ class CartViewModel @Inject constructor(
     private var _subtotal: MutableLiveData<Double> = MutableLiveData()
     val subtotal: LiveData<Double> = _subtotal
 
-    var subtotalValue: Double = 0.0
-
     fun getCartItems() {
         _cart.postValue(NetworkResult.Loading())
-        _response.postValue(NetworkResult.Loading())
-
         viewModelScope.launch(Dispatchers.IO) {
             val cartID: Long = sharedPreferences.getString(CART_ID, "0")!!.toLong()
             try {
                 val cartList = repository.getCart(cartID)
                 if (cartList.isSuccessful) {
                     cartList.body()?.let {
-                        _response.postValue(NetworkResult.Success(it))
-                        _cartList = it.draftOrder?.lineItems as ArrayList<LineItemsItem>
+                        val exchange = it.draftOrder?.totalPrice!!.toDouble()
+                        editor.putFloat(Constants.Exchange_Value, exchange.toFloat())
+                        editor.apply()
+                        Log.i("SUBTOTAL", it.draftOrder.subtotalPrice!!)
+                        _subtotal.postValue(it.draftOrder.subtotalPrice.toDouble())
+                        _cartList = it.draftOrder.lineItems as ArrayList<LineItemsItem>
+
+
                         val filterd = _cartList.filter { item ->
                             !item.title.equals(TITTLE)
                         }
-                        for (i in filterd) {
-                            subtotalValue += i.price?.toDouble()!!
-                        }
-                        _subtotal.postValue(subtotalValue)
-
                         _cart.postValue(NetworkResult.Success(filterd))
-                        setTotal(filterd as ArrayList<LineItemsItem>)
                     }
                 }
 
@@ -104,10 +100,6 @@ class CartViewModel @Inject constructor(
         }
     }
 
-    private fun setTotal(filterList: ArrayList<LineItemsItem>) {
-        subtotalValue = 0.0
-    }
-
     fun removeQuantityFromCart(lineItemsItem: LineItemsItem) {
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -135,11 +127,11 @@ class CartViewModel @Inject constructor(
             val cartId = sharedPreferences.getString(CART_ID, "0")!!.toLong()
             Log.d("LIST", _cartList.size.toString())
             Log.d("LIST", _cartList.toString())
-
             repository.modifyCart(
                 cartId,
                 DraftOrderResponse(DraftOrder(lineItems = _cartList))
             )
+
 
         }
     }
