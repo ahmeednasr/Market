@@ -14,9 +14,6 @@ import com.example.market.data.pojo.LineItemsItem
 import com.example.market.databinding.ItemCartBinding
 import com.example.market.utils.Utils.roundOffDecimal
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import java.math.RoundingMode
-import java.text.DecimalFormat
-import java.util.logging.Handler
 
 class CartAdapter(
     private val currency: String,

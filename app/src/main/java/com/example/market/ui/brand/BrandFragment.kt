@@ -11,7 +11,6 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.market.data.pojo.Product
 import com.example.market.databinding.FragmentBrandBinding
-import com.example.market.ui.categories.ProductsAdapter
 import com.example.market.utils.NetworkResult
 import dagger.hilt.android.AndroidEntryPoint
 
