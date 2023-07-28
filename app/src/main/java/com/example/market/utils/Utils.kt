@@ -21,6 +21,8 @@ import com.example.market.auth.AuthActivity
 import com.google.android.material.snackbar.Snackbar
 import java.math.RoundingMode
 import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -52,8 +54,10 @@ object Utils {
     }
 
     fun roundOffDecimal(number: Double): Double {
-        val df = DecimalFormat("#.##")
+        val df = DecimalFormat("#.##", DecimalFormatSymbols(Locale.ENGLISH))
         df.roundingMode = RoundingMode.CEILING
-        return df.format(number).toDouble()
+
+        val formattedNumber = df.format(number)
+        return formattedNumber.toDouble()
     }
 }
