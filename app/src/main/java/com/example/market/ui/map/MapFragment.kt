@@ -142,6 +142,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickListener
         mMap = googleMap
         mMap.setOnMapClickListener(this)
 //        latitude = 30.04
+
 //        longitude = 31.23
 //        val cairo = LatLng(latitude!!, longitude!!)
 //        mMap.moveCamera(CameraUpdateFactory.newLatLng(cairo))
