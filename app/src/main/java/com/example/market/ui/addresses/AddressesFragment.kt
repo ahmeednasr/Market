@@ -1,8 +1,6 @@
 package com.example.market.ui.addresses
 
-import android.graphics.drawable.GradientDrawable.Orientation
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,11 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.market.R
-import com.example.market.data.pojo.Address
-import com.example.market.data.pojo.Customer
 import com.example.market.data.pojo.CustomerAddress
-import com.example.market.data.pojo.CustomerResponse
-import com.example.market.databinding.FragmentAccountBinding
 import com.example.market.databinding.FragmentAddressesBinding
 import com.example.market.ui.address_form.AddressViewModel
 import com.example.market.utils.NetworkResult

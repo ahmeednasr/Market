@@ -11,7 +11,6 @@ import com.example.market.data.repo.Repository
 import com.example.market.utils.Constants
 import com.example.market.utils.Constants.CART_ID
 import com.example.market.utils.Constants.COMPLETED_STATUS
-import com.example.market.utils.Constants.Exchange_Value
 import com.example.market.utils.Constants.OPEN_STATUS
 import com.example.market.utils.Constants.TITTLE
 import com.example.market.utils.NetworkResult
@@ -32,9 +31,6 @@ class CartViewModel @Inject constructor(
     val cart: LiveData<NetworkResult<List<LineItemsItem>>> = _cart
 
     private var _cartList = ArrayList<LineItemsItem>()
-
-    private val _conversionResult: MutableLiveData<Double> = MutableLiveData()
-    val conversionResult: LiveData<Double> = _conversionResult
 
     private var _subtotal: MutableLiveData<Double> = MutableLiveData()
     val subtotal: LiveData<Double> = _subtotal
@@ -121,18 +117,6 @@ class CartViewModel @Inject constructor(
             }
         }
     }
-
-    fun convertCurrency(from: String, to: String, q: Double) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val response = repository.convertCurrency(from, to, q)
-            if (response.isSuccessful) {
-                response.body()?.result?.let {
-                    _conversionResult.postValue(it)
-                }
-            }
-        }
-    }
-
     fun removeQuantityFromCart(lineItemsItem: LineItemsItem) {
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -154,7 +138,6 @@ class CartViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             var index =
                 _cartList.indexOfFirst { (it.variantId == lineItemsItem.variantId) && ((it.productId == lineItemsItem.productId)) }
-//            var index = _cartList.indexOf(lineItemsItem)
             val q = _cartList[index].quantity
             if (q != null) {
                 _cartList[index].quantity = q + 1

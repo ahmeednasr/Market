@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.market.data.pojo.Address
 import com.example.market.data.pojo.CustomerAddress
 import com.example.market.databinding.ItemAddressBinding
 

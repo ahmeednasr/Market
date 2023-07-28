@@ -50,9 +50,8 @@ class CartFragment : Fragment(), CartClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.getCartItems()
+        Log.d("TAG","onViewCreated")
         currency = sharedPreferences.getString(Constants.CURRENCY_TO_KEY, "") ?: "EGP"
-        // viewModel.convertCurrency("EGP", currency, 1.00)
         setupCartRecyclerView()
         observeCartResponse()
 
@@ -72,8 +71,15 @@ class CartFragment : Fragment(), CartClickListener {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        Log.d("TAG","onResume")
+        viewModel.getCartItems()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
+        Log.d("TAG","onDestroy")
         _binding = null
     }
 
@@ -130,13 +136,8 @@ class CartFragment : Fragment(), CartClickListener {
 
     override fun removeCartItem(lineItemsItem: LineItemsItem) {
         var q = lineItemsItem.quantity!!
-        Log.d("QQQQ", "q= $q")
         var price = lineItemsItem.price?.toDouble()!!
-        Log.d("QQQQ", "price= $price")
-        Log.d("QQQQ", "q*price= ${(q * price)}")
-        Log.d("QQQQ", "cartPrice1= $cartPrice")
         cartPrice -= ((q * price) * (sharedPreferences.getFloat(Exchange_Value, 1.0f).toDouble()))
-        Log.d("QQQQ", "cartPrice2= $cartPrice")
         if (roundOffDecimal(cartPrice) < 0) {
             binding.subTotalPrice.text = "0.0"
         } else {
