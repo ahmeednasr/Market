@@ -70,6 +70,7 @@ class CartFragment : Fragment(), CartClickListener {
             findNavController().popBackStack()
         }
         binding.checkoutBtn.setOnClickListener {
+            viewModel.getUSDExchange()
             findNavController().navigate(CartFragmentDirections.actionCartFragmentToPaymentFragment())
         }
     }
@@ -128,12 +129,15 @@ class CartFragment : Fragment(), CartClickListener {
     override fun deleteProduct(lineItemsItem: LineItemsItem, currentPrice: Double) {
         cartPrice -= currentPrice
         Log.d("NEWNEW", "cartPrice:$cartPrice")
-
         binding.subTotalPrice.text = roundOffDecimal(cartPrice).toString()
         viewModel.removeQuantityFromCart(lineItemsItem)
     }
 
     override fun removeCartItem(lineItemsItem: LineItemsItem) {
+        var q = lineItemsItem.quantity!!
+        var price = lineItemsItem.price?.toDouble()!!
+        cartPrice -= (q * price)
+        binding.subTotalPrice.text = roundOffDecimal(cartPrice).toString()
         viewModel.deleteCartItem(lineItemsItem)
     }
 

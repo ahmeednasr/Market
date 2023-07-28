@@ -101,21 +101,11 @@ class PaymentViewModel @Inject constructor(
             }
         }
     }
-
-    fun getUSDExchange() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val response = repository.convertCurrency(
-                CURRENCY_TO_KEY,
-                USD_VALUE,
-                1.0
-            )
-            Log.d("menp", "$response")
-            if (response.isSuccessful) {
-                response.body()?.result?.let {
-                    editor.putFloat(USD_VALUE, it.toFloat())
-                    editor.apply()
-                }
-            }
+    fun completeDraft(){
+        var id:Long = sharedPreferences.getString(Constants.CART_ID, "0")!!.toLong()
+        viewModelScope.launch {
+            repository.completeDraft(id)
         }
     }
+
 }

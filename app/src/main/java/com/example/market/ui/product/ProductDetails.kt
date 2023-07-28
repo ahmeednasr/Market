@@ -158,10 +158,9 @@ class ProductDetails : Fragment() {
             Log.i("STRING", "${product.variants!![0].price}")
             val price = product.variants[0].price?.toDouble()
             val currencyUnit = sharedPreferences.getString(Constants.CURRENCY_TO_KEY, "")
-            val n1 = roundOffDecimal(price!!)
+            val n1 = price!!
             val n2 = it
             val currency = "${roundOffDecimal(n1 * n2)} $currencyUnit"
-            Log.d("NUMBER1", "$ n1= $price ,n2= $it")
 
             binding.priceText.text = currency
         }
@@ -186,6 +185,7 @@ class ProductDetails : Fragment() {
             if (sharedPreferences.getBoolean(Constants.IS_Logged, false)) {
                 if (quantity > 0 && variantId > 0) {
                     viewModel.saveToCart(product, variantId)
+                    Toast.makeText(requireContext(), "added to cart", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(
                         requireContext(),

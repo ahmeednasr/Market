@@ -106,7 +106,7 @@ class RepositoryImpl(
         userId: Long,
         address: CustomerResponse
     ): Response<CustomerResponse> {
-        return apiService.updateCustomer(userId,address)
+        return apiService.updateCustomer(userId, address)
     }
 
     override suspend fun getVariant(id: Long): Response<VariantResponse> {
@@ -118,11 +118,15 @@ class RepositoryImpl(
     }
 
     override suspend fun deleteAddress(userId: Long, addressId: Long) {
-        apiService.deleteAddress(userId,addressId)
+        apiService.deleteAddress(userId, addressId)
     }
 
     override suspend fun setDefault(userId: Long, addressId: Long) {
-        apiService.setDefault(userId,addressId)
+        apiService.setDefault(userId, addressId)
+    }
+
+    override suspend fun completeDraft(draftId: Long) {
+        apiService.completeDraft(draftId)
     }
 
 }

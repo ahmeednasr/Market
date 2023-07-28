@@ -72,7 +72,7 @@ class AddressViewModel @Inject constructor(
                 response.body()?.let {
                     addressList = it.customer.addresses as ArrayList<CustomerAddress>
                     _customer.postValue(NetworkResult.Success(it))
-                    _addresses.postValue(NetworkResult.Success(it.customer.addresses!!))
+                    _addresses.postValue(NetworkResult.Success(it.customer.addresses))
 
                 }
             } else {
