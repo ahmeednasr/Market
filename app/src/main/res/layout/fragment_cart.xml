@@ -52,6 +52,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/checkout_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -65,7 +66,7 @@
         android:layout_height="150dp"
         android:src="@drawable/empty_cart"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/CartRecuclerView"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar_favourites_fragment3" />
@@ -99,6 +100,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/subtotal"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar_favourites_fragment3" />
 
@@ -107,6 +109,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/subtotal_tv"
         app:layout_constraintStart_toEndOf="@+id/subtotal_tv"
         app:layout_constraintTop_toTopOf="@+id/subtotal_tv" />
@@ -118,6 +121,7 @@
         android:layout_marginStart="4dp"
         android:textSize="16sp"
         android:textStyle="bold"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/total_currancy"
         app:layout_constraintStart_toEndOf="@+id/total_currancy"
         app:layout_constraintTop_toTopOf="@+id/total_currancy" />
@@ -129,6 +133,7 @@
         android:layout_marginTop="16dp"
         android:text="@string/cart"
         android:textSize="16sp"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="@+id/subtotal_tv"
         app:layout_constraintTop_toBottomOf="@+id/subtotal_tv" />
 
@@ -139,6 +144,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:text="Checkout"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

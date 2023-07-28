@@ -1,7 +1,6 @@
 package com.example.market.ui.address_form
 
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -37,10 +36,8 @@ class AddressViewModel @Inject constructor(
     fun getGovernments(country: String) {
         viewModelScope.launch {
             val response = repository.getGovernment(country)
-            Log.i("ADDRESS", response.toString())
             if (response.isSuccessful) {
                 response.body()?.let {
-                    Log.i("ADDRESS", it.toString())
                     _governmentsResult.postValue(NetworkResult.Success(it))
                 }
             } else {
@@ -52,10 +49,8 @@ class AddressViewModel @Inject constructor(
     fun getCities(country: String, government: String) {
         viewModelScope.launch {
             val response = repository.getCities(country, government)
-            Log.i("ADDRESS", response.toString())
             if (response.isSuccessful) {
                 response.body()?.let {
-                    Log.i("ADDRESS", it.toString())
                     _citiesResult.postValue(NetworkResult.Success(it))
                 }
             } else {

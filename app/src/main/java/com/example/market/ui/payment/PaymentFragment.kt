@@ -172,7 +172,6 @@ class PaymentFragment : Fragment() {
                         roundOffDecimal((((result.data.draftOrder.totalPrice)!!.toDouble()) * exchange)).toString()
                     val total =
                         roundOffDecimal(((result.data.draftOrder.totalPrice).toDouble()))
-                    Log.d("menp", "curr=$current")
                     if (total >= MAX_CASH_ON_DELIVERY) {
                         paymentMethod = ONLINE_PAYMENT
                         binding.paymentButtonContainer.visibility = View.VISIBLE
@@ -204,7 +203,6 @@ class PaymentFragment : Fragment() {
 
     private fun setUpPayPal() {
         rounded = roundOffDecimal(current * USD)
-        Log.d("menp", "curr rounded=$rounded")
         binding.paymentButtonContainer.setup(
             createOrder =
             CreateOrder { createOrderActions ->
@@ -235,7 +233,7 @@ class PaymentFragment : Fragment() {
                 Toast.makeText(requireContext(), "payment cancel", Toast.LENGTH_SHORT).show()
             },
             onError = OnError { errorInfo ->
-                Toast.makeText(requireContext(), "payment error$errorInfo", Toast.LENGTH_SHORT)
+                Toast.makeText(requireContext(), "payment error", Toast.LENGTH_SHORT)
                     .show()
             },
         )

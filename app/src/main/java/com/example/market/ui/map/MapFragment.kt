@@ -65,68 +65,72 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickListener
         binding.mapView.onCreate(savedInstanceState)
         binding.mapView.getMapAsync(this)
 
-        // Set the initial location method (GPS by default)
         binding.btnToggleLocationMethod.setOnClickListener {
             isLocationViaGPS = true
             getLastLocation()
         }
         binding.okBtn.setOnClickListener {
-            val addressList =
-                geocoder.getFromLocation(latitude!!, longitude!!, 1)
+            if (latitude != null && longitude != null) {
+                val addressList =
+                    geocoder.getFromLocation(latitude!!, longitude!!, 1)
 
-            if (addressList != null && addressList.isNotEmpty()) {
-                Log.i("MAP", "$addressList")
-                val address = addressList[0]
-                if (address.countryCode != null && address.countryCode == "EG") {
-                    val newLocality = addressList[0].locality
-                    val subAdmin = addressList[0].subAdminArea
-                    val subLocality = addressList[0].subLocality
+                if (addressList != null && addressList.isNotEmpty()) {
+                    Log.i("MAP", "$addressList")
+                    val address = addressList[0]
+                    if (address.countryCode != null && address.countryCode == "EG") {
+                        val newLocality = addressList[0].locality
+                        val subAdmin = addressList[0].subAdminArea
+                        val subLocality = addressList[0].subLocality
 
-                    val cityName = newLocality ?: subAdmin ?: subLocality
-                    if (cityName != null) {
-                        val government = address.adminArea
-                        val city = address.subAdminArea
-                        val postalCode = address.postalCode
-                        val feature = address.featureName
-                        val addressDetails = "$feature-$city-$government-GE"
-                        userAddress = UserAddress(
-                            addressDetails,
-                            city,
-                            government,
-                            null,
-                            postalCode,
-                            null,
-                            null,
-                            address.countryCode
-                        )
-                        Toast.makeText(
-                            requireContext(),
-                            cityName,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        val cityName = newLocality ?: subAdmin ?: subLocality
+                        if (cityName != null) {
+                            val government = address.adminArea
+                            val city = address.subAdminArea
+                            val postalCode = address.postalCode
+                            val feature = address.featureName
+                            val addressDetails = "$feature-$city-$government-GE"
+                            userAddress = UserAddress(
+                                addressDetails,
+                                city,
+                                government,
+                                null,
+                                postalCode,
+                                null,
+                                null,
+                                address.countryCode
+                            )
+                            Toast.makeText(
+                                requireContext(),
+                                cityName,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else {
+                            Toast.makeText(
+                                requireContext(),
+                                "name not found",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     } else {
                         Toast.makeText(
                             requireContext(),
-                            "name not found",
+                            "must choose from egypt only",
                             Toast.LENGTH_SHORT
                         ).show()
                     }
-                } else {
-                    Toast.makeText(
-                        requireContext(),
-                        "must choose from egypt only",
-                        Toast.LENGTH_SHORT
-                    ).show()
                 }
+                parentFragmentManager.setFragmentResult(MAP, Bundle().apply {
+                    putString(ADDRESS_KEY, userAddress.address1)
+                    putString(POSTAL_KEY, userAddress.zip)
+                    putString(GOVERN_KEY, userAddress.province)
+                    putString(CITY_KEY, userAddress.city)
+                    findNavController().navigateUp()
+                })
+            } else {
+                Toast.makeText(requireContext(), "choose location first", Toast.LENGTH_SHORT).show()
             }
-            parentFragmentManager.setFragmentResult(MAP, Bundle().apply {
-                putString(ADDRESS_KEY, userAddress.address1)
-                putString(POSTAL_KEY, userAddress.zip)
-                putString(GOVERN_KEY, userAddress.province)
-                putString(CITY_KEY, userAddress.city)
-                findNavController().navigateUp()
-            })
         }
+
     }
 
     override fun onResume() {
@@ -137,10 +141,10 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickListener
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         mMap.setOnMapClickListener(this)
-        latitude = 30.04
-        longitude = 31.23
-        val cairo = LatLng(latitude!!, longitude!!)
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(cairo))
+//        latitude = 30.04
+//        longitude = 31.23
+//        val cairo = LatLng(latitude!!, longitude!!)
+//        mMap.moveCamera(CameraUpdateFactory.newLatLng(cairo))
     }
 
     override fun onMapClick(latLng: LatLng) {
