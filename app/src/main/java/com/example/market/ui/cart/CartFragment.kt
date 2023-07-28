@@ -50,7 +50,7 @@ class CartFragment : Fragment(), CartClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("TAG","onViewCreated")
+        Log.d("TAG", "onViewCreated")
         currency = sharedPreferences.getString(Constants.CURRENCY_TO_KEY, "") ?: "EGP"
         setupCartRecyclerView()
         observeCartResponse()
@@ -73,13 +73,13 @@ class CartFragment : Fragment(), CartClickListener {
 
     override fun onResume() {
         super.onResume()
-        Log.d("TAG","onResume")
+        Log.d("TAG", "onResume")
         viewModel.getCartItems()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.d("TAG","onDestroy")
+        Log.d("TAG", "onDestroy")
         _binding = null
     }
 

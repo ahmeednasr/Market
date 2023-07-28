@@ -139,7 +139,7 @@ class CartAdapter(
 
     class DailyDiffCallback : DiffUtil.ItemCallback<LineItemsItem>() {
         override fun areItemsTheSame(oldItem: LineItemsItem, newItem: LineItemsItem): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem.id == newItem.id && oldItem.quantity == newItem.quantity
         }
 
         override fun areContentsTheSame(oldItem: LineItemsItem, newItem: LineItemsItem): Boolean {
