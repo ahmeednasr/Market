@@ -77,5 +77,6 @@
     <string name="next">Next</string>
     <string name="Valid_Coupon">Valid_Coupon</string>
     <string name="inValid_Coupon">inValid Coupon</string>
-
+    <string name="alert">alert</string>
+    <string name="Must_login">You Must login first.</string>
 </resources>

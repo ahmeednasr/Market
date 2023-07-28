@@ -14,7 +14,7 @@
     <string name="cart">عربه التسوق</string>
     <string name="filter">تصنيف</string>
     <string name="map">خريطه</string>
-    <string name="OK">Ok</string>
+    <string name="OK">حسنا</string>
     <string name="GPS">GPS</string>
     <string name="change">تغيير</string>
     <string name="arabic">العربيه</string>
@@ -56,11 +56,8 @@
     <string name="login_required">يجب التسجيل</string>
     <string name="alert_msg">يرجى تسجيل الدخول للمتابعة.</string>
     <string name="coupons">كوبونات</string>
-
     <string name="no_internet_msg">حدث مشكلة في الاتصال, يرجى التحقق من اتصالك بالانترنت!</string>
     <string name="no_data_msg">غير متوفر حاليا!</string>
-
-
     <string name="wraning">أنتبه</string>
     <string name="wraning_remove"> هل تريد الحذف ؟</string>
     <string name="order_total">الاجمالي:</string>
@@ -81,5 +78,6 @@
     <string name="next">التالي</string>
     <string name="Valid_Coupon">كوبون صالح</string>
     <string name="inValid_Coupon">كوبون غير صحيح</string>
-
+    <string name="alert">تنبيه</string>
+    <string name="Must_login">يجب تسجيل الدخول.</string>
 </resources>
