@@ -9,7 +9,7 @@ object Constants {
 
     const val CURRENCY_FROM_KEY = "EGP"
     const val CURRENCY_TO_KEY = "CURRENCY_KEY"
-    
+
     const val CURRENCY_URL = "https://api.apilayer.com/currency_data/"
     const val CURRENCY_API_KEY = "DBBn4yFP2oT7w1XT2XP3gYVXT8yAWIPB"
     const val MAP = "MAP"
@@ -30,4 +30,13 @@ object Constants {
     const val DISCOUNT_ID = "DISCOUNT_ID"
     const val TITTLE = "shoes"
     const val IS_Logged = "login"
+    const val Exchange_Value = "Exchange_Value"
+
+    const val Final_Result_Exchange = "Final_Result_Exchange"
+    const val ONLINE_PAYMENT = "ONLINE_PAYMENT"
+    const val CASH_ON_DELIVERY = "CASH_ON_DELIVERY"
+    const val MAX_CASH_ON_DELIVERY = 1000.0
+    const val USD_VALUE = "USD"
+    const val COMPLETED_STATUS = "completed"
+    const val OPEN_STATUS = "open"
 }

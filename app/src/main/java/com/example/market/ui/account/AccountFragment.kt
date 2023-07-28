@@ -2,6 +2,8 @@ package com.example.market.ui.account
 
 import android.content.SharedPreferences
 import android.content.Intent
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -12,8 +14,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
-import androidx.navigation.NavOptions
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -29,6 +32,7 @@ import com.example.market.utils.Constants.CURRENCY_FROM_KEY
 import com.example.market.utils.Constants.CURRENCY_TO_KEY
 import com.example.market.utils.Constants.ENGLISH
 import com.example.market.utils.Constants.LANGUAGE_KEY
+import com.example.market.utils.NetworkManager
 import com.example.market.utils.NetworkResult
 import com.example.market.utils.Utils.setLocale
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -52,6 +56,9 @@ class AccountFragment : Fragment() {
     @Inject
     lateinit var sharedPreferences: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
+
+    @Inject
+    lateinit var networkChangeListener: NetworkManager
 
     private val viewModel: AccountViewModel by viewModels()
     private lateinit var auth: FirebaseAuth
@@ -86,6 +93,7 @@ class AccountFragment : Fragment() {
         auth = Firebase.auth
         editor = sharedPreferences.edit()
 
+        registerNetworkManager()
         updateUserUI()
         setupProductsRecyclerView()
         setupOrdersRecyclerView()
@@ -95,11 +103,13 @@ class AccountFragment : Fragment() {
         observeSearchButton()
         navigateToOrders()
         navigateToFavourites()
+        observeNetworkState()
+        navigateToAddress()
+        navigateToCart()
+        observeSearchButton()
+        navigateToOrders()
 
-//        currentLocale = Locale.getDefault()
-//        currentLanguage = currentLocale.language
         currentLanguage = sharedPreferences.getString(LANGUAGE_KEY, "").toString()
-        Log.i("LANGUAGE", "test 1${currentLanguage}")
 
         if (currentLanguage == "en" || currentLanguage.isEmpty()) {
             binding.languageValue.text = resources.getString(R.string.english)
@@ -115,13 +125,35 @@ class AccountFragment : Fragment() {
         binding.llCurrency.setOnClickListener {
             observeCurrenciesResponse()
         }
-        binding.llAddress.setOnClickListener {
-            findNavController().navigate(AccountFragmentDirections.actionAccountFragmentToAddressesFragment())
-        }
 
-        navigateToCart()
-        observeSearchButton()
-        navigateToOrders()
+    }
+
+    private fun registerNetworkManager() {
+        val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        ContextCompat.registerReceiver(
+            requireActivity(),
+            networkChangeListener,
+            filter,
+            ContextCompat.RECEIVER_NOT_EXPORTED
+        )
+    }
+
+    override fun onPause() {
+        super.onPause()
+        activity?.let {
+            LocalBroadcastManager.getInstance(it).unregisterReceiver(networkChangeListener)
+        }
+    }
+
+    private fun observeNetworkState() {
+        NetworkManager.isNetworkAvailable.observe(viewLifecycleOwner) {
+            if (it) {
+                if (sharedPreferences.getBoolean(Constants.IS_Logged, false)) {
+                    viewModel.getFavourites()
+                    viewModel.getOrders()
+                }
+            }
+        }
     }
 
     private fun navigateToOrders() {
@@ -135,7 +167,7 @@ class AccountFragment : Fragment() {
     }
 
     private fun navigateToFavourites() {
-        binding.llOrders.setOnClickListener {
+        binding.llSavedItems.setOnClickListener {
             if (sharedPreferences.getBoolean(Constants.IS_Logged, false)) {
                 findNavController().navigate(AccountFragmentDirections.actionAccountFragmentToFavouritesFragment())
             } else {
@@ -148,6 +180,16 @@ class AccountFragment : Fragment() {
         binding.ivCart.setOnClickListener {
             if (sharedPreferences.getBoolean(Constants.IS_Logged, false)) {
                 findNavController().navigate(AccountFragmentDirections.actionAccountFragmentToCartFragment())
+            } else {
+                showAlertDialog()
+            }
+        }
+    }
+
+    private fun navigateToAddress() {
+        binding.llAddress.setOnClickListener {
+            if (sharedPreferences.getBoolean(Constants.IS_Logged, false)) {
+                findNavController().navigate(AccountFragmentDirections.actionAccountFragmentToAddressesFragment())
             } else {
                 showAlertDialog()
             }
@@ -217,6 +259,9 @@ class AccountFragment : Fragment() {
         val selectedItem = menuItem.title
         editor.putString(CURRENCY_TO_KEY, selectedItem as String?)
         editor.apply()
+        if (selectedItem != null) {
+            viewModel.convertCurrency(CURRENCY_FROM_KEY, selectedItem, 1.0)
+        }
         binding.currencyValue.text = selectedItem
         Toast.makeText(requireContext(), selectedItem, Toast.LENGTH_SHORT).show()
     }
@@ -224,9 +269,6 @@ class AccountFragment : Fragment() {
     private fun showDialog() {
 
         var popUpBinding = LanguagePopupBinding.inflate(layoutInflater)
-//        currentLocale = Locale.getDefault()
-//        currentLanguage = currentLocale.language
-        Log.i("LANGUAGE", currentLanguage)
         if (currentLanguage == "en" || currentLanguage.isEmpty()) {
             popUpBinding.english.isChecked = true
         } else if (currentLanguage == "ar") {
@@ -256,8 +298,6 @@ class AccountFragment : Fragment() {
     private fun updateUserUI() {
         if (auth.currentUser != null) {
             if (auth.currentUser!!.isEmailVerified) {
-                viewModel.getOrders()
-                viewModel.getFavourites()
                 binding.tvLogin.text = resources.getString(R.string.logout)
                 binding.tvUsername.text = auth.currentUser!!.email
             }
@@ -311,7 +351,6 @@ class AccountFragment : Fragment() {
             when (response) {
                 is NetworkResult.Success -> {
                     response.data?.orders?.let {
-                        Log.d("observeProductsResponse", "size: ${it.size}")
                         ordersAccountAdapter.submitList(it.take(2))
                     }
                 }
@@ -331,6 +370,7 @@ class AccountFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
         }
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

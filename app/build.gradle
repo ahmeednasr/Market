@@ -149,4 +149,6 @@ dependencies {
     testImplementation "io.mockk:mockk:1.13.5"
     androidTestImplementation "io.mockk:mockk-android:1.13.5"
 
+    //paypal
+    implementation('com.paypal.checkout:android-sdk:1.0.0')
 }

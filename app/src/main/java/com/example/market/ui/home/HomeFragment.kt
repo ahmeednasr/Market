@@ -1,9 +1,6 @@
 package com.example.market.ui.home
 
-import android.content.DialogInterface
-import android.content.Intent
-import android.content.IntentFilter
-import android.content.SharedPreferences
+import android.content.*
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -37,6 +34,7 @@ class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+    private lateinit var clipboardManager: ClipboardManager
 
     @Inject
     lateinit var sharedPreferences: SharedPreferences
@@ -57,34 +55,40 @@ class HomeFragment : Fragment() {
         })
     }
     private val discountAdapter by lazy {
-        DiscountAdapter( requireContext(),
+        DiscountAdapter(requireContext(),
             object : DiscountAdapter.DiscountClickListener {
-            override fun onItemClicked(discount: PriceRule) {
-                val alertDialog: AlertDialog? = activity?.let {
-                    val builder = AlertDialog.Builder(it)
-                    builder.apply {
-                        setTitle("you get discount code")
-                        setMessage(discount.title)
-                        setPositiveButton(
-                            R.string.save,
-                            DialogInterface.OnClickListener { dialog, id ->
-                                val sharedPreferences = requireContext().getSharedPreferences(
-                                    Constants.SharedPreferences, 0
-                                )
-                                val editor = sharedPreferences.edit()
-                                editor.putString(DISCOUNT_ID, discount.title)
-                                editor.apply()
-                            })
-                        setNegativeButton(R.string.cancel,
-                            DialogInterface.OnClickListener { dialog, id ->
-                            })
-                    }
-                    builder.create()
-                }
-                alertDialog?.show()
-            }
+                override fun onItemClicked(discount: PriceRule) {
+                    val alertDialog: AlertDialog? = activity?.let {
+                        val builder = AlertDialog.Builder(it)
+                        builder.apply {
+                            setTitle("you get discount code")
+                            setMessage(discount.title)
+                            setPositiveButton(
+                                R.string.save,
+                                DialogInterface.OnClickListener { dialog, id ->
+                                    val sharedPreferences = requireContext().getSharedPreferences(
+                                        Constants.SharedPreferences, 0
+                                    )
+                                    val editor = sharedPreferences.edit()
+                                    editor.putString(DISCOUNT_ID, discount.title)
+                                    editor.apply()
+                                    clipboardManager.setPrimaryClip(
+                                        ClipData.newPlainText(
+                                            "label",
+                                            discount.title
+                                        )
+                                    )
 
-        })
+                                })
+                            setNegativeButton(R.string.cancel,
+                                DialogInterface.OnClickListener { dialog, id ->
+                                })
+                        }
+                        builder.create()
+                    }
+                    alertDialog?.show()
+                }
+            })
     }
 
     override fun onCreateView(
@@ -98,6 +102,8 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        clipboardManager =
+            requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
         registerNetworkManager()
         observeNetworkState()
@@ -124,7 +130,7 @@ class HomeFragment : Fragment() {
 
     private fun observeNetworkState() {
         NetworkManager.isNetworkAvailable.observe(viewLifecycleOwner) {
-            if (it){
+            if (it) {
                 viewModel.getDiscountCodes()
                 viewModel.getBrands()
                 handleWhenThereNetwork()

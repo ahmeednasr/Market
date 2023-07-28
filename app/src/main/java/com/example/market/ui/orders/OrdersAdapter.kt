@@ -5,31 +5,57 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.market.data.pojo.LineItemsItem
 import com.example.market.data.pojo.Order
 import com.example.market.databinding.ItemOrderBinding
+import com.example.market.ui.favourites.FavouritesAdapter
 import com.example.market.utils.Utils
 
-class OrdersAdapter : ListAdapter<Order, OrdersAdapter.MyViewHolder>(
-        DailyDiffCallback()
-    ) {
+class OrdersAdapter(
+    private val currency: String,
+    private val clickListener: OrderClickListener
+) : ListAdapter<Order, OrdersAdapter.MyViewHolder>(
+    DailyDiffCallback()
+) {
+
+    var exchangeRate: Double? = null
+        set(value) {
+            field = value
+        }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         return MyViewHolder.from(parent)
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), clickListener, exchangeRate, currency)
+    }
+
+    interface OrderClickListener {
+        fun onItemClicked(orderId: Long)
     }
 
     class MyViewHolder(private val binding: ItemOrderBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(order: Order) {
+        fun bind(
+            order: Order, clickListener: OrderClickListener, exchangeRate: Double?,
+            currency: String
+        ) {
             binding.apply {
                 tvOrderNumber.text = order.order_number.toString()
-                tvOrderPrice.text = order.current_total_price.toString()
-                tvProductsNumber.text = order.line_items?.size.toString()
+
+                val price = order.current_total_price?.toDouble()?.times(exchangeRate ?: 1.0)
+                tvOrderPrice.text = "${Utils.roundOffDecimal(price ?: 0.0)} $currency"
+
+                tvProductsNumber.text = (order.line_items?.size?.minus(1)).toString()
                 tvDate.text = Utils.formatDate(order.created_at.toString())
+
+                cvLayout.setOnClickListener {
+                    order.id?.let {
+                        clickListener.onItemClicked(it)
+                    }
+                }
             }
         }
 

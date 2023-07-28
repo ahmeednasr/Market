@@ -22,6 +22,8 @@ import com.example.market.auth.AuthActivity
 import com.example.market.data.pojo.LineItemsItem
 import com.example.market.data.pojo.Product
 import com.example.market.databinding.FragmentSearchBinding
+import com.example.market.ui.account.AccountFragmentDirections
+import com.example.market.ui.product.ProductDetailsDirections
 import com.example.market.utils.Constants
 import com.example.market.utils.NetworkManager
 import com.example.market.utils.NetworkResult
@@ -45,6 +47,7 @@ class SearchFragment : Fragment() {
     lateinit var networkChangeListener: NetworkManager
 
     private lateinit var currency: String
+    private var exchangeRate: Double? = null
 
     private val searchAdapter by lazy {
         SearchAdapter(
@@ -88,30 +91,27 @@ class SearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         currency = sharedPreferences.getString(Constants.CURRENCY_TO_KEY, "") ?: "EGP"
+        exchangeRate = sharedPreferences.getFloat(Constants.Exchange_Value, 0.0F).toDouble()
 
         registerNetworkManager()
         observeNetworkState()
+        initSliderValues()
         observeBackButton()
         setupSliderView()
         setupProductsRecyclerView()
         observeProductsResponse()
         observeSearchText()
         observeSliderChange()
-        observeConversionResult()
+        observeNavigation()
     }
 
-    private fun observeConversionResult() {
-        viewModel.conversionResult.observe(viewLifecycleOwner){
-            searchAdapter.exchangeRate = it
-            initSliderValues(it)
-        }
-    }
-
-    private fun initSliderValues(exchangeRate: Double) {
+    private fun initSliderValues() {
         binding.apply {
-            tvMax.text = "${(300*exchangeRate).roundToInt()} ${currency}"
-            tvMin.text = "${(0*exchangeRate).roundToInt()} ${currency}"
-            tvSlider.text = "${(0*exchangeRate).roundToInt()} ${currency}"
+            exchangeRate?.let {
+                tvMax.text = "${(300*it).roundToInt()} ${currency}"
+                tvMin.text = "${(0*it).roundToInt()} ${currency}"
+                tvSlider.text = "${(0*it).roundToInt()} ${currency}"
+            }
         }
     }
 
@@ -172,11 +172,6 @@ class SearchFragment : Fragment() {
     private fun observeNetworkState() {
         NetworkManager.isNetworkAvailable.observe(viewLifecycleOwner) {
             if (it){
-                viewModel.convertCurrency(
-                    "EGP",
-                    currency,
-                    1.00
-                )
                 viewModel.getProducts()
                 handleWhenThereNetwork()
             } else {
@@ -254,8 +249,8 @@ class SearchFragment : Fragment() {
     private fun setupSliderView() {
         binding.continuousSlider.setLabelFormatter { value: Float ->
             //should change $ to current currency
-            binding.tvSlider.text = "${value.roundToInt()} ${currency}"
-            return@setLabelFormatter "${value.roundToInt()} ${currency}"
+            binding.tvSlider.text = "${(value *(exchangeRate ?: 1.0)).roundToInt()} ${currency}"
+            return@setLabelFormatter "${(value * (exchangeRate ?: 1.0)).roundToInt()} ${currency}"
         }
     }
 
@@ -265,6 +260,24 @@ class SearchFragment : Fragment() {
             adapter = searchAdapter
             layoutManager =
                 GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
+        }
+    }
+
+    private fun observeNavigation(){
+        binding.ivFavourite.setOnClickListener {
+            if (sharedPreferences.getBoolean(Constants.IS_Logged, false)) {
+                findNavController().navigate(SearchFragmentDirections.actionSearchFragmentToFavouritesFragment())
+            } else {
+                showAlertDialog()
+            }
+        }
+
+        binding.ivCart.setOnClickListener {
+            if (sharedPreferences.getBoolean(Constants.IS_Logged, false)) {
+                findNavController().navigate(SearchFragmentDirections.actionSearchFragmentToCartFragment())
+            } else {
+                showAlertDialog()
+            }
         }
     }
 
@@ -321,6 +334,7 @@ class SearchFragment : Fragment() {
                             handleNoDataState()
                         } else {
                             handleDataState()
+                            searchAdapter.exchangeRate = exchangeRate
                             searchAdapter.submitList(it)
                         }
                     }

@@ -1,6 +1,5 @@
 package com.example.market.ui.favourites
 
-import android.content.Intent
 import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.net.ConnectivityManager
@@ -17,10 +16,8 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.market.R
-import com.example.market.auth.AuthActivity
 import com.example.market.data.pojo.LineItemsItem
 import com.example.market.databinding.FragmentFavouritesBinding
-import com.example.market.ui.account.AccountFragmentDirections
 import com.example.market.utils.Constants
 import com.example.market.utils.NetworkManager
 import com.example.market.utils.NetworkResult
@@ -43,6 +40,7 @@ class FavouritesFragment : Fragment() {
     lateinit var networkChangeListener: NetworkManager
 
     private lateinit var currency: String
+    private var exchangeRate: Double? = null
 
     private val favouritesAdapter by lazy {
         FavouritesAdapter(sharedPreferences.getString(Constants.CURRENCY_TO_KEY, "") ?: "EGP",
@@ -50,7 +48,7 @@ class FavouritesFragment : Fragment() {
                 override fun onItemClicked(product: LineItemsItem) {
                     product.sku?.toLong()?.let {
                         findNavController().navigate(
-                            AccountFragmentDirections.actionAccountFragmentToProductDetails(
+                            FavouritesFragmentDirections.actionFavouritesFragmentToProductDetails(
                                 it
                             )
                         )
@@ -75,15 +73,13 @@ class FavouritesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         currency = sharedPreferences.getString(Constants.CURRENCY_TO_KEY, "") ?: "EGP"
+        exchangeRate = sharedPreferences.getFloat(Constants.Exchange_Value, 0.0F).toDouble()
+
         registerNetworkManager()
         observeNetworkState()
         observeBackButton()
         setupProductsRecyclerView()
         observeProductsResponse()
-
-        viewModel.conversionResult.observe(viewLifecycleOwner) {
-            favouritesAdapter.exchangeRate = it
-        }
     }
 
     private fun registerNetworkManager() {
@@ -113,7 +109,6 @@ class FavouritesFragment : Fragment() {
         NetworkManager.isNetworkAvailable.observe(viewLifecycleOwner) {
             if (it) {
                 viewModel.getFavourites()
-                viewModel.convertCurrency("EGP", currency, 1.00)
                 handleWhenThereNetwork()
             } else {
                 handleWhenNoNetwork()
@@ -154,6 +149,7 @@ class FavouritesFragment : Fragment() {
                             handleNoDataState()
                         } else {
                             handleDataState()
+                            favouritesAdapter.exchangeRate = exchangeRate
                             favouritesAdapter.submitList(it)
                         }
                     }

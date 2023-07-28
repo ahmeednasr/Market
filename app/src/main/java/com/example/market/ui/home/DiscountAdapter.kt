@@ -1,5 +1,6 @@
 package com.example.market.ui.home
 
+import android.content.ClipboardManager
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -27,6 +28,8 @@ class DiscountAdapter(
             viewHolder.imageView.setImageDrawable(context.resources.getDrawable(R.drawable.twenty_five))
         } else if (prices[position].title.equals("FreeShipping")){
             viewHolder.imageView.setImageDrawable(context.resources.getDrawable(R.drawable.hundred))
+        }else{
+
         }
         viewHolder.textView.text = prices[position].title
 

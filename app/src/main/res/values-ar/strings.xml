@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Market</string>
     <string name="hello_blank_fragment">اهلا بكم</string>
-    <string name="your_cart_is_empty">حقيبه التسوق فارغه!</string>
+    <string name="your_cart_is_empty">عربه التسوق فارغه!</string>
     <string name="remove">حذف</string>
     <string name="currancy">EGP</string>
     <string name="decrement">decrement</string>
@@ -11,8 +11,8 @@
     <string name="categories">الفئات</string>
     <string name="account">الحساب</string>
     <string name="subtotal">المجموع:</string>
-    <string name="cart">السله</string>
-    <string name="filter">filter</string>
+    <string name="cart">عربه التسوق</string>
+    <string name="filter">تصنيف</string>
     <string name="map">خريطه</string>
     <string name="OK">Ok</string>
     <string name="GPS">GPS</string>
@@ -21,6 +21,7 @@
     <string name="english">الانجليزيه</string>
     <string name="address">العنوان</string>
     <string name="currency">العمله</string>
+    <string name="currency_title">العمله:</string>
     <string name="language">اللغه</string>
     <string name="login">تسجيل الدخول</string>
     <string name="logout">تسجيل خروج</string>
@@ -35,7 +36,7 @@
     <string name="save">حفظ</string>
     <string name="availability">متوفر في المتجر:</string>
     <string name="cancel">إلغاء</string>
-    <string name="in_stock">in Stock</string>
+    <string name="in_stock">في المخزن</string>
     <string name="rm_msg">هل تريد حذف هذا المنتج</string>
     <string name="delete">حذف</string>
     <string name="home">الصفحة الرئيسية</string>
@@ -63,4 +64,22 @@
     <string name="wraning">أنتبه</string>
     <string name="wraning_remove"> هل تريد الحذف ؟</string>
     <string name="order_total">الاجمالي:</string>
+    <string name="brand">الماركة:</string>
+    <string name="rating">التقييم:</string>
+    <string name="description">-الوصف-</string>
+    <string name="color">اللون</string>
+    <string name="size">الحجم</string>
+    <string name="add_to_chart">الإضافه إلي العربه</string>
+    <string name="payment_method">طريقة الدفع</string>
+    <string name="cash_on_delivery">الدفع عند الإستلام</string>
+    <string name="online_payment">الدفع عن طريق الانترنت</string>
+    <string name="coupon">كوبون</string>
+    <string name="tax">ضرائب:</string>
+    <string name="discount">تخفيض:</string>
+    <string name="shipping_fee">رسوم:</string>
+    <string name="total">الاجمالي:</string>
+    <string name="next">التالي</string>
+    <string name="Valid_Coupon">كوبون صالح</string>
+    <string name="inValid_Coupon">كوبون غير صحيح</string>
+
 </resources>

@@ -9,6 +9,7 @@ import com.bumptech.glide.Glide
 import com.example.market.data.pojo.LineItemsItem
 import com.example.market.data.pojo.Product
 import com.example.market.databinding.ItemFavouriteProductBinding
+import com.example.market.utils.Utils.roundOffDecimal
 import java.math.RoundingMode
 import java.text.DecimalFormat
 
@@ -23,7 +24,6 @@ class FavouritesAdapter(
     var exchangeRate: Double? = null
         set(value) {
             field = value
-            notifyDataSetChanged()
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -42,11 +42,16 @@ class FavouritesAdapter(
     class MyViewHolder(private val binding: ItemFavouriteProductBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(product: LineItemsItem, clickListener: ProductClickListener, exchangeRate: Double?, currency: String) {
+        fun bind(
+            product: LineItemsItem,
+            clickListener: ProductClickListener,
+            exchangeRate: Double?,
+            currency: String
+        ) {
             binding.apply {
                 tvProductName.text = product.title
                 val price = product.price?.toDouble()?.times(exchangeRate ?: 1.0)
-                tvProductPrice.text = "$currency ${roundOffDecimal(price?:0.0)}"
+                tvProductPrice.text = "${roundOffDecimal(price ?: 0.0)} $currency"
 
                 Glide
                     .with(binding.root)
@@ -61,12 +66,6 @@ class FavouritesAdapter(
                     clickListener.onItemClicked(product)
                 }
             }
-        }
-
-        private fun roundOffDecimal(number: Double): Double {
-            val df = DecimalFormat("#.##")
-            df.roundingMode = RoundingMode.CEILING
-            return df.format(number).toDouble()
         }
 
         companion object {

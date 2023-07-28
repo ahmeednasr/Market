@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.denzcoskun.imageslider.models.SlideModel
@@ -21,8 +22,8 @@ import com.example.market.auth.AuthActivity
 import com.example.market.data.pojo.Product
 import com.example.market.databinding.FragmentProductDetailsBinding
 import com.example.market.utils.Constants
-import com.example.market.utils.Constants.UserID
 import com.example.market.utils.NetworkResult
+import com.example.market.utils.Utils.roundOffDecimal
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlin.math.roundToInt
@@ -65,6 +66,28 @@ class ProductDetails : Fragment() {
 
         viewModel.getProduct(args.productId)
         observeProductResponse()
+
+        binding.backBtn.setOnClickListener {
+            findNavController().popBackStack()
+        }
+        binding.ivFavourite.setOnClickListener {
+            if (sharedPreferences.getBoolean(Constants.IS_Logged, false)) {
+                findNavController().navigate(ProductDetailsDirections.actionProductDetailsToFavouritesFragment())
+            } else {
+                showAlertDialog()
+            }
+        }
+
+        binding.ivCart.setOnClickListener {
+            if (sharedPreferences.getBoolean(Constants.IS_Logged, false)) {
+                findNavController().navigate(ProductDetailsDirections.actionProductDetailsToCartFragment())
+            } else {
+                showAlertDialog()
+            }
+        }
+        binding.ivSearch.setOnClickListener {
+            findNavController().navigate(ProductDetailsDirections.actionProductDetailsToSearchFragment())
+        }
     }
 
     override fun onDestroy() {
@@ -131,10 +154,17 @@ class ProductDetails : Fragment() {
         }
         setColorList(colorList)
         setSizeList(sizeList, product)
-        binding.priceText.text = product.variants!![0].price + " " + sharedPreferences.getString(
-            Constants.CURRENCY_FROM_KEY,
-            "EGP"
-        )
+        viewModel.conversionResult.observe(viewLifecycleOwner) {
+            Log.i("STRING", "${product.variants!![0].price}")
+            val price = product.variants[0].price?.toDouble()
+            val currencyUnit = sharedPreferences.getString(Constants.CURRENCY_TO_KEY, "")
+            val n1 = price!!
+            val n2 = it
+            val currency = "${roundOffDecimal(n1 * n2)} $currencyUnit"
+
+            binding.priceText.text = currency
+        }
+
         binding.ratingBar.rating = randomRounded.toFloat()
         checkFavorite(product)
         reviewAdaptor.submitList(reviewsList)
@@ -148,13 +178,24 @@ class ProductDetails : Fragment() {
                 reviewShow = true
             }
         }
+
         binding.addToChartButton.setOnClickListener {
             Log.i("CART", "$quantity $variantId")
-            if (quantity > 0 && variantId > 0) {
-                viewModel.saveToCart(product, variantId)
+
+            if (sharedPreferences.getBoolean(Constants.IS_Logged, false)) {
+                if (quantity > 0 && variantId > 0) {
+                    viewModel.saveToCart(product, variantId)
+                    Toast.makeText(requireContext(), "added to cart", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "size and color not selected",
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                }
             } else {
-                Toast.makeText(requireContext(), "size and color not selected", Toast.LENGTH_SHORT)
-                    .show()
+                showAlertDialog()
             }
 
         }

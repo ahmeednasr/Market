@@ -19,6 +19,10 @@ import androidx.core.view.updateLayoutParams
 import com.example.market.R
 import com.example.market.auth.AuthActivity
 import com.google.android.material.snackbar.Snackbar
+import java.math.RoundingMode
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -34,7 +38,7 @@ object Utils {
         res.updateConfiguration(conf, dm)
     }
 
-    fun formatDate(date: String) : String{
+    fun formatDate(date: String): String {
         val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val formattedDate: Date = format.parse(date) as Date
         val stringFormat = SimpleDateFormat("dd/MM/yyy", Locale.getDefault())
@@ -49,9 +53,11 @@ object Utils {
         snackbar.show()
     }
 
+    fun roundOffDecimal(number: Double): Double {
+        val df = DecimalFormat("#.##", DecimalFormatSymbols(Locale.ENGLISH))
+        df.roundingMode = RoundingMode.CEILING
 
-
-
-
-
+        val formattedNumber = df.format(number)
+        return formattedNumber.toDouble()
+    }
 }

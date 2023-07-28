@@ -106,11 +106,27 @@ class RepositoryImpl(
         userId: Long,
         address: CustomerResponse
     ): Response<CustomerResponse> {
-        return apiService.updateCustomer(userId,address)
+        return apiService.updateCustomer(userId, address)
     }
 
     override suspend fun getVariant(id: Long): Response<VariantResponse> {
         TODO("Not yet implemented")
+    }
+
+    override suspend fun getSingleOrder(orderId: Long): Response<OrderResponse> {
+        return apiService.getSingleOrder(orderId)
+    }
+
+    override suspend fun deleteAddress(userId: Long, addressId: Long) {
+        apiService.deleteAddress(userId, addressId)
+    }
+
+    override suspend fun setDefault(userId: Long, addressId: Long) {
+        apiService.setDefault(userId, addressId)
+    }
+
+    override suspend fun completeDraft(draftId: Long) {
+        apiService.completeDraft(draftId)
     }
 
 }

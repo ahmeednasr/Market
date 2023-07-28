@@ -1,6 +1,5 @@
 package com.example.market.ui.cart
 
-import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
@@ -8,23 +7,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.market.R
 import com.example.market.data.pojo.LineItemsItem
-import com.example.market.data.pojo.Product
 import com.example.market.databinding.FragmentCartBinding
 import com.example.market.utils.Constants
-import com.example.market.utils.Constants.CURRENCY_FROM_KEY
-import com.example.market.utils.Constants.SharedPreferences
-import com.example.market.utils.Constants.UserID
+import com.example.market.utils.Constants.Exchange_Value
 import com.example.market.utils.NetworkResult
-import com.example.market.utils.Utils
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.example.market.utils.Utils.roundOffDecimal
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -34,6 +26,8 @@ class CartFragment : Fragment(), CartClickListener {
     private val binding get() = _binding!!
     val viewModel: CartViewModel by viewModels()
     private lateinit var currency: String
+    var cartPrice: Double = 0.0
+
 
     @Inject
     lateinit var sharedPreferences: SharedPreferences
@@ -43,10 +37,6 @@ class CartFragment : Fragment(), CartClickListener {
             this,
             requireContext()
         )
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(
@@ -62,20 +52,23 @@ class CartFragment : Fragment(), CartClickListener {
         super.onViewCreated(view, savedInstanceState)
         viewModel.getCartItems()
         currency = sharedPreferences.getString(Constants.CURRENCY_TO_KEY, "") ?: "EGP"
+        // viewModel.convertCurrency("EGP", currency, 1.00)
         setupCartRecyclerView()
         observeCartResponse()
 
-        viewModel.conversionResult.observe(viewLifecycleOwner) {
-            cartAdapter.exchangeRate = it
-        }
+        cartAdapter.exchangeRate = (sharedPreferences.getFloat(Exchange_Value, 1.0f).toDouble())
 
-
-        viewModel.convertCurrency("EGP", currency, 1.00)
-        viewModel.subtotal.observe(viewLifecycleOwner) { subTotal ->
-            binding.subTotalPrice.text = String.format("%.1f", subTotal.toDouble())
+        viewModel.subtotal.observe(viewLifecycleOwner) { sub ->
+            cartPrice = sub * (sharedPreferences.getFloat(Exchange_Value, 1.0f).toDouble())
+            binding.subTotalPrice.text = roundOffDecimal(cartPrice).toString()
         }
+        binding.totalCurrancy.text = currency
         binding.ivBackArrow.setOnClickListener {
             findNavController().popBackStack()
+        }
+        binding.checkoutBtn.setOnClickListener {
+            viewModel.getUSDExchange()
+            findNavController().navigate(CartFragmentDirections.actionCartFragmentToPaymentFragment())
         }
     }
 
@@ -89,7 +82,14 @@ class CartFragment : Fragment(), CartClickListener {
             when (response) {
                 is NetworkResult.Success -> {
                     response.data?.let {
-                        cartAdapter.submitList(it)
+                        if (it.isEmpty()) {
+                            hideView()
+                            cartAdapter.submitList(it)
+                        } else {
+                            showView()
+                            cartAdapter.submitList(it)
+                        }
+
                     }
                 }
                 is NetworkResult.Error -> {
@@ -108,18 +108,62 @@ class CartFragment : Fragment(), CartClickListener {
         }
     }
 
-    override fun addProduct(lineItemsItem: LineItemsItem, max: Int, current: Int) {
-        if (current < max) {
+    override fun addProduct(
+        lineItemsItem: LineItemsItem,
+        max: Int,
+        current: Int,
+        currentPrice: Double
+    ) {
+        if (current <= max) {
+            cartPrice += currentPrice
+            binding.subTotalPrice.text =
+                roundOffDecimal(cartPrice).toString()
             viewModel.addNewQuantityToCart(lineItemsItem)
         }
     }
 
-    override fun deleteProduct(lineItemsItem: LineItemsItem) {
+    override fun deleteProduct(lineItemsItem: LineItemsItem, currentPrice: Double) {
+        cartPrice -= currentPrice
+        binding.subTotalPrice.text = roundOffDecimal(cartPrice).toString()
         viewModel.removeQuantityFromCart(lineItemsItem)
     }
 
-
     override fun removeCartItem(lineItemsItem: LineItemsItem) {
+        var q = lineItemsItem.quantity!!
+        Log.d("QQQQ", "q= $q")
+        var price = lineItemsItem.price?.toDouble()!!
+        Log.d("QQQQ", "price= $price")
+        Log.d("QQQQ", "q*price= ${(q * price)}")
+        Log.d("QQQQ", "cartPrice1= $cartPrice")
+        cartPrice -= ((q * price) * (sharedPreferences.getFloat(Exchange_Value, 1.0f).toDouble()))
+        Log.d("QQQQ", "cartPrice2= $cartPrice")
+        if (roundOffDecimal(cartPrice) < 0) {
+            binding.subTotalPrice.text = "0.0"
+        } else {
+            binding.subTotalPrice.text = roundOffDecimal(cartPrice).toString()
+        }
         viewModel.deleteCartItem(lineItemsItem)
+    }
+
+    private fun hideView() {
+        binding.emptyCart.visibility = View.VISIBLE
+        binding.emptyCardTxt.visibility = View.VISIBLE
+        binding.cartTitle.visibility = View.GONE
+        binding.subtotalTv.visibility = View.GONE
+        binding.totalCurrancy.visibility = View.GONE
+        binding.subTotalPrice.visibility = View.GONE
+        binding.checkoutBtn.visibility = View.GONE
+        binding.CartRecuclerView.visibility = View.GONE
+    }
+
+    private fun showView() {
+        binding.emptyCart.visibility = View.GONE
+        binding.emptyCardTxt.visibility = View.GONE
+        binding.cartTitle.visibility = View.VISIBLE
+        binding.subtotalTv.visibility = View.VISIBLE
+        binding.totalCurrancy.visibility = View.VISIBLE
+        binding.subTotalPrice.visibility = View.VISIBLE
+        binding.checkoutBtn.visibility = View.VISIBLE
+        binding.CartRecuclerView.visibility = View.VISIBLE
     }
 }

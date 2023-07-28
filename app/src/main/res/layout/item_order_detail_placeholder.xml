@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:elevation="8dp"
+    app:cardCornerRadius="8dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <View
+            android:id="@+id/cv_image"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            app:cardCornerRadius="8dp"
+            android:background="@color/background"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <View
+            android:id="@+id/tv_title"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="32dp"
+            android:background="@color/background"
+            android:layout_marginTop="32dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/cv_image"
+            app:layout_constraintStart_toEndOf="@+id/cv_image"/>
+
+        <View
+            android:id="@+id/tv_price"
+            android:layout_width="0dp"
+            android:layout_height="20dp"
+            android:background="@color/background"
+            android:layout_marginTop="4dp"
+            app:layout_constraintStart_toStartOf="@id/tv_title"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title"
+            app:layout_constraintEnd_toEndOf="@id/tv_title"/>
+
+        <View
+            android:id="@+id/tv_quantity"
+            android:layout_width="0dp"
+            android:layout_height="20dp"
+            android:background="@color/background"
+            android:layout_marginTop="4dp"
+            app:layout_constraintStart_toStartOf="@id/tv_price"
+            app:layout_constraintTop_toBottomOf="@+id/tv_price"
+            app:layout_constraintEnd_toEndOf="@id/tv_price"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
