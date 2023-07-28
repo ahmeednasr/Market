@@ -39,8 +39,7 @@ class OrdersAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
-            order: Order, clickListener: OrderClickListener, exchangeRate: Double?,
-            currency: String
+            order: Order, clickListener: OrderClickListener, exchangeRate: Double?, currency: String
         ) {
             binding.apply {
                 tvOrderNumber.text = order.order_number.toString()

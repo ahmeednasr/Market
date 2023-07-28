@@ -77,7 +77,11 @@ class AccountFragment : Fragment() {
         })
     }
 
-    private val ordersAccountAdapter by lazy { OrdersAccountAdapter() }
+    private val ordersAccountAdapter by lazy {
+        OrdersAccountAdapter(
+            sharedPreferences.getString(Constants.CURRENCY_TO_KEY, "") ?: "EGP"
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
