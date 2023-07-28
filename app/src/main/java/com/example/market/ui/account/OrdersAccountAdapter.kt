@@ -9,26 +9,35 @@ import com.example.market.data.pojo.Order
 import com.example.market.databinding.ItemOrderBinding
 import com.example.market.utils.Utils
 
-class OrdersAccountAdapter : ListAdapter<Order, OrdersAccountAdapter.MyViewHolder>(
-        DailyDiffCallback()
-    ) {
+class OrdersAccountAdapter(
+    private val currency: String
+) : ListAdapter<Order, OrdersAccountAdapter.MyViewHolder>(
+    DailyDiffCallback()
+) {
+
+    var exchangeRate: Double? = null
+        set(value) {
+            field = value
+        }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         return MyViewHolder.from(parent)
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), exchangeRate, currency)
     }
 
     class MyViewHolder(private val binding: ItemOrderBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(order: Order) {
+        fun bind(order: Order, exchangeRate: Double?, currency: String) {
             binding.apply {
                 tvOrderNumber.text = order.order_number.toString()
-                tvOrderPrice.text = order.current_total_price.toString()
-                tvProductsNumber.text = order.line_items?.size.toString()
+                val price = order.current_total_price?.toDouble()?.times(exchangeRate ?: 1.0)
+                tvOrderPrice.text = "${Utils.roundOffDecimal(price ?: 0.0)} $currency"
+
+                tvProductsNumber.text = (order.line_items?.size?.minus(1)).toString()
                 tvDate.text = Utils.formatDate(order.created_at.toString())
             }
         }
