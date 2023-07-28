@@ -36,11 +36,10 @@ class CartViewModel @Inject constructor(
     val subtotal: LiveData<Double> = _subtotal
 
     fun getCartItems() {
-        _cart.postValue(NetworkResult.Loading())
         viewModelScope.launch(Dispatchers.IO) {
+            _cart.postValue(NetworkResult.Loading())
             val cartID: Long = sharedPreferences.getString(CART_ID, "0")!!.toLong()
             Log.i("SUBTOTAL", cartID.toString())
-
             try {
                 val cartList = repository.getCart(cartID)
                 if (cartList.isSuccessful) {
@@ -54,8 +53,8 @@ class CartViewModel @Inject constructor(
                                 !item.title.equals(TITTLE)
                             }
                             _cart.postValue(NetworkResult.Success(filterd))
-                        }
-                        else if (it.draftOrder.status == COMPLETED_STATUS) {
+
+                        } else if (it.draftOrder.status == COMPLETED_STATUS) {
                             val id = sharedPreferences.getString(Constants.UserID, "0")?.toLong()
                             val customer = Customer(id = id)
                             val dummy = DraftOrderResponse(
@@ -75,7 +74,7 @@ class CartViewModel @Inject constructor(
                                 customer.multipass_identifier =
                                     cartResponse.await().body()?.draftOrder?.id.toString()
                                 editor.putString(
-                                    Constants.CART_ID,
+                                    CART_ID,
                                     customer.multipass_identifier.toString()
                                 )
                                 editor.apply()
@@ -117,13 +116,20 @@ class CartViewModel @Inject constructor(
             }
         }
     }
-    fun removeQuantityFromCart(lineItemsItem: LineItemsItem) {
 
+    fun removeQuantityFromCart(lineItemsItem: LineItemsItem) {
         viewModelScope.launch(Dispatchers.IO) {
-            var index = _cartList.indexOf(lineItemsItem)
+            var index =
+                _cartList.indexOfFirst { (it.variantId == lineItemsItem.variantId) && ((it.productId == lineItemsItem.productId)) }
+            // var index = _cartList.indexOf(lineItemsItem)
+            Log.d("WTFC", "index ${index}")
             val q = _cartList[index].quantity
+            Log.d("WTFC", "${q}")
             if (q != null) {
+                Log.d("WTFC", "${_cartList[index].quantity}")
                 _cartList[index].quantity = q - 1
+                Log.d("WTFC", "${_cartList[index].quantity}")
+
             }
             val cartId = sharedPreferences.getString(CART_ID, "0")!!.toLong()
             repository.modifyCart(
@@ -138,9 +144,13 @@ class CartViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             var index =
                 _cartList.indexOfFirst { (it.variantId == lineItemsItem.variantId) && ((it.productId == lineItemsItem.productId)) }
+            Log.d("WTFC", "index ${index}")
             val q = _cartList[index].quantity
+            Log.d("WTFC", "${q}")
             if (q != null) {
+                Log.d("WTFC", "${q}")
                 _cartList[index].quantity = q + 1
+                Log.d("WTFC", "${q}")
             }
             val cartId = sharedPreferences.getString(CART_ID, "0")!!.toLong()
             Log.d("LIST", _cartList.size.toString())
