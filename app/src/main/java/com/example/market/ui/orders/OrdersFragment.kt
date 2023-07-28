@@ -1,6 +1,7 @@
 package com.example.market.ui.orders
 
 import android.content.IntentFilter
+import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Log
@@ -14,6 +15,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.market.databinding.FragmentOrdersBinding
+import com.example.market.utils.Constants
 import com.example.market.utils.NetworkManager
 import com.example.market.utils.NetworkResult
 import com.example.market.utils.Utils
@@ -27,8 +29,16 @@ class OrdersFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: OrdersViewModel by viewModels()
+
+    @Inject
+    lateinit var sharedPreferences: SharedPreferences
+
+    private var exchangeRate: Double? = null
+
     private val ordersAdapter by lazy {
-        OrdersAdapter(object : OrdersAdapter.OrderClickListener {
+        OrdersAdapter(
+            sharedPreferences.getString(Constants.CURRENCY_TO_KEY, "") ?: "EGP",
+            object : OrdersAdapter.OrderClickListener {
             override fun onItemClicked(orderId: Long) {
                 findNavController().navigate(
                     OrdersFragmentDirections.actionOrdersFragmentToOrderDetailsFragment(
@@ -53,6 +63,8 @@ class OrdersFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        exchangeRate = sharedPreferences.getFloat(Constants.Exchange_Value, 0.0F).toDouble()
 
         registerNetworkManager()
         observeNetworkState()
@@ -128,6 +140,7 @@ class OrdersFragment : Fragment() {
                             handleNoDataState()
                         } else {
                             handleDataState()
+                            ordersAdapter.exchangeRate = exchangeRate
                             ordersAdapter.submitList(it)
                         }
                     }

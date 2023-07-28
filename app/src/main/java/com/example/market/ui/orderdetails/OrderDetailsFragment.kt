@@ -1,6 +1,7 @@
 package com.example.market.ui.orderdetails
 
 import android.content.IntentFilter
+import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Log
@@ -15,6 +16,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.market.databinding.FragmentOrderDetailsBinding
+import com.example.market.utils.Constants
 import com.example.market.utils.NetworkManager
 import com.example.market.utils.NetworkResult
 import com.example.market.utils.Utils
@@ -27,10 +29,19 @@ class OrderDetailsFragment : Fragment() {
     private var _binding: FragmentOrderDetailsBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: OrderDetailsViewModel by viewModels()
-    private val orderDetailsAdapter by lazy { OrderDetailsAdapter() }
+    @Inject
+    lateinit var sharedPreferences: SharedPreferences
 
-    val args: OrderDetailsFragmentArgs by navArgs()
+    private var exchangeRate: Double? = null
+
+    private val viewModel: OrderDetailsViewModel by viewModels()
+    private val orderDetailsAdapter by lazy {
+        OrderDetailsAdapter(
+            sharedPreferences.getString(Constants.CURRENCY_TO_KEY, "") ?: "EGP"
+        )
+    }
+
+    private val args: OrderDetailsFragmentArgs by navArgs()
 
     @Inject
     lateinit var networkChangeListener: NetworkManager
@@ -46,6 +57,8 @@ class OrderDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        exchangeRate = sharedPreferences.getFloat(Constants.Exchange_Value, 0.0F).toDouble()
 
         registerNetworkManager()
         observeNetworkState()
@@ -79,7 +92,7 @@ class OrderDetailsFragment : Fragment() {
 
     private fun observeNetworkState() {
         NetworkManager.isNetworkAvailable.observe(viewLifecycleOwner) {
-            if (it){
+            if (it) {
                 viewModel.getOrder(args.orderId)
                 handleWhenThereNetwork()
             } else {
@@ -117,11 +130,14 @@ class OrderDetailsFragment : Fragment() {
                     stopShimmer()
                     response.data?.order?.line_items?.let {
                         Log.d("observeProductsResponse", "size: ${it}")
-                        if (it.isEmpty()){
+                        if (it.isEmpty()) {
                             handleNoDataState()
                         } else {
                             handleDataState()
-                            orderDetailsAdapter.submitList(it)
+                            orderDetailsAdapter.exchangeRate = exchangeRate
+                            orderDetailsAdapter.submitList(it.filter { product ->
+                                !product.title.equals(Constants.TITTLE)
+                            })
                         }
                     }
                 }

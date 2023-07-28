@@ -12,24 +12,37 @@ import com.example.market.databinding.ItemOrderBinding
 import com.example.market.databinding.ItemOrderDetailBinding
 import com.example.market.utils.Utils
 
-class OrderDetailsAdapter : ListAdapter<LineItem, OrderDetailsAdapter.MyViewHolder>(
-        DailyDiffCallback()
-    ) {
+class OrderDetailsAdapter(
+    private val currency: String
+) : ListAdapter<LineItem, OrderDetailsAdapter.MyViewHolder>(
+    DailyDiffCallback()
+) {
+
+    var exchangeRate: Double? = null
+        set(value) {
+            field = value
+        }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         return MyViewHolder.from(parent)
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), exchangeRate, currency)
     }
 
     class MyViewHolder(private val binding: ItemOrderDetailBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(product: LineItem) {
+        fun bind(product: LineItem, exchangeRate: Double?, currency: String) {
             binding.apply {
                 tvTitle.text = product.title
+
+                val price = product.price?.toDouble()?.times(exchangeRate ?: 1.0)
+                tvPrice.text = "Price: ${Utils.roundOffDecimal(price ?: 0.0)} $currency"
+
+                tvQuantity.text = "Quantity: ${product.quantity}"
+
                 Glide
                     .with(binding.root)
                     .load(product.properties?.get(0)?.value)
