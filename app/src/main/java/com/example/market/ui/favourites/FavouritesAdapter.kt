@@ -24,7 +24,6 @@ class FavouritesAdapter(
     var exchangeRate: Double? = null
         set(value) {
             field = value
-            notifyDataSetChanged()
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -52,7 +51,7 @@ class FavouritesAdapter(
             binding.apply {
                 tvProductName.text = product.title
                 val price = product.price?.toDouble()?.times(exchangeRate ?: 1.0)
-                tvProductPrice.text = "$currency ${roundOffDecimal(price ?: 0.0)}"
+                tvProductPrice.text = "${roundOffDecimal(price ?: 0.0)} $currency"
 
                 Glide
                     .with(binding.root)

@@ -91,25 +91,18 @@ class SearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         currency = sharedPreferences.getString(Constants.CURRENCY_TO_KEY, "") ?: "EGP"
+        exchangeRate = sharedPreferences.getFloat(Constants.Exchange_Value, 0.0F).toDouble()
 
         registerNetworkManager()
         observeNetworkState()
+        initSliderValues()
         observeBackButton()
         setupSliderView()
         setupProductsRecyclerView()
         observeProductsResponse()
         observeSearchText()
         observeSliderChange()
-        observeConversionResult()
         observeNavigation()
-    }
-
-    private fun observeConversionResult() {
-        viewModel.conversionResult.observe(viewLifecycleOwner){
-            searchAdapter.exchangeRate = it
-            exchangeRate = it
-            initSliderValues()
-        }
     }
 
     private fun initSliderValues() {
@@ -179,11 +172,6 @@ class SearchFragment : Fragment() {
     private fun observeNetworkState() {
         NetworkManager.isNetworkAvailable.observe(viewLifecycleOwner) {
             if (it){
-                viewModel.convertCurrency(
-                    "EGP",
-                    currency,
-                    1.00
-                )
                 viewModel.getProducts()
                 handleWhenThereNetwork()
             } else {
@@ -346,6 +334,7 @@ class SearchFragment : Fragment() {
                             handleNoDataState()
                         } else {
                             handleDataState()
+                            searchAdapter.exchangeRate = exchangeRate
                             searchAdapter.submitList(it)
                         }
                     }
