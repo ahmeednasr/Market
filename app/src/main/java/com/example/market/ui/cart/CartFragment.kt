@@ -43,7 +43,6 @@ class CartFragment : Fragment(), CartClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.d("TAG","onDestroy")
         _binding = FragmentCartBinding.inflate(inflater, container, false)
 
         return binding.root
