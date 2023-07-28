@@ -55,14 +55,11 @@ class CartFragment : Fragment(), CartClickListener {
         // viewModel.convertCurrency("EGP", currency, 1.00)
         setupCartRecyclerView()
         observeCartResponse()
-        Log.d("NEWNEW", sharedPreferences.getFloat(Exchange_Value, 1.0f).toString())
 
         cartAdapter.exchangeRate = (sharedPreferences.getFloat(Exchange_Value, 1.0f).toDouble())
 
         viewModel.subtotal.observe(viewLifecycleOwner) { sub ->
-            Log.d("NEWNEW", sharedPreferences.getFloat(Exchange_Value, 1.0f).toString())
             cartPrice = sub * (sharedPreferences.getFloat(Exchange_Value, 1.0f).toDouble())
-            Log.d("NEWNEW", "cartPrice:$cartPrice")
             binding.subTotalPrice.text = roundOffDecimal(cartPrice).toString()
         }
         binding.totalCurrancy.text = currency
@@ -119,7 +116,6 @@ class CartFragment : Fragment(), CartClickListener {
     ) {
         if (current <= max) {
             cartPrice += currentPrice
-            Log.d("NEWNEW", "cartPrice:$cartPrice")
             binding.subTotalPrice.text =
                 roundOffDecimal(cartPrice).toString()
             viewModel.addNewQuantityToCart(lineItemsItem)
@@ -128,31 +124,46 @@ class CartFragment : Fragment(), CartClickListener {
 
     override fun deleteProduct(lineItemsItem: LineItemsItem, currentPrice: Double) {
         cartPrice -= currentPrice
-        Log.d("NEWNEW", "cartPrice:$cartPrice")
         binding.subTotalPrice.text = roundOffDecimal(cartPrice).toString()
         viewModel.removeQuantityFromCart(lineItemsItem)
     }
 
     override fun removeCartItem(lineItemsItem: LineItemsItem) {
         var q = lineItemsItem.quantity!!
+        Log.d("QQQQ", "q= $q")
         var price = lineItemsItem.price?.toDouble()!!
-        cartPrice -= (q * price)
-        binding.subTotalPrice.text = roundOffDecimal(cartPrice).toString()
+        Log.d("QQQQ", "price= $price")
+        Log.d("QQQQ", "q*price= ${(q * price)}")
+        Log.d("QQQQ", "cartPrice1= $cartPrice")
+        cartPrice -= ((q * price) * (sharedPreferences.getFloat(Exchange_Value, 1.0f).toDouble()))
+        Log.d("QQQQ", "cartPrice2= $cartPrice")
+        if (roundOffDecimal(cartPrice) < 0) {
+            binding.subTotalPrice.text = "0.0"
+        } else {
+            binding.subTotalPrice.text = roundOffDecimal(cartPrice).toString()
+        }
         viewModel.deleteCartItem(lineItemsItem)
     }
 
     private fun hideView() {
         binding.emptyCart.visibility = View.VISIBLE
         binding.emptyCardTxt.visibility = View.VISIBLE
-        binding.cartTitle.visibility = View.INVISIBLE
-        binding.subtotalTv.visibility = View.INVISIBLE
-        binding.totalCurrancy.visibility = View.INVISIBLE
-        binding.subTotalPrice.visibility = View.INVISIBLE
-        binding.checkoutBtn.visibility = View.INVISIBLE
+        binding.cartTitle.visibility = View.GONE
+        binding.subtotalTv.visibility = View.GONE
+        binding.totalCurrancy.visibility = View.GONE
+        binding.subTotalPrice.visibility = View.GONE
+        binding.checkoutBtn.visibility = View.GONE
+        binding.CartRecuclerView.visibility = View.GONE
     }
 
     private fun showView() {
         binding.emptyCart.visibility = View.GONE
         binding.emptyCardTxt.visibility = View.GONE
+        binding.cartTitle.visibility = View.VISIBLE
+        binding.subtotalTv.visibility = View.VISIBLE
+        binding.totalCurrancy.visibility = View.VISIBLE
+        binding.subTotalPrice.visibility = View.VISIBLE
+        binding.checkoutBtn.visibility = View.VISIBLE
+        binding.CartRecuclerView.visibility = View.VISIBLE
     }
 }
