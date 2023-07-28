@@ -11,7 +11,8 @@ object Constants {
     const val CURRENCY_TO_KEY = "CURRENCY_KEY"
 
     const val CURRENCY_URL = "https://api.apilayer.com/currency_data/"
-    const val CURRENCY_API_KEY = "DBBn4yFP2oT7w1XT2XP3gYVXT8yAWIPB"
+    const val CURRENCY_API_KEY = "t6CgMbtre09SZk3qZr8o4lZNDzCWYIjo"
+    //t6CgMbtre09SZk3qZr8o4lZNDzCWYIjo
     const val MAP = "MAP"
     const val CITY_URL = "https://countriesnow.space/api/v0.1/countries/cities"
 
