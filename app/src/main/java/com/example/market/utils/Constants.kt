@@ -36,5 +36,7 @@ object Constants {
     const val ONLINE_PAYMENT = "ONLINE_PAYMENT"
     const val CASH_ON_DELIVERY = "CASH_ON_DELIVERY"
     const val MAX_CASH_ON_DELIVERY = 1000.0
-    const val USD_VALUE="USD"
+    const val USD_VALUE = "USD"
+    const val COMPLETED_STATUS = "completed"
+    const val OPEN_STATUS = "open"
 }

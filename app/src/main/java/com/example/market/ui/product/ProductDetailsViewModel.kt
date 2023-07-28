@@ -100,14 +100,12 @@ class ProductDetailsViewModel @Inject constructor(
     fun saveToCart(product: Product, variantId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
             val cartId = sharedPreferences.getString(CART_ID, "0")!!.toLong()
-            Log.i("CART", cartId.toString())
             val draftResponse = repository.getCart(
                 cartId
             )
             if (draftResponse.isSuccessful) {
                 draftResponse.body()?.let { it ->
                     _cart = it.draftOrder?.lineItems as ArrayList<LineItemsItem>
-                    Log.i("CART", _cart.toString())
                     val exist = _cart.filter {
                         it.variantId == variantId && it.productId == product.id
                     }.isNotEmpty()
@@ -127,9 +125,8 @@ class ProductDetailsViewModel @Inject constructor(
                             )
                         )
                         _cart.add(savedItem)
-                        Log.i("CART", _cart.toString())
                         repository.modifyCart(
-                            cartId ?: 0,
+                            cartId,
                             DraftOrderResponse(
                                 DraftOrder(
                                     lineItems = _cart,

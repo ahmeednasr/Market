@@ -43,6 +43,10 @@ class PaymentFragment : Fragment() {
     private val binding get() = _binding!!
     val viewModel: PaymentViewModel by viewModels()
     private var paymentMethod: String = CASH_ON_DELIVERY
+    var USD: Double = .0
+    var current = .0
+    var rounded: Double = .0
+
 
     @Inject
     lateinit var sharedPreferences: SharedPreferences
@@ -57,12 +61,12 @@ class PaymentFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.nextBtn.setOnClickListener {
-            findNavController().navigate(PaymentFragmentDirections.actionPaymentFragmentToOrdersFragment())
+            Toast.makeText(requireContext(), "payment approve", Toast.LENGTH_SHORT).show()
+            viewModel.completeDraft()
+            findNavController().navigate(PaymentFragmentDirections.actionPaymentFragmentToHomeFragment())
         }
         viewModel.getCartItems()
         viewModel.convertCurrency()
-        viewModel.getUSDExchange()
-        setUpPayPal()
         observeDiscount()
         Log.d("menp", "${sharedPreferences.getFloat(USD_VALUE, .0f)}")
         observeCost()
@@ -72,13 +76,13 @@ class PaymentFragment : Fragment() {
             paymentMethod = ONLINE_PAYMENT
             binding.paymentButtonContainer.visibility = View.VISIBLE
             binding.nextBtn.visibility = View.INVISIBLE
+            updateUI(0.0)
         }
         binding.cashOnDelivery.setOnClickListener {
             paymentMethod = CASH_ON_DELIVERY
             binding.paymentButtonContainer.visibility = View.INVISIBLE
             binding.nextBtn.visibility = View.VISIBLE
         }
-
         binding.coupon.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
@@ -96,12 +100,12 @@ class PaymentFragment : Fragment() {
                 } else {
                     viewModel.getDiscountCodes(s.toString())
                 }
-
             }
 
             override fun afterTextChanged(s: Editable?) {
             }
         })
+        setUpPayPal()
     }
 
     private fun observeDiscount() {
@@ -158,6 +162,8 @@ class PaymentFragment : Fragment() {
                     var exchange = (sharedPreferences.getFloat(
                         Constants.Exchange_Value, 1.0f
                     ))
+                    USD = sharedPreferences.getFloat(USD_VALUE, 1.0f).toDouble()
+
                     binding.subTotalValue.text =
                         roundOffDecimal((((result.data?.draftOrder?.subtotalPrice)!!.toDouble()) * exchange)).toString()
                     binding.TaxValue.text =
@@ -166,6 +172,7 @@ class PaymentFragment : Fragment() {
                         roundOffDecimal((((result.data.draftOrder.totalPrice)!!.toDouble()) * exchange)).toString()
                     val total =
                         roundOffDecimal(((result.data.draftOrder.totalPrice).toDouble()))
+                    Log.d("menp", "curr=$current")
                     if (total >= MAX_CASH_ON_DELIVERY) {
                         paymentMethod = ONLINE_PAYMENT
                         binding.paymentButtonContainer.visibility = View.VISIBLE
@@ -174,6 +181,7 @@ class PaymentFragment : Fragment() {
                         binding.onlinePayment.isClickable = false
                         binding.cashOnDelivery.isChecked = false
                         binding.cashOnDelivery.isClickable = false
+                        updateUI(0.0)
                         Toast.makeText(
                             requireContext(),
                             "reach to limit in cashOnDelivery",
@@ -181,6 +189,7 @@ class PaymentFragment : Fragment() {
                         ).show()
                     } else {
                         binding.nextBtn.visibility = View.VISIBLE
+                        //updateUI(0.0)
                     }
                 }
                 is NetworkResult.Loading -> {
@@ -194,10 +203,8 @@ class PaymentFragment : Fragment() {
     }
 
     private fun setUpPayPal() {
-        val current = binding.totalValue.text.toString().toDouble()
-        val value = sharedPreferences.getFloat(USD_VALUE, .0f).toDouble()
-        Log.d("menp", "curr=$current")
-        Log.d("menp", "value=$value")
+        rounded = roundOffDecimal(current * USD)
+        Log.d("menp", "curr rounded=$rounded")
         binding.paymentButtonContainer.setup(
             createOrder =
             CreateOrder { createOrderActions ->
@@ -211,8 +218,7 @@ class PaymentFragment : Fragment() {
                                 amount =
                                 Amount(
                                     currencyCode = CurrencyCode.USD,
-                                    value = "10.20"
-                                    // roundOffDecimal(current * value).toString()
+                                    value = rounded.toString()
                                 )
                             )
                         )
@@ -222,22 +228,31 @@ class PaymentFragment : Fragment() {
             onApprove =
             OnApprove { approval ->
                 Toast.makeText(requireContext(), "payment approve", Toast.LENGTH_SHORT).show()
+                viewModel.completeDraft()
+                findNavController().navigate(PaymentFragmentDirections.actionPaymentFragmentToHomeFragment())
             },
             onCancel = OnCancel {
                 Toast.makeText(requireContext(), "payment cancel", Toast.LENGTH_SHORT).show()
             },
             onError = OnError { errorInfo ->
-                Toast.makeText(requireContext(), "payment error", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "payment error$errorInfo", Toast.LENGTH_SHORT)
+                    .show()
             },
         )
     }
 
     private fun updateUI(value: Double) {
+
         var subTotal = binding.subTotalValue.text.toString().toDouble()
+        USD = sharedPreferences.getFloat(USD_VALUE, .0f).toDouble()
         var totalTax = binding.TaxValue.text.toString().toDouble()
         subTotal += (subTotal * (value / 100))
         var totalPrice = (subTotal + totalTax)
         binding.totalValue.text = roundOffDecimal(totalPrice).toString()
+        current = binding.totalValue.text.toString().toDouble()
+        Log.d("menp", "curr=$current")
+        rounded = roundOffDecimal(current * USD)
+        Log.d("menp", "curr rounded=$rounded")
     }
 
     override fun onDestroyView() {

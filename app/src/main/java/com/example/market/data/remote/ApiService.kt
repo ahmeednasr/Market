@@ -116,4 +116,7 @@ interface ApiService {
     @PUT("customers/{userID}/addresses/{address_id}/default.json")
     suspend fun setDefault(@Path("userID") userId: Long,@Path("address_id") addressId : Long)
 
+    @PUT("draft_orders/{id}/complete.json")
+    suspend fun completeDraft(@Path("id") draftId: Long)
+
 }
