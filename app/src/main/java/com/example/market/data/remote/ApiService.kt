@@ -110,4 +110,10 @@ interface ApiService {
 
     @GET("orders/{id}.json")
     suspend fun getSingleOrder(@Path("id") orderId: Long): Response<OrderResponse>
+    @DELETE("customers/{userID}/addresses/{address_id}.json")
+    suspend fun deleteAddress(@Path("userID") userId: Long,@Path("address_id") addressId : Long)
+
+    @PUT("customers/{userID}/addresses/{address_id}/default.json")
+    suspend fun setDefault(@Path("userID") userId: Long,@Path("address_id") addressId : Long)
+
 }

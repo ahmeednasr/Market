@@ -20,6 +20,7 @@
     <string name="english">english</string>
     <string name="address">Address</string>
     <string name="currency">Currency</string>
+    <string name="currency_title">Currency:</string>
     <string name="language">Language</string>
     <string name="login">login</string>
     <string name="orders">Orders</string>
@@ -74,5 +75,7 @@
     <string name="shipping_fee">Shipping Fee:</string>
     <string name="total">Total:</string>
     <string name="next">Next</string>
+    <string name="Valid_Coupon">Valid_Coupon</string>
+    <string name="inValid_Coupon">inValid Coupon</string>
 
 </resources>

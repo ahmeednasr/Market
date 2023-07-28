@@ -1,6 +1,5 @@
 package com.example.market.ui.cart
 
-import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
@@ -8,25 +7,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.market.R
 import com.example.market.data.pojo.LineItemsItem
-import com.example.market.data.pojo.Product
 import com.example.market.databinding.FragmentCartBinding
-import com.example.market.ui.home.HomeFragmentDirections
 import com.example.market.utils.Constants
-import com.example.market.utils.Constants.CURRENCY_FROM_KEY
-import com.example.market.utils.Constants.SharedPreferences
-import com.example.market.utils.Constants.UserID
+import com.example.market.utils.Constants.Exchange_Value
 import com.example.market.utils.NetworkResult
-import com.example.market.utils.Utils
 import com.example.market.utils.Utils.roundOffDecimal
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -36,7 +26,8 @@ class CartFragment : Fragment(), CartClickListener {
     private val binding get() = _binding!!
     val viewModel: CartViewModel by viewModels()
     private lateinit var currency: String
-    var currentPrice: Double = 0.0
+    var cartPrice: Double = 0.0
+
 
     @Inject
     lateinit var sharedPreferences: SharedPreferences
@@ -47,7 +38,6 @@ class CartFragment : Fragment(), CartClickListener {
             requireContext()
         )
     }
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,25 +52,20 @@ class CartFragment : Fragment(), CartClickListener {
         super.onViewCreated(view, savedInstanceState)
         viewModel.getCartItems()
         currency = sharedPreferences.getString(Constants.CURRENCY_TO_KEY, "") ?: "EGP"
+        // viewModel.convertCurrency("EGP", currency, 1.00)
         setupCartRecyclerView()
         observeCartResponse()
-        viewModel.convertCurrency("EGP", currency, 1.00)
+        Log.d("NEWNEW", sharedPreferences.getFloat(Exchange_Value, 1.0f).toString())
 
-        viewModel.conversionResult.observe(viewLifecycleOwner) {
-            cartAdapter.exchangeRate = it
+        cartAdapter.exchangeRate = (sharedPreferences.getFloat(Exchange_Value, 1.0f).toDouble())
 
-        }
-        viewModel.response.observe(viewLifecycleOwner) {
-            when(it){
-                is NetworkResult.Success->binding.subTotalPrice.text=it.data?.draftOrder?.totalPrice
-                else -> {}
-            }
-
+        viewModel.subtotal.observe(viewLifecycleOwner) { sub ->
+            Log.d("NEWNEW", sharedPreferences.getFloat(Exchange_Value, 1.0f).toString())
+            cartPrice = sub * (sharedPreferences.getFloat(Exchange_Value, 1.0f).toDouble())
+            Log.d("NEWNEW", "cartPrice:$cartPrice")
+            binding.subTotalPrice.text = roundOffDecimal(cartPrice).toString()
         }
         binding.totalCurrancy.text = currency
-        viewModel.subtotal.observe(viewLifecycleOwner) { subTotal ->
-
-        }
         binding.ivBackArrow.setOnClickListener {
             findNavController().popBackStack()
         }
@@ -100,17 +85,10 @@ class CartFragment : Fragment(), CartClickListener {
                 is NetworkResult.Success -> {
                     response.data?.let {
                         if (it.isEmpty()) {
-                            binding.emptyCart.visibility = View.VISIBLE
-                            binding.emptyCardTxt.visibility = View.VISIBLE
-                            binding.cartTitle.visibility = View.INVISIBLE
-                            binding.subtotalTv.visibility = View.INVISIBLE
-                            binding.totalCurrancy.visibility = View.INVISIBLE
-                            binding.subTotalPrice.visibility = View.INVISIBLE
-
+                            hideView()
                             cartAdapter.submitList(it)
                         } else {
-                            binding.emptyCart.visibility = View.GONE
-                            binding.emptyCardTxt.visibility = View.GONE
+                            showView()
                             cartAdapter.submitList(it)
                         }
 
@@ -132,19 +110,45 @@ class CartFragment : Fragment(), CartClickListener {
         }
     }
 
-    override fun addProduct(lineItemsItem: LineItemsItem, max: Int, current: Int) {
-        if (current < max) {
-
+    override fun addProduct(
+        lineItemsItem: LineItemsItem,
+        max: Int,
+        current: Int,
+        currentPrice: Double
+    ) {
+        if (current <= max) {
+            cartPrice += currentPrice
+            Log.d("NEWNEW", "cartPrice:$cartPrice")
+            binding.subTotalPrice.text =
+                roundOffDecimal(cartPrice).toString()
             viewModel.addNewQuantityToCart(lineItemsItem)
         }
     }
 
-    override fun deleteProduct(lineItemsItem: LineItemsItem) {
+    override fun deleteProduct(lineItemsItem: LineItemsItem, currentPrice: Double) {
+        cartPrice -= currentPrice
+        Log.d("NEWNEW", "cartPrice:$cartPrice")
+
+        binding.subTotalPrice.text = roundOffDecimal(cartPrice).toString()
         viewModel.removeQuantityFromCart(lineItemsItem)
     }
 
-
     override fun removeCartItem(lineItemsItem: LineItemsItem) {
         viewModel.deleteCartItem(lineItemsItem)
+    }
+
+    private fun hideView() {
+        binding.emptyCart.visibility = View.VISIBLE
+        binding.emptyCardTxt.visibility = View.VISIBLE
+        binding.cartTitle.visibility = View.INVISIBLE
+        binding.subtotalTv.visibility = View.INVISIBLE
+        binding.totalCurrancy.visibility = View.INVISIBLE
+        binding.subTotalPrice.visibility = View.INVISIBLE
+        binding.checkoutBtn.visibility = View.INVISIBLE
+    }
+
+    private fun showView() {
+        binding.emptyCart.visibility = View.GONE
+        binding.emptyCardTxt.visibility = View.GONE
     }
 }

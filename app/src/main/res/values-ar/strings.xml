@@ -21,6 +21,7 @@
     <string name="english">الانجليزيه</string>
     <string name="address">العنوان</string>
     <string name="currency">العمله</string>
+    <string name="currency_title">العمله:</string>
     <string name="language">اللغه</string>
     <string name="login">تسجيل الدخول</string>
     <string name="logout">تسجيل خروج</string>
@@ -78,4 +79,7 @@
     <string name="shipping_fee">رسوم:</string>
     <string name="total">الاجمالي:</string>
     <string name="next">التالي</string>
+    <string name="Valid_Coupon">كوبون صالح</string>
+    <string name="inValid_Coupon">كوبون غير صحيح</string>
+
 </resources>

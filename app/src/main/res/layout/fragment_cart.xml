@@ -107,7 +107,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="@string/currancy"
         app:layout_constraintBottom_toBottomOf="@+id/subtotal_tv"
         app:layout_constraintStart_toEndOf="@+id/subtotal_tv"
         app:layout_constraintTop_toTopOf="@+id/subtotal_tv" />
@@ -117,7 +116,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
-        android:text="0.0"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/total_currancy"

@@ -12,9 +12,11 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.market.R
 import com.example.market.data.pojo.LineItemsItem
 import com.example.market.databinding.ItemCartBinding
+import com.example.market.utils.Utils.roundOffDecimal
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.math.RoundingMode
 import java.text.DecimalFormat
+import java.util.logging.Handler
 
 class CartAdapter(
     private val currency: String,
@@ -29,6 +31,7 @@ class CartAdapter(
             field = value
             notifyDataSetChanged()
         }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         return MyViewHolder.from(parent)
@@ -71,48 +74,64 @@ class CartAdapter(
                     .show()
             }
             binding.addItem.setOnClickListener {
-                var currentQuantity = current.quantity
-                if (currentQuantity!! < max!!.toInt()) {
+                if (isAddActive) {
+                    var currentQuantity = current.quantity
+                    if (currentQuantity!! < max!!.toInt()) {
+                        currentQuantity += 1
+                        binding.itemCount.text = currentQuantity.toString()
+                        val price = current.price?.toDouble()?.times(exchangeRate ?: 1.0)
 
-                    currentQuantity += 1
-                    binding.itemCount.text = currentQuantity.toString()
-                    onClick.addProduct(current, max.toInt(), currentQuantity)
+                        onClick.addProduct(
+                            current,
+                            max.toInt(),
+                            currentQuantity,
+                            roundOffDecimal(price ?: 0.0)
+                        )
 
-                } else {
-                    Toast.makeText(ctx, "cant add more", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(ctx, "cant add more", Toast.LENGTH_SHORT).show()
+                    }
                 }
+                binding.addItem.isEnabled = false
+                addHandler.postDelayed({
+                    binding.addItem.isEnabled = true
+                }, 650)
 
             }
             binding.rmItem.setOnClickListener {
-                var currentQuantity = current.quantity
-                if (currentQuantity!! > 1) {
-                    currentQuantity -= 1
-                    binding.itemCount.text = currentQuantity.toString()
-                    onClick.deleteProduct(current)
-                } else {
-                    MaterialAlertDialogBuilder(ctx)
-                        .setTitle(ctx.resources.getString(R.string.app_name))
-                        .setMessage(ctx.resources.getString(R.string.rm_msg))
-                        .setNeutralButton(ctx.resources.getString(R.string.cancel)) { dialog, which ->
-                        }
-                        .setNegativeButton(ctx.resources.getString(R.string.delete)) { dialog, which ->
-                            if (current.id != null) {
-                                onClick.removeCartItem(current)
+                if (isDecrementActive) {
+                    var currentQuantity = current.quantity
+                    if (currentQuantity!! > 1) {
+                        currentQuantity -= 1
+                        binding.itemCount.text = currentQuantity.toString()
+                        val price = current.price?.toDouble()?.times(exchangeRate ?: 1.0)
+                        onClick.deleteProduct(current, roundOffDecimal(price ?: 0.0))
+                    } else {
+                        MaterialAlertDialogBuilder(ctx)
+                            .setTitle(ctx.resources.getString(R.string.app_name))
+                            .setMessage(ctx.resources.getString(R.string.rm_msg))
+                            .setNeutralButton(ctx.resources.getString(R.string.cancel)) { dialog, which ->
                             }
-                        }
-                        .show()
+                            .setNegativeButton(ctx.resources.getString(R.string.delete)) { dialog, which ->
+                                if (current.id != null) {
+                                    onClick.removeCartItem(current)
+                                }
+                            }
+                            .show()
+                    }
                 }
-
+                binding.rmItem.isEnabled = false
+                decremHandler.postDelayed({
+                    binding.rmItem.isEnabled = true
+                }, 650)
             }
         }
 
-        private fun roundOffDecimal(number: Double): Double {
-            val df = DecimalFormat("#.##")
-            df.roundingMode = RoundingMode.CEILING
-            return df.format(number).toDouble()
-        }
-
         companion object {
+            var isAddActive = true
+            var isDecrementActive = true
+            val addHandler = android.os.Handler()
+            val decremHandler = android.os.Handler()
             fun from(parent: ViewGroup): MyViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
                 val binding = ItemCartBinding.inflate(layoutInflater, parent, false)
@@ -130,6 +149,5 @@ class CartAdapter(
             return oldItem == newItem
         }
     }
-
 
 }

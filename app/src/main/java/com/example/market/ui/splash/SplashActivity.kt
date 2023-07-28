@@ -5,13 +5,11 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.View
-import com.example.market.R
-import com.example.market.databinding.ActivityMainBinding
+import androidx.activity.viewModels
 import com.example.market.databinding.ActivitySplashBinding
 import com.example.market.ui.MainActivity
-import com.example.market.utils.Constants
+import com.example.market.utils.Constants.CURRENCY_FROM_KEY
 import com.example.market.utils.Constants.CURRENCY_TO_KEY
 import com.example.market.utils.Constants.ENGLISH
 import com.example.market.utils.Constants.LANGUAGE_KEY
@@ -23,6 +21,7 @@ import javax.inject.Inject
 class SplashActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySplashBinding
+    val viewModel: SplashViewModel by viewModels()
 
     @Inject
     lateinit var sharedPreferences: SharedPreferences
@@ -33,11 +32,15 @@ class SplashActivity : AppCompatActivity() {
         binding = ActivitySplashBinding.inflate(layoutInflater)
         val view: View = binding.root
         setContentView(view)
+        viewModel.convertCurrency(
+            CURRENCY_FROM_KEY,
+            sharedPreferences.getString(CURRENCY_TO_KEY, "") ?: CURRENCY_FROM_KEY,
+            1.0
+        )
         Handler().postDelayed({
             editor = sharedPreferences.edit()
             val currentCurrency = sharedPreferences.getString(CURRENCY_TO_KEY, "")
             val language = sharedPreferences.getString(LANGUAGE_KEY, "")
-            Log.i("LOCALIZATION0", language.toString())
 
             if (currentCurrency == null || currentCurrency.isEmpty()) {
                 editor.putString(CURRENCY_TO_KEY, "EGP")
