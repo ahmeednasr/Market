@@ -12,6 +12,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.market.R
 import com.example.market.data.pojo.LineItemsItem
 import com.example.market.databinding.ItemCartBinding
+import com.example.market.utils.Utils.roundOffDecimal
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.math.RoundingMode
 import java.text.DecimalFormat
@@ -124,12 +125,6 @@ class CartAdapter(
                     binding.rmItem.isEnabled = true
                 }, 650)
             }
-        }
-
-        private fun roundOffDecimal(number: Double): Double {
-            val df = DecimalFormat("#.##")
-            df.roundingMode = RoundingMode.CEILING
-            return df.format(number).toDouble()
         }
 
         companion object {

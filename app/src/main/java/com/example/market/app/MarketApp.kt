@@ -20,7 +20,7 @@ class MarketApp : Application() {
             application = this,
             clientId = clintId,
             environment = Environment.SANDBOX,
-            returnUrl = returnUrl,
+            returnUrl = defaultUrl,
             currencyCode = CurrencyCode.USD,
             userAction = UserAction.PAY_NOW,
             settingsConfig = SettingsConfig(

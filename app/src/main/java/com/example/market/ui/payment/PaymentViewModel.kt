@@ -13,6 +13,7 @@ import com.example.market.data.repo.Repository
 import com.example.market.utils.Constants
 import com.example.market.utils.Constants.CURRENCY_FROM_KEY
 import com.example.market.utils.Constants.CURRENCY_TO_KEY
+import com.example.market.utils.Constants.USD_VALUE
 import com.example.market.utils.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -91,9 +92,27 @@ class PaymentViewModel @Inject constructor(
                 sharedPreferences.getString(CURRENCY_TO_KEY, "") ?: CURRENCY_FROM_KEY,
                 1.0
             )
+            Log.d("menp", "$response")
             if (response.isSuccessful) {
                 response.body()?.result?.let {
                     editor.putFloat(Constants.Exchange_Value, it.toFloat())
+                    editor.apply()
+                }
+            }
+        }
+    }
+
+    fun getUSDExchange() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val response = repository.convertCurrency(
+                CURRENCY_TO_KEY,
+                USD_VALUE,
+                1.0
+            )
+            Log.d("menp", "$response")
+            if (response.isSuccessful) {
+                response.body()?.result?.let {
+                    editor.putFloat(USD_VALUE, it.toFloat())
                     editor.apply()
                 }
             }

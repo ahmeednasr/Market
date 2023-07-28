@@ -156,12 +156,13 @@ class ProductDetails : Fragment() {
         setSizeList(sizeList, product)
         viewModel.conversionResult.observe(viewLifecycleOwner) {
             Log.i("STRING", "${product.variants!![0].price}")
-            val currency =
-                product.variants[0].price?.toDouble()?.times(it)
-                    ?.let { it1 -> roundOffDecimal(it1).toString() } + " " + sharedPreferences.getString(
-                    Constants.CURRENCY_TO_KEY,
-                    ""
-                )
+            val price = product.variants[0].price?.toDouble()
+            val currencyUnit = sharedPreferences.getString(Constants.CURRENCY_TO_KEY, "")
+            val n1 = roundOffDecimal(price!!)
+            val n2 = it
+            val currency = "${roundOffDecimal(n1 * n2)} $currencyUnit"
+            Log.d("NUMBER1", "$ n1= $price ,n2= $it")
+
             binding.priceText.text = currency
         }
 
@@ -186,7 +187,11 @@ class ProductDetails : Fragment() {
                 if (quantity > 0 && variantId > 0) {
                     viewModel.saveToCart(product, variantId)
                 } else {
-                    Toast.makeText(requireContext(), "size and color not selected", Toast.LENGTH_SHORT)
+                    Toast.makeText(
+                        requireContext(),
+                        "size and color not selected",
+                        Toast.LENGTH_SHORT
+                    )
                         .show()
                 }
             } else {

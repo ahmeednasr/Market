@@ -11,6 +11,7 @@ import com.example.market.R
 import com.example.market.data.pojo.Product
 import com.example.market.databinding.ItemFavouriteProductBinding
 import com.example.market.databinding.ItemSearchProductBinding
+import com.example.market.utils.Utils.roundOffDecimal
 import java.math.RoundingMode
 import java.text.DecimalFormat
 
@@ -22,7 +23,7 @@ class SearchAdapter(
         DailyDiffCallback()
     ) {
 
-        var exchangeRate: Double? = null
+    var exchangeRate: Double? = null
         set(value) {
             field = value
             notifyDataSetChanged()
@@ -56,11 +57,16 @@ class SearchAdapter(
     class MyViewHolder(val binding: ItemSearchProductBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(product: Product, clickListener: ProductClickListener, exchangeRate: Double?, currency: String) {
+        fun bind(
+            product: Product,
+            clickListener: ProductClickListener,
+            exchangeRate: Double?,
+            currency: String
+        ) {
             binding.apply {
                 tvProductName.text = product.title
                 val price = product.variants?.get(0)?.price?.toDouble()?.times(exchangeRate ?: 1.0)
-                tvProductPrice.text = "$currency ${roundOffDecimal(price?:0.0)}"
+                tvProductPrice.text = "$currency ${roundOffDecimal(price ?: 0.0)}"
 
                 Glide
                     .with(binding.root)
@@ -71,12 +77,6 @@ class SearchAdapter(
                     clickListener.onItemClicked(product)
                 }
             }
-        }
-
-        private fun roundOffDecimal(number: Double): Double {
-            val df = DecimalFormat("#.##")
-            df.roundingMode = RoundingMode.CEILING
-            return df.format(number).toDouble()
         }
 
         companion object {

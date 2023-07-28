@@ -19,6 +19,7 @@ import com.example.market.utils.Constants
 import com.example.market.utils.Constants.CASH_ON_DELIVERY
 import com.example.market.utils.Constants.MAX_CASH_ON_DELIVERY
 import com.example.market.utils.Constants.ONLINE_PAYMENT
+import com.example.market.utils.Constants.USD_VALUE
 import com.example.market.utils.NetworkResult
 import com.example.market.utils.Utils
 import com.example.market.utils.Utils.roundOffDecimal
@@ -60,8 +61,10 @@ class PaymentFragment : Fragment() {
         }
         viewModel.getCartItems()
         viewModel.convertCurrency()
+        viewModel.getUSDExchange()
         setUpPayPal()
         observeDiscount()
+        Log.d("menp", "${sharedPreferences.getFloat(USD_VALUE, .0f)}")
         observeCost()
         binding.currencyName.text =
             sharedPreferences.getString(Constants.CURRENCY_TO_KEY, "") ?: "EGP"
@@ -158,11 +161,11 @@ class PaymentFragment : Fragment() {
                     binding.subTotalValue.text =
                         roundOffDecimal((((result.data?.draftOrder?.subtotalPrice)!!.toDouble()) * exchange)).toString()
                     binding.TaxValue.text =
-                        roundOffDecimal((((result.data.draftOrder!!.totalTax)!!.toDouble()) * exchange)).toString()
+                        roundOffDecimal((((result.data.draftOrder.totalTax)!!.toDouble()) * exchange)).toString()
                     binding.totalValue.text =
-                        roundOffDecimal((((result.data.draftOrder!!.totalPrice)!!.toDouble()) * exchange)).toString()
+                        roundOffDecimal((((result.data.draftOrder.totalPrice)!!.toDouble()) * exchange)).toString()
                     val total =
-                        roundOffDecimal(((result.data.draftOrder!!.totalPrice)!!.toDouble()))
+                        roundOffDecimal(((result.data.draftOrder.totalPrice).toDouble()))
                     if (total >= MAX_CASH_ON_DELIVERY) {
                         paymentMethod = ONLINE_PAYMENT
                         binding.paymentButtonContainer.visibility = View.VISIBLE
@@ -191,6 +194,10 @@ class PaymentFragment : Fragment() {
     }
 
     private fun setUpPayPal() {
+        val current = binding.totalValue.text.toString().toDouble()
+        val value = sharedPreferences.getFloat(USD_VALUE, .0f).toDouble()
+        Log.d("menp", "curr=$current")
+        Log.d("menp", "value=$value")
         binding.paymentButtonContainer.setup(
             createOrder =
             CreateOrder { createOrderActions ->
@@ -202,7 +209,11 @@ class PaymentFragment : Fragment() {
                         listOf(
                             PurchaseUnit(
                                 amount =
-                                Amount(currencyCode = CurrencyCode.USD, value = "10.00")
+                                Amount(
+                                    currencyCode = CurrencyCode.USD,
+                                    value = "10.20"
+                                    // roundOffDecimal(current * value).toString()
+                                )
                             )
                         )
                     )
