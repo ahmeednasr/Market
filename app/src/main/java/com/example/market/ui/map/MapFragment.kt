@@ -99,6 +99,13 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickListener
                                 null,
                                 address.countryCode
                             )
+                            parentFragmentManager.setFragmentResult(MAP, Bundle().apply {
+                                putString(ADDRESS_KEY, userAddress.address1)
+                                putString(POSTAL_KEY, userAddress.zip)
+                                putString(GOVERN_KEY, userAddress.province)
+                                putString(CITY_KEY, userAddress.city)
+                                findNavController().navigateUp()
+                            })
                             Toast.makeText(
                                 requireContext(),
                                 cityName,
@@ -119,13 +126,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickListener
                         ).show()
                     }
                 }
-                parentFragmentManager.setFragmentResult(MAP, Bundle().apply {
-                    putString(ADDRESS_KEY, userAddress.address1)
-                    putString(POSTAL_KEY, userAddress.zip)
-                    putString(GOVERN_KEY, userAddress.province)
-                    putString(CITY_KEY, userAddress.city)
-                    findNavController().navigateUp()
-                })
+
             } else {
                 Toast.makeText(requireContext(), "choose location first", Toast.LENGTH_SHORT).show()
             }
