@@ -1,14 +1,18 @@
 package com.example.market.ui.address_form
 
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import android.text.InputType
 import android.text.SpannableStringBuilder
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -29,7 +33,6 @@ class AddressFormFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
     override fun onCreateView(
@@ -37,7 +40,6 @@ class AddressFormFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentAddressFormBinding.inflate(inflater, container, false)
-
         return binding.root
     }
 
@@ -47,8 +49,15 @@ class AddressFormFragment : Fragment() {
         viewModel.getGovernments("egypt")
 
         binding.saveBtn.setOnClickListener {
-            createAddresses()
-            findNavController().popBackStack()
+//            createAddresses()
+//            findNavController().popBackStack()
+            val validation = validationInput()
+            if (validation) {
+                createAddresses()
+                findNavController().popBackStack()
+            } else {
+                Toast.makeText(requireContext(), R.string.data_not_valid, Toast.LENGTH_SHORT).show()
+            }
         }
 
         binding.locationBtn.setOnClickListener {
@@ -138,16 +147,26 @@ class AddressFormFragment : Fragment() {
         }
     }
 
-    private fun createAddresses(){
+    private fun createAddresses() {
         val city = binding.autoCompleteCity.text.toString()
         val country = binding.itCountry.text.toString()
         val province = binding.autoCompleteGovern.text.toString().split(" ")[0]
         val zip = binding.itZipcode.text.toString()
         val address1 = binding.tiAddress.text.toString()
         val phone = binding.itPhone.text.toString()
-        val address = CustomerAddress(country = country, province = province, city = city, phone = phone, zip = zip, address1 = address1)
+        val address = CustomerAddress(
+            country = "Egypt",
+            province = province,
+            city = city,
+            phone = phone,
+            zip = zip,
+            address1 = address1
+        )
+        Log.d("ADDRESS", "address $address")
 
         val update = CustomerResponse(Customer(addresses = listOf(address)))
+        Log.d("ADDRESS", update.toString())
+
         viewModel.modifyCustomerAddress(update)
     }
 
@@ -157,8 +176,16 @@ class AddressFormFragment : Fragment() {
         _binding = null
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-
+    private fun validationInput(): Boolean {
+        val addressIsEmpty = binding.tiAddress.text?.isNotBlank()!!
+        val zipCodeIsEmpty = binding.itZipcode.text?.isNotBlank()!!
+        val governmentIsEmpty = binding.autoCompleteGovern.text?.isNotBlank()!!
+        val cityIsEmpty = binding.autoCompleteCity.text?.isNotBlank()!!
+        val phonePattern = Regex("""^01\d{9}$""")
+        val phoneIsValid = phonePattern.matches(binding.itPhone.text.toString())
+        val validation =
+            addressIsEmpty && zipCodeIsEmpty && governmentIsEmpty && cityIsEmpty && phoneIsValid
+        return validation
     }
+
 }

@@ -102,4 +102,14 @@
     <string name="cart_toast">لا يمكن اضافة المزيد</string>
     <string name="product_add">تمت الاضافة</string>
     <string name="product_selected">يجب اختيار حجم ولون المنتج</string>
+    <string name="phone_is_not_valid">الهاتف غير صحيح</string>
+    <string name="data_not_valid">بيانات غير صحيحه</string>
+    <string name="payment_successfully">نجاح الدفع</string>
+    <string name="payment_error">خطأ في الدفع</string>
+    <string name="payment_cancel">إلغاء الدفع</string>
+    <string name="invalid_address">عنوان غير صحيح</string>
+    <string name="invalid_zipcode">كود غير صحيح</string>
+    <string name="invalid_government">محافظه غير صحيحه</string>
+    <string name="invalid_city">مدينه غير صحيحه</string>
+    <string name="invalid_phone">هاتف غير صحيح</string>
 </resources>

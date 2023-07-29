@@ -26,6 +26,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/address"
             android:weightSum="1"
+            app:boxStrokeErrorColor="#FF0000"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/location_btn"
             app:layout_constraintStart_toStartOf="parent"
@@ -58,6 +59,7 @@
         android:layout_marginTop="8dp"
         android:hint="@string/zipcode"
         android:weightSum="1"
+        app:boxStrokeErrorColor="#FF0000"
         app:layout_constraintEnd_toEndOf="@+id/textInputLayoutAddress"
         app:layout_constraintStart_toStartOf="@+id/textInputLayoutAddress"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayoutAddress">
@@ -78,6 +80,7 @@
         android:layout_marginTop="8dp"
         android:hint="@string/phone"
         android:weightSum="1"
+        app:boxStrokeErrorColor="#FF0000"
         app:layout_constraintEnd_toEndOf="@+id/textInputLayoutAddress"
         app:layout_constraintStart_toStartOf="@+id/textInputLayoutAddress"
         app:layout_constraintTop_toBottomOf="@+id/zipLayout">
@@ -99,6 +102,7 @@
         android:clickable="false"
         android:hint="@string/country"
         android:weightSum="1"
+        app:boxStrokeErrorColor="#FF0000"
         app:layout_constraintEnd_toEndOf="@+id/textInputLayoutAddress"
         app:layout_constraintStart_toStartOf="@+id/textInputLayoutAddress"
         app:layout_constraintTop_toBottomOf="@+id/phoneLayout">
@@ -121,6 +125,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:focusableInTouchMode="true"
+        app:boxStrokeErrorColor="#FF0000"
         app:layout_constraintEnd_toEndOf="@+id/countryLayout"
         app:layout_constraintStart_toStartOf="@+id/countryLayout"
         app:layout_constraintTop_toBottomOf="@+id/countryLayout">
@@ -133,19 +138,21 @@
             android:clickable="false"
             android:editable="false"
             android:enabled="false"
-            android:textColor="@color/black"
-            android:textColorHint="@color/black"
             android:hint="@string/govern"
-            android:inputType="none" />
+            android:inputType="none"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout"
+        android:id="@+id/cityLayout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:focusableInTouchMode="true"
+        app:boxStrokeErrorColor="#FF0000"
         app:layout_constraintEnd_toEndOf="@+id/governTextInputLayout"
         app:layout_constraintStart_toStartOf="@+id/governTextInputLayout"
         app:layout_constraintTop_toBottomOf="@+id/governTextInputLayout">
@@ -165,10 +172,10 @@
         android:id="@+id/save_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:text="@string/save"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/cityLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
