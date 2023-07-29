@@ -1,6 +1,7 @@
 package com.example.market.ui.address_form
 
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -61,14 +62,13 @@ class AddressViewModel @Inject constructor(
 
     fun getCustomerAddresses() {
         viewModelScope.launch {
-            val id = sharedPreferences.getString(Constants.UserID,"0")?.toLong()
-            val response = repository.getCustomer(id?:0)
-            if(response.isSuccessful){
+            val id = sharedPreferences.getString(Constants.UserID, "0")?.toLong()
+            val response = repository.getCustomer(id ?: 0)
+            if (response.isSuccessful) {
                 response.body()?.let {
                     addressList = it.customer.addresses as ArrayList<CustomerAddress>
                     _customer.postValue(NetworkResult.Success(it))
                     _addresses.postValue(NetworkResult.Success(it.customer.addresses))
-
                 }
             } else {
                 _addresses.postValue(NetworkResult.Error("Error"))
@@ -78,30 +78,35 @@ class AddressViewModel @Inject constructor(
 
     }
 
-    fun modifyCustomerAddress(address: CustomerResponse){
+    fun modifyCustomerAddress(address: CustomerResponse) {
         viewModelScope.launch {
-            val id = sharedPreferences.getString(Constants.UserID,"0")?.toLong()
-            val response = repository.addAddressToUser(id?:0,address)
-            if(response.isSuccessful){
+            val id = sharedPreferences.getString(Constants.UserID, "0")?.toLong()
+            Log.d("ADDRESS", id.toString())
+
+            val response = repository.addAddressToUser(id ?: 0, address)
+            Log.d("ADDRESS", address.toString())
+            Log.d("ADDRESS", "address= $response")
+            if (response.isSuccessful) {
                 response.body()?.let {
+                    Log.d("ADDRESS", "okkkkkkkkk\n= ${it.customer.addresses} \n-----------------------\n")
                     _addresses.postValue(NetworkResult.Success(it.customer.addresses!!))
                 }
             }
         }
     }
 
-    fun deleteAddress(address: CustomerAddress){
+    fun deleteAddress(address: CustomerAddress) {
         viewModelScope.launch {
-            val id = sharedPreferences.getString(Constants.UserID,"0")?.toLong()
-            repository.deleteAddress(id?:0,address.id?:0)
+            val id = sharedPreferences.getString(Constants.UserID, "0")?.toLong()
+            repository.deleteAddress(id ?: 0, address.id ?: 0)
             getCustomerAddresses()
         }
     }
 
-    fun setDefaultAddress(address: CustomerAddress){
+    fun setDefaultAddress(address: CustomerAddress) {
         viewModelScope.launch {
-            val id = sharedPreferences.getString(Constants.UserID,"0")?.toLong()
-            repository.setDefault(id?:0,address.id?:0)
+            val id = sharedPreferences.getString(Constants.UserID, "0")?.toLong()
+            repository.setDefault(id ?: 0, address.id ?: 0)
             getCustomerAddresses()
         }
     }
