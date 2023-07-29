@@ -40,6 +40,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
+import okhttp3.internal.notify
+import okhttp3.internal.notifyAll
 import java.util.*
 import javax.inject.Inject
 
@@ -79,7 +81,7 @@ class AccountFragment : Fragment() {
 
     private val ordersAccountAdapter by lazy {
         OrdersAccountAdapter(
-            sharedPreferences.getString(Constants.CURRENCY_TO_KEY, "") ?: "EGP"
+            sharedPreferences.getString(CURRENCY_TO_KEY, "") ?: "EGP"
         )
     }
 
@@ -124,6 +126,10 @@ class AccountFragment : Fragment() {
         binding.currencyValue.text = sharedPreferences.getString(CURRENCY_TO_KEY, "") ?: "EGP"
         binding.llLanguage.setOnClickListener {
             showDialog()
+        }
+
+        viewModel.exchangeRate.observe(viewLifecycleOwner){
+            ordersAccountAdapter.exchangeRate = it.toDouble()
         }
 
         binding.llCurrency.setOnClickListener {

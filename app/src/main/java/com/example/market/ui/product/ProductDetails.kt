@@ -187,11 +187,11 @@ class ProductDetails : Fragment() {
             if (sharedPreferences.getBoolean(Constants.IS_Logged, false)) {
                 if (quantity > 0 && variantId > 0) {
                     viewModel.saveToCart(product, variantId)
-                    Toast.makeText(requireContext(), "added to cart", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), R.string.product_add, Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(
                         requireContext(),
-                        "size and color not selected",
+                        R.string.product_selected,
                         Toast.LENGTH_SHORT
                     )
                         .show()

@@ -79,4 +79,12 @@
     <string name="inValid_Coupon">inValid Coupon</string>
     <string name="alert">alert</string>
     <string name="Must_login">You Must login first.</string>
+    <string name="Order_details">Order Details</string>
+    <string name="search">Search</string>
+    <string name="discount_alert">you get discount code</string>
+    <string name="price">price</string>
+    <string name="quantity">quantity</string>
+    <string name="cart_toast">cannot add more</string>
+    <string name="product_add">added to cart</string>
+    <string name="product_selected">size and color not selected</string>
 </resources>

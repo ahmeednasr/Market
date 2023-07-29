@@ -38,6 +38,8 @@ class AccountViewModel @Inject constructor(
     private val _orders: MutableLiveData<NetworkResult<OrderResponse>> = MutableLiveData()
     val orders: LiveData<NetworkResult<OrderResponse>> = _orders
 
+    private val _exchangeRate: MutableLiveData<Float> = MutableLiveData()
+    val exchangeRate: LiveData<Float> = _exchangeRate
 
     private val _currencies: MutableLiveData<NetworkResult<Currencies>> =
         MutableLiveData(NetworkResult.Loading())
@@ -61,6 +63,7 @@ class AccountViewModel @Inject constructor(
             val response = repository.convertCurrency(from, to, amount)
             if (response.isSuccessful) {
                 response.body()?.let {
+                    _exchangeRate.postValue(it.result?.toFloat())
                     editor.putFloat(Exchange_Value, it.result!!.toFloat())
                     editor.apply()
                 }
@@ -69,26 +72,26 @@ class AccountViewModel @Inject constructor(
     }
 
     fun getFavourites() {
-//        _products.value = NetworkResult.Loading()
-//        viewModelScope.launch {
-//            val draftResponse = repository.getFavourites(
-//                sharedPreferences.getString(Constants.FAVOURITE_ID, "0")?.toLong() ?: 0L
-//            )
-//            if (draftResponse.isSuccessful) {
-//                draftResponse.body()?.let {
-//                    _favourites = it.draftOrder?.lineItems as ArrayList<LineItemsItem>
-//                    _products.postValue(
-//                        NetworkResult.Success(
-//                            _favourites.filter { product ->
-//                                !product.title.equals(Constants.TITTLE)
-//                            }
-//                        )
-//                    )
-//                }
-//            } else {
-//                _products.postValue(NetworkResult.Error("error"))
-//            }
-//        }
+        _products.value = NetworkResult.Loading()
+        viewModelScope.launch {
+            val draftResponse = repository.getFavourites(
+                sharedPreferences.getString(Constants.FAVOURITE_ID, "0")?.toLong() ?: 0L
+            )
+            if (draftResponse.isSuccessful) {
+                draftResponse.body()?.let {
+                    _favourites = it.draftOrder?.lineItems as ArrayList<LineItemsItem>
+                    _products.postValue(
+                        NetworkResult.Success(
+                            _favourites.filter { product ->
+                                !product.title.equals(Constants.TITTLE)
+                            }
+                        )
+                    )
+                }
+            } else {
+                _products.postValue(NetworkResult.Error("error"))
+            }
+        }
     }
 
     fun getOrders() {
