@@ -86,7 +86,7 @@ class CartAdapter(
                         )
 
                     } else {
-                        Toast.makeText(ctx, "cant add more", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(ctx, R.string.cart_toast, Toast.LENGTH_SHORT).show()
                     }
                 }
                 binding.addItem.isEnabled = false

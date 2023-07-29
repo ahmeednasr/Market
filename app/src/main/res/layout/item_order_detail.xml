@@ -59,7 +59,7 @@
             app:layout_constraintStart_toStartOf="@id/tv_title"
             app:layout_constraintTop_toBottomOf="@+id/tv_title"
             app:layout_constraintEnd_toEndOf="@id/tv_title"
-            tools:text="price" />
+            tools:text="@string/price" />
 
         <TextView
             android:id="@+id/tv_quantity"
@@ -73,7 +73,7 @@
             app:layout_constraintStart_toStartOf="@id/tv_price"
             app:layout_constraintTop_toBottomOf="@+id/tv_price"
             app:layout_constraintEnd_toEndOf="@id/tv_price"
-            tools:text="quantity" />
+            tools:text="@string/quantity" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

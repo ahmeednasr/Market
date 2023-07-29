@@ -30,7 +30,7 @@
     <string name="phone">الهاتف</string>
     <string name="zipcode">الكود البريدي</string>
     <string name="country">الدوله</string>
-    <string name="egypt">Egypt</string>
+    <string name="egypt">مصر</string>
     <string name="city">المدينه</string>
     <string name="govern">المحافظه</string>
     <string name="save">حفظ</string>
@@ -80,4 +80,12 @@
     <string name="inValid_Coupon">كوبون غير صحيح</string>
     <string name="alert">تنبيه</string>
     <string name="Must_login">يجب تسجيل الدخول.</string>
+    <string name="Order_details">تفاصيل الطلب</string>
+    <string name="search">البحث</string>
+    <string name="discount_alert">لقد حصلت على كود الخصم</string>
+    <string name="price">السعر</string>
+    <string name="quantity">الكمية</string>
+    <string name="cart_toast">لا يمكن اضافة المزيد</string>
+    <string name="product_add">تمت الاضافة</string>
+    <string name="product_selected">يجب اختيار حجم ولون المنتج</string>
 </resources>

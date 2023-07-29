@@ -69,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
                 android:buttonTint="@color/black"
-                android:text="address"
+                android:text="@string/address"
                 android:textSize="16sp" />
 
             <ImageView
