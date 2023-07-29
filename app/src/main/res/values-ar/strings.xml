@@ -78,6 +78,20 @@
     <string name="next">التالي</string>
     <string name="Valid_Coupon">كوبون صالح</string>
     <string name="inValid_Coupon">كوبون غير صحيح</string>
+
+    <string name="signup_account_nfor_you">اشترك بحساب\nخاص بك.</string>
+    <string name="signup">اشترك</string>
+    <string name="confirm_password">تأكيد كلمة المرور</string>
+    <string name="email">البريد الألكتروني</string>
+    <string name="phone_auth">رقم الهاتف</string>
+    <string name="first_name">الأسم الأول</string>
+    <string name="password">كلمة المرور</string>
+    <string name="last_name">اسم العائلة</string>
+    <string name="login_auth">تسحيل الدخول</string>
+    <string name="join_with_google">تسجيل الدخول بحساب جوجل</string>
+    <string name="login_into_nyour_account">\u0020تسجيل الدخول\nالي حسابك الشخصي.</string>
+    <string name="let_your_magical_journey_begin">دع رحلتك السحرية تبدأ</string>
+
     <string name="alert">تنبيه</string>
     <string name="Must_login">يجب تسجيل الدخول.</string>
     <string name="Order_details">تفاصيل الطلب</string>
