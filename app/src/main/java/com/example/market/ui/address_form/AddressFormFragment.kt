@@ -1,8 +1,11 @@
 package com.example.market.ui.address_form
 
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import android.text.InputType
 import android.text.SpannableStringBuilder
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -29,7 +32,6 @@ class AddressFormFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
     override fun onCreateView(
@@ -37,7 +39,6 @@ class AddressFormFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentAddressFormBinding.inflate(inflater, container, false)
-
         return binding.root
     }
 
@@ -47,8 +48,11 @@ class AddressFormFragment : Fragment() {
         viewModel.getGovernments("egypt")
 
         binding.saveBtn.setOnClickListener {
-            createAddresses()
-            findNavController().popBackStack()
+            var validation = validationInput()
+            if (validation) {
+                createAddresses()
+                findNavController().popBackStack()
+            }
         }
 
         binding.locationBtn.setOnClickListener {
@@ -71,6 +75,7 @@ class AddressFormFragment : Fragment() {
             binding.autoCompleteCity.text = SpannableStringBuilder(address?.city)
             binding.itPhone.inputType = InputType.TYPE_CLASS_PHONE
             binding.saveBtn.visibility = View.VISIBLE
+            validationInput()
         }
         observeGovernmentResponse()
         observeCitiesResponse()
@@ -138,15 +143,21 @@ class AddressFormFragment : Fragment() {
         }
     }
 
-    private fun createAddresses(){
+    private fun createAddresses() {
         val city = binding.autoCompleteCity.text.toString()
         val country = binding.itCountry.text.toString()
         val province = binding.autoCompleteGovern.text.toString().split(" ")[0]
         val zip = binding.itZipcode.text.toString()
         val address1 = binding.tiAddress.text.toString()
         val phone = binding.itPhone.text.toString()
-        val address = CustomerAddress(country = country, province = province, city = city, phone = phone, zip = zip, address1 = address1)
-
+        val address = CustomerAddress(
+            country = country,
+            province = province,
+            city = city,
+            phone = phone,
+            zip = zip,
+            address1 = address1
+        )
         val update = CustomerResponse(Customer(addresses = listOf(address)))
         viewModel.modifyCustomerAddress(update)
     }
@@ -157,8 +168,69 @@ class AddressFormFragment : Fragment() {
         _binding = null
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
+    private fun validationInput(): Boolean {
+        Log.d("VALIDATION", "--------------------------------")
+        val addressIsEmpty = binding.tiAddress.text?.isNotBlank()!!
+        if (!addressIsEmpty) {
+            binding.addressLayout.apply {
+                val errorColor = ColorStateList.valueOf(Color.RED)
+                setBoxStrokeColorStateList(errorColor)
+                isErrorEnabled = true
+                error = getString(R.string.invalid_address)
 
+            }
+        }
+        val zipCodeIsEmpty = binding.itZipcode.text?.isNotBlank()!!
+        if (!zipCodeIsEmpty) {
+            binding.zipLayout.apply {
+                val errorColor = ColorStateList.valueOf(Color.RED)
+                setBoxStrokeColorStateList(errorColor)
+                isErrorEnabled = true
+                error = getString(R.string.invalid_zipcode)
+            }
+            binding.zipLayout.isErrorEnabled = true
+        }
+        val governmentIsEmpty = binding.autoCompleteGovern.text?.isNotBlank()!!
+        if (!governmentIsEmpty) {
+            binding.governTextInputLayout.apply {
+                val errorColor = ColorStateList.valueOf(Color.RED)
+                setBoxStrokeColorStateList(errorColor)
+                isErrorEnabled = true
+                error = getString(
+                    R.string
+                        .invalid_government
+                )
+            }
+        }
+        val cityIsEmpty = binding.autoCompleteCity.text?.isNotBlank()!!
+        if (!cityIsEmpty) {
+            binding.cityLayout.apply {
+                val errorColor = ColorStateList.valueOf(Color.RED)
+                setBoxStrokeColorStateList(errorColor)
+                isErrorEnabled = true
+                error = getString(R.string.invalid_city)
+            }
+        } else {
+            binding.cityLayout.apply {
+                setBoxStrokeColorStateList(ColorStateList.valueOf(resources.getColor(R.color.ash_gray)))
+                isErrorEnabled = false
+                error = null
+            }
+        }
+        val phonePattern = Regex("""^01\d{10}$""")
+        val phoneIsValid = phonePattern.matches(binding.itPhone.text.toString())
+        if (!phoneIsValid) {
+            binding.phoneLayout.apply {
+                val errorColor = ColorStateList.valueOf(Color.RED)
+                setBoxStrokeColorStateList(errorColor)
+                isErrorEnabled = true
+                error = getString(R.string.invalid_phone)
+            }
+        }
+        val validation =
+            addressIsEmpty && zipCodeIsEmpty && governmentIsEmpty && cityIsEmpty && phoneIsValid
+        Log.d("VALIDATION", "validation= $validation")
+        return validation
     }
+
 }

@@ -87,4 +87,14 @@
     <string name="cart_toast">cannot add more</string>
     <string name="product_add">added to cart</string>
     <string name="product_selected">size and color not selected</string>
+    <string name="phone_is_not_valid">Phone Is Not Valid</string>
+    <string name="data_not_valid">Data Not Valid</string>
+    <string name="payment_successfully">successful payment</string>
+    <string name="payment_error">payment error</string>
+    <string name="payment_cancel">payment cancel</string>
+    <string name="invalid_address">Invalid address</string>
+    <string name="invalid_zipcode">Invalid ZipCode</string>
+    <string name="invalid_government">Invalid Government</string>
+    <string name="invalid_city">Invalid City</string>
+    <string name="invalid_phone">Invalid Phone</string>
 </resources>

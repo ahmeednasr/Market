@@ -40,8 +40,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
-import okhttp3.internal.notify
-import okhttp3.internal.notifyAll
 import java.util.*
 import javax.inject.Inject
 
@@ -89,7 +87,6 @@ class AccountFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         _binding = FragmentAccountBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -128,7 +125,7 @@ class AccountFragment : Fragment() {
             showDialog()
         }
 
-        viewModel.exchangeRate.observe(viewLifecycleOwner){
+        viewModel.exchangeRate.observe(viewLifecycleOwner) {
             ordersAccountAdapter.exchangeRate = it.toDouble()
         }
 
@@ -380,7 +377,6 @@ class AccountFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
         }
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
