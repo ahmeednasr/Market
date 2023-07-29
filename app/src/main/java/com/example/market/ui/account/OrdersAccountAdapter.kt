@@ -18,6 +18,7 @@ class OrdersAccountAdapter(
     var exchangeRate: Double? = null
         set(value) {
             field = value
+            notifyDataSetChanged()
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {

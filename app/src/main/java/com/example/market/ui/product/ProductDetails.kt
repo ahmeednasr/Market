@@ -152,7 +152,9 @@ class ProductDetails : Fragment() {
         for (i in product.options[1].values.indices) {
             colorList.add(product.options[1].values[i])
         }
+
         setColorList(colorList)
+
         setSizeList(sizeList, product)
         viewModel.conversionResult.observe(viewLifecycleOwner) {
             Log.i("STRING", "${product.variants!![0].price}")
@@ -185,11 +187,11 @@ class ProductDetails : Fragment() {
             if (sharedPreferences.getBoolean(Constants.IS_Logged, false)) {
                 if (quantity > 0 && variantId > 0) {
                     viewModel.saveToCart(product, variantId)
-                    Toast.makeText(requireContext(), "added to cart", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), R.string.product_add, Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(
                         requireContext(),
-                        "size and color not selected",
+                        R.string.product_selected,
                         Toast.LENGTH_SHORT
                     )
                         .show()
@@ -242,8 +244,8 @@ class ProductDetails : Fragment() {
 
     private fun showAlertDialog() {
         val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Error")
-        builder.setMessage("You Must login first.")
+        builder.setTitle(resources.getString(R.string.alert))
+        builder.setMessage(resources.getString(R.string.Must_login))
         builder.setIcon(android.R.drawable.ic_dialog_alert)
         builder.setPositiveButton(resources.getString(R.string.OK)) { _, _ ->
             val i = Intent(requireActivity(), AuthActivity::class.java)

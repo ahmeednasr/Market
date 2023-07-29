@@ -14,7 +14,7 @@
     <string name="cart">عربه التسوق</string>
     <string name="filter">تصنيف</string>
     <string name="map">خريطه</string>
-    <string name="OK">Ok</string>
+    <string name="OK">حسنا</string>
     <string name="GPS">GPS</string>
     <string name="change">تغيير</string>
     <string name="arabic">العربيه</string>
@@ -30,7 +30,7 @@
     <string name="phone">الهاتف</string>
     <string name="zipcode">الكود البريدي</string>
     <string name="country">الدوله</string>
-    <string name="egypt">Egypt</string>
+    <string name="egypt">مصر</string>
     <string name="city">المدينه</string>
     <string name="govern">المحافظه</string>
     <string name="save">حفظ</string>
@@ -56,11 +56,8 @@
     <string name="login_required">يجب التسجيل</string>
     <string name="alert_msg">يرجى تسجيل الدخول للمتابعة.</string>
     <string name="coupons">كوبونات</string>
-
     <string name="no_internet_msg">حدث مشكلة في الاتصال, يرجى التحقق من اتصالك بالانترنت!</string>
     <string name="no_data_msg">غير متوفر حاليا!</string>
-
-
     <string name="wraning">أنتبه</string>
     <string name="wraning_remove"> هل تريد الحذف ؟</string>
     <string name="order_total">الاجمالي:</string>
@@ -82,7 +79,6 @@
     <string name="Valid_Coupon">كوبون صالح</string>
     <string name="inValid_Coupon">كوبون غير صحيح</string>
 
-
     <string name="signup_account_nfor_you">اشترك بحساب\nخاص بك.</string>
     <string name="signup">اشترك</string>
     <string name="confirm_password">تأكيد كلمة المرور</string>
@@ -96,4 +92,14 @@
     <string name="login_into_nyour_account">\u0020تسجيل الدخول\nالي حسابك الشخصي.</string>
     <string name="let_your_magical_journey_begin">دع رحلتك السحرية تبدأ</string>
 
+    <string name="alert">تنبيه</string>
+    <string name="Must_login">يجب تسجيل الدخول.</string>
+    <string name="Order_details">تفاصيل الطلب</string>
+    <string name="search">البحث</string>
+    <string name="discount_alert">لقد حصلت على كود الخصم</string>
+    <string name="price">السعر</string>
+    <string name="quantity">الكمية</string>
+    <string name="cart_toast">لا يمكن اضافة المزيد</string>
+    <string name="product_add">تمت الاضافة</string>
+    <string name="product_selected">يجب اختيار حجم ولون المنتج</string>
 </resources>
