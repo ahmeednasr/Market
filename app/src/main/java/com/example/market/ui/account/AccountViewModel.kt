@@ -47,65 +47,86 @@ class AccountViewModel @Inject constructor(
 
     private fun getCurrencies() {
         viewModelScope.launch {
-            val productsResponse = repository.getCurrencies()
-            if (productsResponse.isSuccessful) {
-                productsResponse.body()?.let {
-                    _currencies.postValue(NetworkResult.Success(it))
+            try {
+                val productsResponse = repository.getCurrencies()
+                if (productsResponse.isSuccessful) {
+                    productsResponse.body()?.let {
+                        _currencies.postValue(NetworkResult.Success(it))
+                    }
+                } else {
+                    _currencies.postValue(NetworkResult.Error("error"))
                 }
-            } else {
-                _currencies.postValue(NetworkResult.Error("error"))
+            } catch (e: Exception) {
+
             }
+
         }
     }
 
     fun convertCurrency(from: String, to: String, amount: Double) {
         viewModelScope.launch {
-            val response = repository.convertCurrency(from, to, amount)
-            if (response.isSuccessful) {
-                response.body()?.let {
-                    _exchangeRate.postValue(it.result?.toFloat())
-                    editor.putFloat(Exchange_Value, it.result!!.toFloat())
-                    editor.apply()
+            try {
+                val response = repository.convertCurrency(from, to, amount)
+                if (response.isSuccessful) {
+                    response.body()?.let {
+                        _exchangeRate.postValue(it.result?.toFloat())
+                        editor.putFloat(Exchange_Value, it.result!!.toFloat())
+                        editor.apply()
+                    }
                 }
+            } catch (ex: Exception) {
+
             }
+
         }
     }
 
     fun getFavourites() {
+
         _products.value = NetworkResult.Loading()
         viewModelScope.launch {
-            val draftResponse = repository.getFavourites(
-                sharedPreferences.getString(Constants.FAVOURITE_ID, "0")?.toLong() ?: 0L
-            )
-            if (draftResponse.isSuccessful) {
-                draftResponse.body()?.let {
-                    _favourites = it.draftOrder?.lineItems as ArrayList<LineItemsItem>
-                    _products.postValue(
-                        NetworkResult.Success(
-                            _favourites.filter { product ->
-                                !product.title.equals(Constants.TITTLE)
-                            }
+            try {
+                val draftResponse = repository.getFavourites(
+                    sharedPreferences.getString(Constants.FAVOURITE_ID, "0")?.toLong() ?: 0L
+                )
+                if (draftResponse.isSuccessful) {
+                    draftResponse.body()?.let {
+                        _favourites = it.draftOrder?.lineItems as ArrayList<LineItemsItem>
+                        _products.postValue(
+                            NetworkResult.Success(
+                                _favourites.filter { product ->
+                                    !product.title.equals(Constants.TITTLE)
+                                }
+                            )
                         )
-                    )
+                    }
+                } else {
+                    _products.postValue(NetworkResult.Error("error"))
                 }
-            } else {
-                _products.postValue(NetworkResult.Error("error"))
+            } catch (ex: Exception) {
+
             }
+
         }
     }
 
     fun getOrders() {
         _orders.value = NetworkResult.Loading()
         viewModelScope.launch {
-            val id = sharedPreferences.getString(Constants.UserID, "0")
-            val ordersResponse = repository.getCustomerOrders(id?.toLong() ?: 0L)
-            if (ordersResponse.isSuccessful) {
-                ordersResponse.body()?.let {
-                    _orders.postValue(NetworkResult.Success(it))
+            try {
+                val id = sharedPreferences.getString(Constants.UserID, "0")
+                val ordersResponse = repository.getCustomerOrders(id?.toLong() ?: 0L)
+                if (ordersResponse.isSuccessful) {
+                    ordersResponse.body()?.let {
+                        _orders.postValue(NetworkResult.Success(it))
+                    }
+                } else {
+                    _orders.postValue(NetworkResult.Error("error"))
                 }
-            } else {
-                _orders.postValue(NetworkResult.Error("error"))
+            } catch (ex: Exception) {
+
             }
+
         }
     }
 }

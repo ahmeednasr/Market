@@ -21,13 +21,18 @@ class SplashViewModel
 
     fun convertCurrency(from: String, to: String, q: Double) {
         viewModelScope.launch(Dispatchers.IO) {
-            val response = repository.convertCurrency(from, to, q)
-            if (response.isSuccessful) {
-                response.body()?.result?.let {
-                    editor.putFloat(Constants.Exchange_Value, it.toFloat())
-                    editor.apply()
+            try{
+                val response = repository.convertCurrency(from, to, q)
+                if (response.isSuccessful) {
+                    response.body()?.result?.let {
+                        editor.putFloat(Constants.Exchange_Value, it.toFloat())
+                        editor.apply()
+                    }
                 }
+            }catch (e:Exception){
+
             }
+
         }
     }
 }

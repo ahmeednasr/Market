@@ -104,7 +104,7 @@ class SearchViewModel @Inject constructor(
     }
 
     fun filterProductsByTittle(text: String) {
-        _products.value = NetworkResult.Loading()
+        _pro ducts.value = NetworkResult.Loading()
         viewModelScope.launch (coroutineExceptionHandler){
             _filterProducts = allProducts.filter {
                 it.title?.toLowerCase()?.contains(text, true) ?: false

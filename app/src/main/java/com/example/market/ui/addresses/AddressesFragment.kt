@@ -57,8 +57,7 @@ class AddressesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
+        binding.btnAdd.visibility=View.INVISIBLE
         binding.btnAdd.setOnClickListener {
             findNavController().navigate(R.id.action_addressesFragment_to_addressFormFragment)
         }
@@ -82,9 +81,11 @@ class AddressesFragment : Fragment() {
                     response.data?.let {
                         Log.d("ADDRESS", "address= ${response.data.customer.addresses}")
                         addressesAdaptor.submitList(it.customer.addresses)
+                        binding.btnAdd.visibility=View.VISIBLE
                     }
                 }
                 is NetworkResult.Error -> {
+                    binding.btnAdd.visibility=View.INVISIBLE
                     Utils.showErrorSnackbar(binding.root, "Error happened")
                 }
                 is NetworkResult.Loading -> {

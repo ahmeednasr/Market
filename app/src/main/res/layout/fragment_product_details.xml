@@ -103,7 +103,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:text="Title"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -128,7 +127,6 @@
                         android:layout_gravity="center"
                         android:layout_margin="8dp"
                         android:layout_weight="0.75"
-                        android:text="Brand Name"
                         android:textSize="20sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -138,7 +136,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:text="Price"
                     android:textSize="24sp"
                     android:textStyle="bold" />
 

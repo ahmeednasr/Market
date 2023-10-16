@@ -112,7 +112,7 @@ class CategoriesFragment : Fragment() {
 
     private fun observeNetworkState() {
         NetworkManager.isNetworkAvailable.observe(viewLifecycleOwner) {
-            if (it){
+            if (it) {
                 viewModel.getProducts()
                 handleWhenThereNetwork()
             } else {
@@ -125,6 +125,7 @@ class CategoriesFragment : Fragment() {
         binding.apply {
             category.visibility = View.GONE
             rvProducts.visibility = View.GONE
+            fabCategory.visibility = View.INVISIBLE
         }
     }
 
@@ -133,6 +134,7 @@ class CategoriesFragment : Fragment() {
         binding.apply {
             ivNoConnection.visibility = View.VISIBLE
             tvNoConnection.visibility = View.VISIBLE
+            fabCategory.visibility = View.INVISIBLE
         }
     }
 
@@ -140,6 +142,7 @@ class CategoriesFragment : Fragment() {
         binding.apply {
             category.visibility = View.VISIBLE
             rvProducts.visibility = View.VISIBLE
+            fabCategory.visibility = View.VISIBLE
             ivNoConnection.visibility = View.GONE
             tvNoConnection.visibility = View.GONE
         }
@@ -365,7 +368,8 @@ class CategoriesFragment : Fragment() {
         binding.apply {
             when (subCategory) {
                 ACCESSORIES -> {
-                    fabAccessories.backgroundTintList = resources.getColorStateList(R.color.orange_700)
+                    fabAccessories.backgroundTintList =
+                        resources.getColorStateList(R.color.orange_700)
                 }
                 T_SHIRTS -> {
                     fabShirt.backgroundTintList = resources.getColorStateList(R.color.orange_700)
