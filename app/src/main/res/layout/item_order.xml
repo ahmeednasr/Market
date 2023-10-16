@@ -60,8 +60,7 @@
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="@id/tv_price"
             app:layout_constraintStart_toEndOf="@id/tv_price"
-            app:layout_constraintTop_toTopOf="@id/tv_price"
-            tools:text="360 EGP" />
+            app:layout_constraintTop_toTopOf="@id/tv_price" />
 
         <TextView
             android:id="@+id/tv_num"

@@ -84,9 +84,9 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickListener
 
                         val cityName = newLocality ?: subAdmin ?: subLocality
                         if (cityName != null) {
-                            val government = address.adminArea
-                            val city = address.subAdminArea
-                            val postalCode = address.postalCode
+                            val government = address.adminArea?:""
+                            val city = address.subAdminArea?:""
+                            val postalCode = address.postalCode?:""
                             val feature = address.featureName
                             val addressDetails = "$feature-$city-$government-GE"
                             userAddress = UserAddress(

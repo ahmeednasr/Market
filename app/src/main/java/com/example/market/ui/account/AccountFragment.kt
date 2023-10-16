@@ -79,7 +79,7 @@ class AccountFragment : Fragment() {
 
     private val ordersAccountAdapter by lazy {
         OrdersAccountAdapter(
-            sharedPreferences.getString(Constants.CURRENCY_TO_KEY, "") ?: "EGP"
+            sharedPreferences.getString(CURRENCY_TO_KEY, "") ?: "EGP"
         )
     }
 
@@ -87,7 +87,6 @@ class AccountFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         _binding = FragmentAccountBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -124,6 +123,10 @@ class AccountFragment : Fragment() {
         binding.currencyValue.text = sharedPreferences.getString(CURRENCY_TO_KEY, "") ?: "EGP"
         binding.llLanguage.setOnClickListener {
             showDialog()
+        }
+
+        viewModel.exchangeRate.observe(viewLifecycleOwner) {
+            ordersAccountAdapter.exchangeRate = it.toDouble()
         }
 
         binding.llCurrency.setOnClickListener {
@@ -374,7 +377,6 @@ class AccountFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
         }
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -15,7 +15,6 @@ class AuthActivity : AppCompatActivity() {
         binding = ActivityAuthBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-
         val navController = Navigation.findNavController(this, R.id.nav_host_fragment_auth)
     }
 }

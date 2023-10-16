@@ -1,6 +1,7 @@
 package com.example.market.ui.addresses
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -25,14 +26,18 @@ class AddressesFragment : Fragment() {
 
     private val viewModel: AddressViewModel by viewModels()
     private val addressesAdaptor by lazy {
-        AddressesAdaptor(object : AddressesAdaptor.AddressClickListener{
+        AddressesAdaptor(object : AddressesAdaptor.AddressClickListener {
             override fun onSelectedClicked(address: CustomerAddress) {
                 viewModel.setDefaultAddress(address)
                 getAddressesList()
             }
 
             override fun onItemDeSelected(address: CustomerAddress) {
-                Toast.makeText(requireContext(),"Default Location Has Been Changed",Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Default Location Has Been Changed",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
 
             override fun onItemDeleted(address: CustomerAddress) {
@@ -52,8 +57,7 @@ class AddressesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
+        binding.btnAdd.visibility=View.INVISIBLE
         binding.btnAdd.setOnClickListener {
             findNavController().navigate(R.id.action_addressesFragment_to_addressFormFragment)
         }
@@ -65,23 +69,26 @@ class AddressesFragment : Fragment() {
         getAddressesList()
         binding.rvAddresses.apply {
             adapter = addressesAdaptor
-            layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.VERTICAL,false)
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         }
     }
 
-    private fun getAddressesList(){
-        viewModel.costumer.observe(viewLifecycleOwner){response ->
-            when(response){
+    private fun getAddressesList() {
+        viewModel.costumer.observe(viewLifecycleOwner) { response ->
+            when (response) {
                 is NetworkResult.Success -> {
                     response.data?.let {
+                        Log.d("ADDRESS", "address= ${response.data.customer.addresses}")
                         addressesAdaptor.submitList(it.customer.addresses)
+                        binding.btnAdd.visibility=View.VISIBLE
                     }
                 }
                 is NetworkResult.Error -> {
+                    binding.btnAdd.visibility=View.INVISIBLE
                     Utils.showErrorSnackbar(binding.root, "Error happened")
                 }
                 is NetworkResult.Loading -> {
-                    Toast.makeText(requireContext(),"Loading Data",Toast.LENGTH_SHORT).show()
                 }
             }
         }

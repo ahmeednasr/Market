@@ -225,22 +225,22 @@ class PaymentFragment : Fragment() {
             },
             onApprove =
             OnApprove { approval ->
-                Toast.makeText(requireContext(), "payment approve", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), R.string.payment_successfully, Toast.LENGTH_SHORT)
+                    .show()
                 viewModel.completeDraft()
                 findNavController().navigate(PaymentFragmentDirections.actionPaymentFragmentToHomeFragment())
             },
             onCancel = OnCancel {
-                Toast.makeText(requireContext(), "payment cancel", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), R.string.payment_cancel, Toast.LENGTH_SHORT).show()
             },
             onError = OnError { errorInfo ->
-                Toast.makeText(requireContext(), "payment error", Toast.LENGTH_SHORT)
+                Toast.makeText(requireContext(), R.string.payment_error, Toast.LENGTH_SHORT)
                     .show()
             },
         )
     }
 
     private fun updateUI(value: Double) {
-
         var subTotal = binding.subTotalValue.text.toString().toDouble()
         USD = sharedPreferences.getFloat(USD_VALUE, .0f).toDouble()
         var totalTax = binding.TaxValue.text.toString().toDouble()
@@ -248,16 +248,13 @@ class PaymentFragment : Fragment() {
         var totalPrice = (subTotal + totalTax)
         binding.totalValue.text = roundOffDecimal(totalPrice).toString()
         current = binding.totalValue.text.toString().toDouble()
-        Log.d("menp", "curr=$current")
         rounded = roundOffDecimal(current * USD)
-        Log.d("menp", "curr rounded=$rounded")
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
 }
 
 
